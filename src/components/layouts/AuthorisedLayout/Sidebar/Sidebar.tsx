@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Menu, Layout } from "antd";
 import {
   UserOutlined,
@@ -7,15 +7,23 @@ import {
 } from "@ant-design/icons";
 import "./Sidebar.css";
 import { useAuthorisedContext } from "../../../../context/authorised-layout-context";
+import useBreakpoint from "antd/lib/grid/hooks/useBreakpoint";
 
 const { Sider } = Layout;
-
 const Sidebar = () => {
   const {
     siderCollapsed,
     selectedMenuItem,
     setMenuItem,
+    toggleSider,
   } = useAuthorisedContext();
+  const screens = useBreakpoint();
+
+  useEffect(() => {
+    if (screens.xs && !siderCollapsed) {
+      toggleSider();
+    }
+  },[screens.xs, siderCollapsed, toggleSider]);
   return (
     <div>
       <Sider trigger={null} collapsible collapsed={siderCollapsed}>
