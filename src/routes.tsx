@@ -1,16 +1,16 @@
 import React, { lazy, Suspense } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
-import CustomSpin from "./components/CustomSpin/CustomSpin";
 import { stringify } from "querystring";
 
 import { useAuth } from "./hooks/useAuth";
 import Deposit from "./pages/Deposit/Deposit";
 import Withdrawal from "./pages/Withdrawal/Withdrawal";
+import { CustomSpin } from "./components";
 const AuthorisedLayout = lazy(
-  () => import("./components/layouts/AuthorisedLayout/AuthorisedLayout")
+  () => import("./containers/layouts/AuthorisedLayout/AuthorisedLayout")
 );
 const UnauthorisedLayout = lazy(
-  () => import("./components/layouts/UnauthorisedLayout/UnauthorisedLayout")
+  () => import("./containers/layouts/UnauthorisedLayout/UnauthorisedLayout")
 );
 const Login = lazy(() => import("./pages/Login/Login"));
 const NotFound = lazy(() => import("./pages/NotFound/NotFound"));
