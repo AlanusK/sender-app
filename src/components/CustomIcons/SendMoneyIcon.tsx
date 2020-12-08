@@ -22,7 +22,7 @@ const SendMoneyIcon = (props: CustomIconProp) => {
       </g>
     </svg>
   );
-  return <Icon component={SendMoneySvg} {...props} onClick={props.handleCardAction}/>;
+  return <Icon component={SendMoneySvg} {...props} />;
 };
 
 export default SendMoneyIcon;

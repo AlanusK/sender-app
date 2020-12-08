@@ -1,10 +1,14 @@
 import React from "react";
-import WalletBallanceContainer from "../../containers/WalletBallanceContainer/WalletBallanceContainer";
+import {
+  ExtendedWalletBallanceContainer,
+  WalletBallanceContainer,
+} from "../../containers";
 
 const Dashboard = () => {
   return (
     <div className="site-wrapper">
       <WalletBallanceContainer />
+      <ExtendedWalletBallanceContainer />
     </div>
   );
 };
