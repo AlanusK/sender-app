@@ -2,12 +2,52 @@ import React from 'react';
 import { Table, Button  } from 'antd';
 import "./TransactionsTableContainer.css";
 import useBreakpoint from "antd/lib/grid/hooks/useBreakpoint";
+import { ColumnsType } from 'antd/lib/table';
+
+const data = [
+  {
+    key: '1',
+    date: '04/11/1990',
+    amount: 'USD 10,000/=',
+    type: 'Deposit',
+    status: 'Completed',
+  },
+  {
+    key: '2',
+    date: '28/05/2020',
+    amount: 'USD 1,000/=',
+    type: 'Deposit',
+    status: 'Completed',
+  },
+  {
+    key: '3',
+    date: '17/11/2014',
+    amount: 'EUR 1,000/=',
+    type: 'Deposit',
+    status: 'Completed',
+  },
+  {
+    key: '4',
+    date: '13/09/2007',
+    amount: 'EUR 1,000/=',
+    type: 'Deposit',
+    status: 'Cancelled',
+  }, 
+];
+
+type dataType = {
+  key: string;
+  date: string;
+  amount: string;
+  type: string;
+  status: string;
+};
 
 const TransactionsTableContainer = () => {
 
   const screens = useBreakpoint();
 
-  const columnsFull = [
+  const columnsFull: ColumnsType<dataType> = [
     {
       title: 'Date',
       dataIndex: 'date',
@@ -18,13 +58,13 @@ const TransactionsTableContainer = () => {
       title: 'Amount',
       dataIndex: 'amount',
       key: 'amount',
-      // align: 'center',
+      align: 'right',
     },
     {
       title: 'Type',
       dataIndex: 'type',
       key: 'type',
-      // align: 'center',
+      align: 'right',
     },
     {
       title: 'Status',
@@ -34,7 +74,7 @@ const TransactionsTableContainer = () => {
     },
   ];
 
-  const columnsHalf = [
+  const columnsHalf: ColumnsType<dataType> = [
     {
       title: 'Date',
       dataIndex: 'date',
@@ -45,7 +85,7 @@ const TransactionsTableContainer = () => {
       title: 'Amount',
       dataIndex: 'amount',
       key: 'amount',
-      // align: 'center',
+      align: 'right',
     },
   ];
 
@@ -54,37 +94,6 @@ const TransactionsTableContainer = () => {
   if (screens.xs) {
     columns = columnsHalf;
   }
-
-  const data = [
-    {
-      key: '1',
-      date: '04/11/1990',
-      amount: 'USD 10,000/=',
-      type: 'Deposit',
-      status: 'Completed',
-    },
-    {
-      key: '2',
-      date: '28/05/2020',
-      amount: 'USD 1,000/=',
-      type: 'Deposit',
-      status: 'Completed',
-    },
-    {
-      key: '3',
-      date: '17/11/2014',
-      amount: 'EUR 1,000/=',
-      type: 'Deposit',
-      status: 'Completed',
-    },
-    {
-      key: '4',
-      date: '13/09/2007',
-      amount: 'EUR 1,000/=',
-      type: 'Deposit',
-      status: 'Cancelled',
-    }, 
-  ];
 
   return (
     <>
