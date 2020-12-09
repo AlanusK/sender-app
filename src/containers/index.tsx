@@ -1,4 +1,5 @@
 import ExtendedWalletBallanceContainer from "./ExtendedWalletBallanceContainer/ExtendedWalletBallanceContainer";
 import WalletBallanceContainer from "./WalletBallanceContainer/WalletBallanceContainer";
+import TransactionsTableContainer from "./TransactionsTableContainer/TransactionsTableContainer";
 
-export {WalletBallanceContainer, ExtendedWalletBallanceContainer}
+export {WalletBallanceContainer, ExtendedWalletBallanceContainer, TransactionsTableContainer}
