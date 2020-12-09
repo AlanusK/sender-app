@@ -20,7 +20,7 @@ function AddCurrencyCard(props: IAddCurrencyProps) {
       onClick={props.handleAddCurrency}
       style={{ ...style, textAlign: "center" }}
     >
-      <AddIcon />
+      <AddIcon size="2em" />
       <h3>Add Currency</h3>
     </Card>
   );

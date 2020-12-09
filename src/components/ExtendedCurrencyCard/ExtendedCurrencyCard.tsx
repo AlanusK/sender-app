@@ -24,18 +24,18 @@ function ExtendedCurrencyCard(props: IExtendedCurrencyCard) {
         />
       }
       actions={[
-        <p onClick={props.handledeposit}>
-          <DepositIcon key="deposit" size={24} />
+        <div onClick={props.handledeposit}>
+          <DepositIcon key="deposit" size={22} />
           <p>Deposit</p>
-        </p>,
-        <p onClick={props.handleWithdrawalAction}>
-          <WithdrawalIcon key="withdrawal" size={24} />
+        </div>,
+        <div onClick={props.handleWithdrawalAction}>
+          <WithdrawalIcon key="withdrawal" size={22} />
           <p>Withdrawal</p>
-        </p>,
-        <p onClick={props.handleSendAction}>
-          <SendMoneyIcon key="send" size={24} />
+        </div>,
+        <div onClick={props.handleSendAction}>
+          <SendMoneyIcon key="send" size={22} />
           <p>Send</p>
-        </p>,
+        </div>,
       ]}
     >
       <Statistic
