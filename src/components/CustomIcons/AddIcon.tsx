@@ -3,7 +3,7 @@ import React from "react";
 import CustomIconProp from "./CustomIconPopsTypes";
 
 const AddIcon = (props: CustomIconProp) => {
-  const iconSize = props.size ? props.size : 30;
+  const iconSize = props.size ? props.size :"1em";
   const ExportSvg = () => (
     <svg
       version="1.1"

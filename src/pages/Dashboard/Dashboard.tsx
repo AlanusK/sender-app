@@ -9,6 +9,7 @@ const Dashboard = () => {
     <div className="site-wrapper">
       <WalletBallanceContainer />
       <ExtendedWalletBallanceContainer />
+
     </div>
   );
 };
