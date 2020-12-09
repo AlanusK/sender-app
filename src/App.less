@@ -1,36 +1,79 @@
 @import '~antd/dist/antd.less';
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+// dark-mode
+//layout
+body.dark-mode,
+.dark-mode .ant-layout {
+  background-color: #303030;
+  color: silver;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.dark-mode .site-layout .site-layout-background,
+.dark-mode .ant-layout-footer,
+.dark-mode .ant-menu,
+.dark-mode .ant-layout-sider {
+  background-color: #424242;
+  color: silver;
 }
 
-.App-link {
-  color: #61dafb;
+.dark-mode li.ant-menu-item:not(.ant-menu-item-selected):hover {
+  color: silver;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.dark-mode li.ant-menu-item.ant-menu-item-selected svg {
+  fill: #232323;
+}
+
+//components
+.dark-mode h1,
+.dark-mode h3,
+.dark-mode h2,
+.dark-mode h4,
+.dark-mode h5,
+.dark-mode h6 {
+  color: silver;
+}
+
+.dark-mode .ant-card,
+.dark-mode .ant-card-head,
+.dark-mode .ant-card-actions,
+.dark-mode .ant-statistic-content-value-int,
+.dark-mode .ant-statistic-content-value-decimal {
+  color: silver;
+  background: #303030;
+}
+
+.dark-mode .ant-statistic-title {
+  color: rgb(63, 134, 0);
+}
+
+.dark-mode .ant-card-bordered
+
+/* :not(.ant-card-hoverable) */
+  {
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.dark-mode .anticon svg {
+  fill: silver;
+}
+
+.dark-mode .ant-card-actions li {
+  color: silver;
+}
+
+.dark-mode .ant-card-actions>li>span:hover {
+  color: #fff;
+}
+
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
 }

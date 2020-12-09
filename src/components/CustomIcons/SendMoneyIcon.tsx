@@ -3,7 +3,7 @@ import React from "react";
 import CustomIconProp from "./CustomIconPopsTypes";
 
 const SendMoneyIcon = (props: CustomIconProp) => {
-  const iconSize = props.size ? props.size : 30;
+  const iconSize = props.size ? props.size: "1em";
   const SendMoneySvg = () => (
     <svg
       version="1.1"
@@ -22,7 +22,7 @@ const SendMoneyIcon = (props: CustomIconProp) => {
       </g>
     </svg>
   );
-  return <Icon component={SendMoneySvg} {...props} onClick={props.handleCardAction}/>;
+  return <Icon component={SendMoneySvg} {...props} />;
 };
 
 export default SendMoneyIcon;

@@ -6,16 +6,16 @@ import { DepositIcon, SendMoneyIcon, WithdrawalIcon } from "..";
 interface IExtendedCurrencyCard {
   amount: number;
   currency: "TZS" | "USD" | "GBP" | "KES" | "RWF";
-  handleSendCaAction(): any;
-  handleDepositCaAction(): any;
-  handleWithdrawalCaAction(): any;
+  handleSendAction(): any;
+  handledeposit(): any;
+  handleWithdrawalAction(): any;
 }
 function ExtendedCurrencyCard(props: IExtendedCurrencyCard) {
   return (
     <Card
       title={props.currency}
       bordered={true}
-      hoverable={true}
+      hoverable={false}
       extra={
         <Avatar
           shape="circle"
@@ -24,33 +24,18 @@ function ExtendedCurrencyCard(props: IExtendedCurrencyCard) {
         />
       }
       actions={[
-        <>
-          <Tooltip title="Deposit">
-            <DepositIcon
-              key="deposit"
-              size={24}
-              handleCardAction={props.handleDepositCaAction}
-            />
-          </Tooltip>
-        </>,
-        <>
-          <Tooltip title="Withdrawal">
-            <WithdrawalIcon
-              key="withdrawal"
-              size={24}
-              handleCardAction={props.handleWithdrawalCaAction}
-            />
-          </Tooltip>
-        </>,
-        <>
-          <Tooltip title="Send Money">
-            <SendMoneyIcon
-              key="send"
-              size={24}
-              handleCardAction={props.handleSendCaAction}
-            />
-          </Tooltip>
-        </>,
+        <div onClick={props.handledeposit}>
+          <DepositIcon key="deposit" size={22} />
+          <p>Deposit</p>
+        </div>,
+        <div onClick={props.handleWithdrawalAction}>
+          <WithdrawalIcon key="withdrawal" size={22} />
+          <p>Withdrawal</p>
+        </div>,
+        <div onClick={props.handleSendAction}>
+          <SendMoneyIcon key="send" size={22} />
+          <p>Send</p>
+        </div>,
       ]}
     >
       <Statistic

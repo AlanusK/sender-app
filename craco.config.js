@@ -17,9 +17,12 @@ module.exports = {
                modifyVars: {
                   ...theme,
                   // Full list of default variables for overides can be found at https://github.com/ant-design/ant-design/blob/master/components/style/themes/default.less
-                  '@primary-color': '#434343',
+                  '@primary-color': '#232323',
                   '@font-family': 'Circular-Std',
-                  '@statistic-font-family':'Circular-Bold'
+                  '@statistic-font-family': 'Circular-Bold',
+                  '@menu-bg': '#fedb00',
+                  '@layout-header-background': '@menu-bg',
+                  '@menu-item-active-bg': '#fff'
                },
                javascriptEnabled: true,
             },

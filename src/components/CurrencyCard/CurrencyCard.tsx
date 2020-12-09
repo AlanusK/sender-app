@@ -5,6 +5,7 @@ import { AuthorisedCurrencies } from "../../constants";
 interface ICurrencyCard {
   amount: number;
   currency: "TZS" | "USD" | "GBP" | "KES" | "RWF";
+  handleCardClick?():void;
 }
 function CurrencyCard(props: ICurrencyCard) {
   return (
@@ -19,6 +20,7 @@ function CurrencyCard(props: ICurrencyCard) {
           src={AuthorisedCurrencies[props.currency].icon}
         />
       }
+      onClick={props.handleCardClick}
     >
       <Statistic
         title={AuthorisedCurrencies[props.currency].symbol}

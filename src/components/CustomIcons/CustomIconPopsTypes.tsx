@@ -1,7 +1,6 @@
 interface CustomIconProp {
-  size?: number;
+  size?: number | any;
   color?: string;
-  handleCardAction?(): any;
 }
 
 export default CustomIconProp;
