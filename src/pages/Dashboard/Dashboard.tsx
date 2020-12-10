@@ -1,8 +1,12 @@
+import { Row } from "antd";
 import React from "react";
 import {
+  DepositFormContainer,
   ExtendedWalletBallanceContainer,
+  SelectCurrencyContainer,
   WalletBallanceContainer,
   TransactionsTableContainer,
+  WithdrawalFormContainer,
 } from "../../containers";
 import { ColumnsType } from 'antd/lib/table';
 
@@ -75,9 +79,18 @@ const columns: ColumnsType<transactions> = [
 const Dashboard = () => {
   return (
     <div className="site-wrapper">
-      {/* <WalletBallanceContainer />
-      <ExtendedWalletBallanceContainer /> */}
       <TransactionsTableContainer columns={columns} transactions={data} />
+      <WalletBallanceContainer />
+      <ExtendedWalletBallanceContainer />
+      <Row style={{ marginTop: "40px" }}>
+        <SelectCurrencyContainer />
+      </Row>
+      <Row style={{ marginTop: "80px" }}>
+        <DepositFormContainer />
+      </Row>
+      <Row style={{ marginTop: "20px" }}>
+        <WithdrawalFormContainer />
+      </Row>
     </div>
   );
 };

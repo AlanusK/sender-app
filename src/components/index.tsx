@@ -1,5 +1,6 @@
 import AddCurrencyCard from "./AddCurrencyCard/AddCurrencyCard";
 import CurrencyCard from "./CurrencyCard/CurrencyCard";
+import CustomCurrencyInput from "./CustomCurrencyInput/CustomCurrencyInput";
 import AddIcon from "./CustomIcons/AddIcon";
 import DepositIcon from "./CustomIcons/DepositIcon";
 import HeartIcon from "./CustomIcons/HeartIcon";
@@ -23,5 +24,6 @@ export {
   AddIcon,
   LightBulbIcon,
   DarkModeToggle,
-  TransactionsTable
+  TransactionsTable,
+  CustomCurrencyInput
 };
