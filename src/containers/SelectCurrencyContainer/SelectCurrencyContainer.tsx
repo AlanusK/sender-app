@@ -3,7 +3,7 @@ import React from "react";
 import { AuthorisedCurrencies } from "../../constants";
 
 interface ISelectCurrency {
-  onCurrencyChange?(): void;
+  onCurrencyChange?(value:string, option: any): void;
 }
 
 export default function SelectCurrencyContainer(props: ISelectCurrency) {

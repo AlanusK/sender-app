@@ -17,12 +17,17 @@ code {
   background-color: @primary-color;
 }
 
+.summary-label {
+  color: #434343;
+}
+
+
 // dark-mode
 //layout
 body.dark-mode,
 .dark-mode .ant-layout {
   background-color: #303030;
-  color: silver;
+  color: #fafafa;
 }
 
 .dark-mode .site-layout .site-layout-background,
@@ -30,11 +35,11 @@ body.dark-mode,
 .dark-mode .ant-menu,
 .dark-mode .ant-layout-sider {
   background-color: #424242;
-  color: silver;
+  color: #fafafa;
 }
 
 .dark-mode li.ant-menu-item:not(.ant-menu-item-selected):hover {
-  color: silver;
+  color: #fafafa;
 }
 
 .dark-mode li.ant-menu-item.ant-menu-item-selected svg {
@@ -48,7 +53,7 @@ body.dark-mode,
 .dark-mode h4,
 .dark-mode h5,
 .dark-mode h6 {
-  color: silver;
+  color: #fafafa;
 }
 
 .dark-mode .ant-card,
@@ -56,7 +61,7 @@ body.dark-mode,
 .dark-mode .ant-card-actions,
 .dark-mode .ant-statistic-content-value-int,
 .dark-mode .ant-statistic-content-value-decimal {
-  color: silver;
+  color: #fafafa;
   background: #303030;
 }
 
@@ -69,21 +74,22 @@ body.dark-mode,
 }
 
 .dark-mode .anticon svg {
-  fill: silver;
+  fill: #fafafa;
 }
 
 .dark-mode .ant-card-actions li {
-  color: silver;
+  color: #fafafa;
 }
 
 .dark-mode .ant-card-actions>li>span:hover {
   color: #fff;
 }
 
-.dark-mode .ant-select:not(.ant-select-customize-input) .ant-select-selector {
+.dark-mode .ant-select:not(.ant-select-customize-input) .ant-select-selector,
+.dark-mode input.ant-input-number {
   background-color: #303030;
   border: 1px solid rgb(240, 240, 240);
-  color: silver;
+  color: #fafafa;
 }
 
 .dark-mode .ant-select-dropdown {
@@ -91,8 +97,18 @@ body.dark-mode,
 }
 
 .dark-mode .ant-select-item {
-  color: silver;
+  color: #fafafa;
 }
+
 .dark-mode .ant-select-item:not(.ant-select-item-option-selected):hover {
   color: @primary-color;
+}
+
+.dark-mode .ant-form-item-has-error .ant-input-number:not([disabled]):hover,
+.ant-form-item-has-error .ant-picker:not([disabled]):hover {
+  background-color: #424242;
+}
+
+.dark-mode .summary-label {
+  color: #fafafa;
 }
