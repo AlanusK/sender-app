@@ -8,13 +8,12 @@ interface ITransactionsTableProps {
 
 const TransactionsTable = (props:ITransactionsTableProps) => {
   return (
-        <Table 
+        <Table
           columns={props.columns}
           dataSource={props.transactions}
           pagination={false}
           // scroll={{ y: 280}}
           size='small'
-          bordered 
         />
   );
 };

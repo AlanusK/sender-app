@@ -9,7 +9,7 @@ const Login = () => {
   const { signin } = useAuth();
   const { replace, query } = useRouter();
   const onFinish = (values: any) => {
-    console.log("Success:", values);
+    //console.log("Success:", values);
     signin(values);
     return values.username && values.password
       ? replace(query.redirect ? query.redirect : "/")
