@@ -6,6 +6,17 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+.ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+  color: #fafafa;
+  font-weight: 600;
+  background-color: @primary-color;
+}
+
 // dark-mode
 //layout
 body.dark-mode,
@@ -53,10 +64,7 @@ body.dark-mode,
   color: rgb(63, 134, 0);
 }
 
-.dark-mode .ant-card-bordered
-
-/* :not(.ant-card-hoverable) */
-  {
+.dark-mode .ant-card-bordered:not(.ant-card-hoverable) {
   border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
@@ -72,8 +80,19 @@ body.dark-mode,
   color: #fff;
 }
 
+.dark-mode .ant-select:not(.ant-select-customize-input) .ant-select-selector {
+  background-color: #303030;
+  border: 1px solid rgb(240, 240, 240);
+  color: silver;
+}
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+.dark-mode .ant-select-dropdown {
+  background-color: #424242;
+}
+
+.dark-mode .ant-select-item {
+  color: silver;
+}
+.dark-mode .ant-select-item:not(.ant-select-item-option-selected):hover {
+  color: @primary-color;
 }

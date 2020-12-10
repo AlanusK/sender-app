@@ -1,5 +1,4 @@
 import React, { useState, useContext, createContext } from "react";
-import { useHistory } from "react-router-dom";
 
 interface AuthContextProps {
   isAuthenticated: any;

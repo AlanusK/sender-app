@@ -29,4 +29,4 @@ export const AuthorisedCurrencies = {
       "https://upload.wikimedia.org/wikipedia/commons/b/b7/Flag_of_Europe.svg",
     symbol: "€",
   },
-};
+}
