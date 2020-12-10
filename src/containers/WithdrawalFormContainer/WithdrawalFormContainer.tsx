@@ -95,7 +95,7 @@ export default function WithdrawalFormContainer() {
         <>
           <Row gutter={[12, 12]}>
             <Col style={{ width: 200 }}>
-              <span className="summary-label">Amount</span>
+              <h4 className="summary-label">Amount</h4>
             </Col>
             <Col
               style={{
@@ -104,14 +104,14 @@ export default function WithdrawalFormContainer() {
                 width: 200,
               }}
             >
-              <span style={{ fontFamily: "Circular-Bold" }}>
+              <h4 style={{ fontFamily: "Circular-Bold" }}>
                 {`${selectedCurrency.key} ${toDecimalMark(withdrawalAmount)}`}
-              </span>
+              </h4>
             </Col>
           </Row>
           <Row gutter={[12, 12]}>
             <Col style={{ width: 200 }}>
-              <span className="summary-label">Fee</span>
+              <h4 className="summary-label">Fee</h4>
             </Col>
             <Col
               style={{
@@ -120,14 +120,14 @@ export default function WithdrawalFormContainer() {
                 width: 200,
               }}
             >
-              <span style={{ fontFamily: "Circular-Bold" }}>
+              <h4 style={{ fontFamily: "Circular-Bold" }}>
                 {`${selectedCurrency.key} ${toDecimalMark(withdrawalFee)}`}
-              </span>
+              </h4>
             </Col>
           </Row>
           <Row gutter={[12, 12]}>
             <Col style={{ width: 200 }}>
-              <span className="summary-label">Net-Payout Amount</span>
+              <h4 className="summary-label">Net-Payout Amount</h4>
             </Col>
             <Col
               style={{
@@ -136,11 +136,11 @@ export default function WithdrawalFormContainer() {
                 width: 200,
               }}
             >
-              <span style={{ fontFamily: "Circular-Bold" }}>
+              <h4 style={{ fontFamily: "Circular-Bold" }}>
                 {`${selectedCurrency.key} ${toDecimalMark(
                   withdrawalAmount - withdrawalFee
                 )}`}
-              </span>
+              </h4>
             </Col>
           </Row>
         </>
