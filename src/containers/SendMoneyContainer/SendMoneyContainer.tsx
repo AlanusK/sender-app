@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Form, Input, Button, Radio, Select, Row, Col } from 'antd';
-import "./SenderContainer.css";
+import "./SendMoneyContainer.css";
 
-const SenderContainer = () => {
+const SendMoneyContainer = () => {
   const [form] = Form.useForm();
 
 
@@ -56,11 +56,11 @@ const SenderContainer = () => {
           <Input placeholder="John Doe" />
         </Form.Item>
         <Form.Item>
-          <Row gutter={16} justify="end"> 
+          <Row gutter={16} justify="end">
             <Col span={16}><h4>Amount</h4></Col>
             <Col span={8}><h4 className="amount-output">$100</h4></Col>
           </Row>
-          <Row gutter={16}> 
+          <Row gutter={16}>
             <Col span={16}><h4>Amount KES (1 USD = KES 2310) </h4></Col>
             <Col span={8}><h4 className="amount-output">KES 231,000</h4></Col>
           </Row>
@@ -78,4 +78,4 @@ const SenderContainer = () => {
   );
 };
 
-export default SenderContainer;
+export default SendMoneyContainer;

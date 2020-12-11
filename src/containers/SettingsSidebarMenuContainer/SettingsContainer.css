@@ -1,0 +1,12 @@
+.settings-page .ant-tabs-nav-list {
+  min-width: 200px;
+}
+
+.settings-page .ant-tabs-tab.ant-tabs-tab-active {
+   background: #f2f2f3;
+ }
+
+.settings-page .ant-tabs-tab:hover {
+   color: #252525;
+   background: #fafafa;
+}

@@ -5,9 +5,11 @@ import CustomHeader from "./Header/Header";
 import "./AuthorisedLayout.css";
 import { AuthorisedLayoutContextProvider } from "../../../context/authorised-layout-context";
 import SiteFooter from "./Footer/Footer";
+import { useRouter } from "../../../hooks/useRouter";
 
 const { Content } = Layout;
 const AuthorisedLayout = ({ children }: any) => {
+  const { pathname } = useRouter();
   return (
     <Layout>
       <AuthorisedLayoutContextProvider>
@@ -17,8 +19,8 @@ const AuthorisedLayout = ({ children }: any) => {
           <Content
             className="site-layout-background"
             style={{
-              margin: "24px 16px",
-              padding: 24,
+              margin: pathname === "/settings" ? 0 : "20px 14px",
+              padding: pathname === "/settings" ? 0 : 24,
               minHeight: 280,
             }}
           >

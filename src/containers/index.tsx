@@ -3,8 +3,10 @@ import ExtendedWalletBallanceContainer from "./ExtendedWalletBallanceContainer/E
 import SelectCurrencyContainer from "./SelectCurrencyContainer/SelectCurrencyContainer";
 import WalletBallanceContainer from "./WalletBallanceContainer/WalletBallanceContainer";
 import TransactionsTableContainer from "./TransactionsTableContainer/TransactionsTableContainer";
-
 import WithdrawalFormContainer from "./WithdrawalFormContainer/WithdrawalFormContainer";
+import SendMoneyContainer from "./SendMoneyContainer/SendMoneyContainer";
+import GeneralSettingsContainer from "./GeneralSettingsContainer/GeneralSettingsContainer";
+import SettingsContainer from "./SettingsSidebarMenuContainer/SettingsContainer";
 
 export {
   WalletBallanceContainer,
@@ -12,5 +14,8 @@ export {
   SelectCurrencyContainer,
   DepositFormContainer,
   WithdrawalFormContainer,
-  TransactionsTableContainer
+  TransactionsTableContainer,
+  SendMoneyContainer,
+  SettingsContainer,
+  GeneralSettingsContainer
 };

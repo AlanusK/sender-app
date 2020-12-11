@@ -6,9 +6,9 @@ import {
   WalletBallanceContainer,
   TransactionsTableContainer,
   WithdrawalFormContainer,
+  SendMoneyContainer,
 } from "../../containers";
 import { ColumnsType } from "antd/lib/table";
-import SenderContainer from "../../containers/SenderContainer/SenderContainer";
 
 const data = [
   {
@@ -96,7 +96,7 @@ const Dashboard = () => {
         <WithdrawalFormContainer />
       </div>
       <div style={{ marginTop: "80px", width:400 }}>
-        <SenderContainer />
+        <SendMoneyContainer />
       </div>
     </div>
   );

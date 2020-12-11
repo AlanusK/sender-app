@@ -1,11 +1,12 @@
-import React from 'react';
+import React from "react";
+import { SettingsContainer } from "../../containers";
 
 const Settings = () => {
-   return (
-      <div>
-       Settings
-      </div>
-   );
+  return (
+    <div>
+      <SettingsContainer />
+    </div>
+  );
 };
 
 export default Settings;

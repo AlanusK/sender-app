@@ -15,6 +15,7 @@ const UnauthorisedLayout = lazy(
 const Login = lazy(() => import("./pages/Login/Login"));
 const NotFound = lazy(() => import("./pages/NotFound/NotFound"));
 const Dashboard = lazy(() => import("./pages/Dashboard/Dashboard"));
+const Settings = lazy(() => import("./pages/Settings/Settings"));
 /**
  *
  *  A wrapper for <Route> that redirects to the login
@@ -40,7 +41,7 @@ function PrivateRoute({ children, ...rest }: any) {
             to={{
               pathname: `/login`,
               state: { from: location },
-              search: `?${queryString}`
+              search: `?${queryString}`,
             }}
           />
         )
@@ -72,6 +73,13 @@ const Routes = () => {
           <AuthorisedLayout>
             <Suspense fallback={<CustomSpin />}>
               <Withdrawal />
+            </Suspense>
+          </AuthorisedLayout>
+        </PrivateRoute>
+        <PrivateRoute exact={true} path={"/settings"}>
+          <AuthorisedLayout>
+            <Suspense fallback={<CustomSpin />}>
+              <Settings />
             </Suspense>
           </AuthorisedLayout>
         </PrivateRoute>
