@@ -1,0 +1,31 @@
+.title {
+    margin-top: -10px;
+}
+
+.line-top {
+    margin: 0px -15px 15px;
+    border-top: 1px solid lightgray;
+}
+
+.balance {
+    margin-top: -20px;
+}
+
+.amount-output {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.line-bottom {
+    margin: 0px -15px 0px;
+    border-top: 1px solid lightgray;
+}
+
+.form-item-button {
+    margin-bottom: 6px;
+}
+
+.button {
+    position: absolute;
+    right: 0;
+}

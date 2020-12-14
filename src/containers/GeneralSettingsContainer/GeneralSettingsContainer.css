@@ -1,0 +1,23 @@
+.ant-upload.ant-upload-select.ant-upload-select-picture-card {
+  width: 140px;
+  height: 30px;
+  margin-left: 20px;
+}
+
+.profile-picture-avatar {
+  width: 140px;
+  height: 140px;
+  line-height: 120px;
+  font-size: 18px;
+  border: 6px solid #f2f2f3;
+}
+
+.settings-page .ant-tabs-tabpane {
+  border-bottom: 1px solid #f2f2f3;
+  padding-bottom: 30px;
+}
+
+.settings-page .ant-avatar > img {
+   border: 3px solid #fedb02;
+   border-radius: 50%;
+}

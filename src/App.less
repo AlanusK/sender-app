@@ -6,6 +6,23 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+.ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+  color: silver;
+  font-weight: 600;
+  background-color: @primary-color;
+}
+
+.summary-label {
+  color: #434343;
+}
+
+
+
 // dark-mode
 //layout
 body.dark-mode,
@@ -24,11 +41,20 @@ body.dark-mode,
 
 .dark-mode li.ant-menu-item:not(.ant-menu-item-selected):hover {
   color: silver;
+  background: #1d20216e;
 }
 
-.dark-mode li.ant-menu-item.ant-menu-item-selected svg {
-  fill: #232323;
+.dark-mode .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
+  background-color: #1d2021;
+  color: silver;
 }
+
+.dark-mode li.ant-menu-item.ant-menu-item-selected>span svg {
+  fill: silver;
+}
+
+
+
 
 //components
 .dark-mode h1,
@@ -49,15 +75,18 @@ body.dark-mode,
   background: #303030;
 }
 
+.dark-mode .ant-card-head,
+.dark-mode .ant-card-actions {
+  border-bottom: 1px solid #424242;
+  border-top: 1px solid #424242;
+}
+
 .dark-mode .ant-statistic-title {
   color: rgb(63, 134, 0);
 }
 
-.dark-mode .ant-card-bordered
-
-/* :not(.ant-card-hoverable) */
-  {
-  border: 1px solid rgba(0, 0, 0, 0.05);
+.dark-mode .ant-card-bordered {
+  border: 0;
 }
 
 .dark-mode .anticon svg {
@@ -68,12 +97,69 @@ body.dark-mode,
   color: silver;
 }
 
+.dark-mode .ant-card-actions > li:not(:last-child) {
+  border-right: 1px solid #424242;
+}
+
 .dark-mode .ant-card-actions>li>span:hover {
   color: #fff;
 }
 
+.dark-mode .ant-select:not(.ant-select-customize-input) .ant-select-selector,
+.dark-mode input.ant-input-number {
+  background-color: #303030;
+  border: 1px solid #424242;
+  color: silver;
+}
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+.dark-mode .ant-select-dropdown {
+  background-color: #424242;
+}
+
+.dark-mode .ant-select-item {
+  color: silver;
+}
+
+.dark-mode .ant-select-item:not(.ant-select-item-option-selected):hover {
+  color: silver;
+}
+
+.dark-mode .ant-select-item-option-active:not(.ant-select-item-option-disabled) {
+  background-color: #2d2b2b;
+}
+
+.dark-mode .ant-form-item-has-error .ant-input-number:not([disabled]):hover,
+.ant-form-item-has-error .ant-picker:not([disabled]):hover {
+  background-color: #424242;
+}
+
+.dark-mode .summary-label {
+  color: silver;
+}
+
+.dark-mode .ant-table {
+  background: #303030;
+  color: silver;
+}
+
+.dark-mode tr.ant-table-row:hover {
+  color: #cecac4;
+}
+
+.dark-mode .ant-table-thead>tr>th {
+  background-color: #1d1f20;
+  color: #cecac4;
+}
+
+.dark-mode .ant-table-tbody>tr>td {
+  border-bottom: 0;
+}
+
+.dark-mode .ant-table-thead>tr>th {
+  border-bottom: 0;
+}
+
+.dark-mode .ant-table-tbody>tr.ant-table-row:hover>td {
+  background-image: initial;
+  background-color: #1d20216e;
 }

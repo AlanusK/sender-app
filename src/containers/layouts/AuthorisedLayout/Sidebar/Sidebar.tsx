@@ -23,7 +23,7 @@ const Sidebar = () => {
     if (screens.xs && !siderCollapsed) {
       toggleSider();
     }
-  },[screens.xs, siderCollapsed, toggleSider]);
+  }, [screens.xs, siderCollapsed, toggleSider]);
   return (
     <div>
       <Sider trigger={null} collapsible collapsed={siderCollapsed}>
@@ -42,6 +42,9 @@ const Sidebar = () => {
           </Menu.Item>
           <Menu.Item key="withdrawal" icon={<UploadOutlined />}>
             Withdrawal
+          </Menu.Item>
+          <Menu.Item key="settings" icon={<UploadOutlined />}>
+            Settings
           </Menu.Item>
         </Menu>
       </Sider>

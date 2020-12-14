@@ -1,0 +1,16 @@
+.title {
+    margin-top: -10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between ;
+}
+
+.button {
+    margin-bottom: 10px;
+    width: 100px;
+}
+
+.line-top {
+    margin: 0px -15px 20px;
+    border-top: 1px solid lightgray;
+}

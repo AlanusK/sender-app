@@ -19,6 +19,10 @@ function ExtendedWalletBallanceContainer() {
     console.log("withdrawaling");
   };
 
+  const addCurrency = () => {
+    console.log("add currency");
+  }
+
   const allowedCurrencies: Array<ICurrency> = [
     { currency: "TZS", amount: 3000, key: "1" },
     { currency: "USD", amount: 6000, key: "2" },
@@ -41,7 +45,7 @@ function ExtendedWalletBallanceContainer() {
       </Row>
       <Row>
         <Col span={24} md={8} lg={6}>
-          <AddCurrencyCard />
+          <AddCurrencyCard handleAddCurrency={addCurrency}/>
         </Col>
       </Row>
     </>

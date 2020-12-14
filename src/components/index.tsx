@@ -1,5 +1,6 @@
 import AddCurrencyCard from "./AddCurrencyCard/AddCurrencyCard";
 import CurrencyCard from "./CurrencyCard/CurrencyCard";
+import CustomCurrencyInput from "./CustomCurrencyInput/CustomCurrencyInput";
 import AddIcon from "./CustomIcons/AddIcon";
 import DepositIcon from "./CustomIcons/DepositIcon";
 import HeartIcon from "./CustomIcons/HeartIcon";
@@ -9,6 +10,7 @@ import WithdrawalIcon from "./CustomIcons/WithdrawalIcon";
 import CustomSpin from "./CustomSpin/CustomSpin";
 import DarkModeToggle from "./DarkModeToggle/DarkModeToggle";
 import ExtendedCurrencyCard from "./ExtendedCurrencyCard/ExtendedCurrencyCard";
+import TransactionsTable from "./TransactionsTable/TransactionsTable";
 
 export {
   HeartIcon,
@@ -21,5 +23,7 @@ export {
   AddCurrencyCard,
   AddIcon,
   LightBulbIcon,
-  DarkModeToggle
+  DarkModeToggle,
+  TransactionsTable,
+  CustomCurrencyInput
 };

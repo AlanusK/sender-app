@@ -18,6 +18,12 @@ function WalletBallanceContainer() {
   const setActiveCurrency = () => {
     console.log("set active currency");
   };
+
+  const addCurrency = () => {
+    console.log("add currency");
+  }
+
+
   return (
     <Row gutter={[12, 12]}>
       {allowedCurrencies.map((item) => (
@@ -30,7 +36,7 @@ function WalletBallanceContainer() {
         </Col>
       ))}
       <Col span={24} md={8} lg={6}>
-        <AddCurrencyCard />
+        <AddCurrencyCard handleAddCurrency={addCurrency}/>
       </Col>
     </Row>
   );

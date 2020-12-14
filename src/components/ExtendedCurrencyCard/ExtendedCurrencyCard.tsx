@@ -1,7 +1,8 @@
 import React from "react";
-import { Avatar, Card, Statistic, Tooltip } from "antd";
 import { AuthorisedCurrencies } from "../../constants";
 import { DepositIcon, SendMoneyIcon, WithdrawalIcon } from "..";
+import { Card, Statistic } from "antd";
+import Avatar from "antd/lib/avatar/avatar";
 
 interface IExtendedCurrencyCard {
   amount: number;
@@ -25,15 +26,15 @@ function ExtendedCurrencyCard(props: IExtendedCurrencyCard) {
       }
       actions={[
         <div onClick={props.handledeposit}>
-          <DepositIcon key="deposit" size={22} />
+          <DepositIcon key="deposit" size={20} />
           <p>Deposit</p>
         </div>,
         <div onClick={props.handleWithdrawalAction}>
-          <WithdrawalIcon key="withdrawal" size={22} />
+          <WithdrawalIcon key="withdrawal" size={20} />
           <p>Withdrawal</p>
         </div>,
         <div onClick={props.handleSendAction}>
-          <SendMoneyIcon key="send" size={22} />
+          <SendMoneyIcon key="send" size={20} />
           <p>Send</p>
         </div>,
       ]}
