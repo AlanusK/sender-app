@@ -95,7 +95,7 @@ const Dashboard = () => {
       <div style={{ marginTop: "20px" }}>
         <WithdrawalFormContainer />
       </div>
-      <div style={{ marginTop: "80px", width:400 }}>
+      <div style={{ marginTop: "80px" }}>
         <SendMoneyContainer />
       </div>
     </div>
