@@ -173,7 +173,10 @@ const SendMoneyContainer = () => {
 
         <hr className="line-bottom" />
 
-        <Form.Item className="form-item-button">
+        <Form.Item 
+          className="form-item-button"
+          style={{width: screens.xs ? "200px" : "412px"}}
+        >
           <Button className="button" type="primary">Send</Button>
         </Form.Item>
       </Form>
