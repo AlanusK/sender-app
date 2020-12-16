@@ -30,20 +30,17 @@ const AllTransactionsTableContainer = (props:IAllTransactionsTableProps) => {
       <div className="search-input">
         <Input 
           placeholder='Search' 
-          style={{width: "450px", height: "38px"}}
+          style={{width: screens.xs ? "200px" : "450px", height: "38px"}}
         />
       </div>
       <div className="transactions-table">
         <TransactionsTable 
-        columns={columns}
-        transactions={props.transactions}
+          columns={columns}
+          transactions={props.transactions}
         /> 
       </div>
     </>
   );
 };
 
-export default AllTransactionsTableContainer;
-
- 
-      
+export default AllTransactionsTableContainer;  

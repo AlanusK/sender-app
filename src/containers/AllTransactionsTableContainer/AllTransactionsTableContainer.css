@@ -3,7 +3,7 @@
     align-items: center;
     height: 50px;
     border: 1px solid #f0f2f5;
-
+    flex-wrap: wrap;
 }
 
 .transaction-type {
@@ -34,4 +34,26 @@
 .transactions-table {
     background-color: white;
     padding-top: 10px;
+}
+
+@media  (max-width: 700px) {
+    .transaction-type {
+        position: relative;
+        margin-left: 0px;
+        margin-right: 0px;
+        height: 50px;
+    }
+}
+
+@media  (max-width: 510px) {
+    .title-all-transactions {
+        height: 70px;
+    }
+
+    .transaction-type {
+        position: relative;
+        margin-left: 0px;
+        margin-right: 0px;
+        height: 35px;
+    }
 }
