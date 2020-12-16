@@ -7,6 +7,7 @@ import {
   TransactionsTableContainer,
   WithdrawalFormContainer,
   SendMoneyContainer,
+  AllTransactionsTableContainer,
 } from "../../containers";
 import { ColumnsType } from "antd/lib/table";
 
@@ -79,6 +80,9 @@ const columns: ColumnsType<transactions> = [
 const Dashboard = () => {
   return (
     <div className="site-wrapper">
+      <div style={{ marginBottom: "100px" }}>
+        <AllTransactionsTableContainer columns={columns} transactions={data} />
+      </div>
       <TransactionsTableContainer columns={columns} transactions={data} />
       <div style={{ marginTop: "40px" }}>
         <WalletBallanceContainer />
