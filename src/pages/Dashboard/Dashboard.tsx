@@ -10,6 +10,7 @@ import {
   SendMoneyContainer,
 } from "../../containers";
 import { ColumnsType } from "antd/lib/table";
+import IndividualTransactionsContainer from "/home/alan/Codemaster/Clickpesa/sender-dashboard-v2/src/containers/IndividualTransactionsContainer/IndividualTransactionsContainer";
 
 const data = [
   {
@@ -80,9 +81,10 @@ const columns: ColumnsType<transactions> = [
 const Dashboard = () => {
   return (
     <div className="site-wrapper">
+      <IndividualTransactionsContainer />
       <div style={{ marginTop: "40px" }}>
         <h1>Extensive KYC Form</h1>
-        <KycContainer />
+        {/* <KycContainer /> */}
       </div>
       <div style={{ marginTop: "40px" }}>
         <h1>Transaction Table</h1>
