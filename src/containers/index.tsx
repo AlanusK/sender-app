@@ -10,7 +10,7 @@ import GeneralSettingsContainer from "./GeneralSettingsContainer/GeneralSettings
 import SettingsContainer from "./SettingsSidebarMenuContainer/SettingsContainer";
 import IndividualTransactionsContainer from "./IndividualTransactionsContainer/IndividualTransactionsContainer";
 import SecuritySettingsContainer from "./SecuritySettingsContainer/SecuritySettingsContainer"
-
+import UserLiteKycContainer from "./UserLiteKycContainer/UserLiteKycContainer"
 export {
   WalletBallanceContainer,
   ExtendedWalletBallanceContainer,
@@ -23,5 +23,6 @@ export {
   SettingsContainer,
   GeneralSettingsContainer,
   IndividualTransactionsContainer,
-  SecuritySettingsContainer
+  SecuritySettingsContainer,
+  UserLiteKycContainer,
 };
