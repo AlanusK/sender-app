@@ -8,9 +8,9 @@ import {
   TransactionsTableContainer,
   WithdrawalFormContainer,
   SendMoneyContainer,
+  IndividualTransactionsContainer,
 } from "../../containers";
 import { ColumnsType } from "antd/lib/table";
-import IndividualTransactionsContainer from "/home/alan/Codemaster/Clickpesa/sender-dashboard-v2/src/containers/IndividualTransactionsContainer/IndividualTransactionsContainer";
 
 const data = [
   {
