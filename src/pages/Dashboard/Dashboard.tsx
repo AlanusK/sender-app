@@ -83,11 +83,11 @@ const Dashboard = () => {
   return (
     <div className="site-wrapper">
       <IndividualTransactionsContainer />
-      <div style={{ marginTop: "40px" }}>
+      <div style={{ marginTop: "40px" }}></div>
       <SecuritySettingsContainer />
-      {/* <div style={{ marginTop: "40px" }}>
+      <div style={{ marginTop: "40px" }}>
         <h1>Extensive KYC Form</h1>
-        {/* <KycContainer /> */}
+        <KycContainer />
       </div>
       <div style={{ marginTop: "40px" }}>
         <h1>Transaction Table</h1>
