@@ -9,6 +9,7 @@ import {
   WithdrawalFormContainer,
   SendMoneyContainer,
   IndividualTransactionsContainer,
+  SecuritySettingsContainer,
 } from "../../containers";
 import { ColumnsType } from "antd/lib/table";
 
@@ -83,6 +84,8 @@ const Dashboard = () => {
     <div className="site-wrapper">
       <IndividualTransactionsContainer />
       <div style={{ marginTop: "40px" }}>
+      <SecuritySettingsContainer />
+      {/* <div style={{ marginTop: "40px" }}>
         <h1>Extensive KYC Form</h1>
         {/* <KycContainer /> */}
       </div>
