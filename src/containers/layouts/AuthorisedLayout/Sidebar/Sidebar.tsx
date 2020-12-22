@@ -4,6 +4,7 @@ import {
   UserOutlined,
   VideoCameraOutlined,
   UploadOutlined,
+  GlobalOutlined,
 } from "@ant-design/icons";
 import "./Sidebar.css";
 import { useAuthorisedContext } from "../../../../context/authorised-layout-context";
@@ -45,6 +46,9 @@ const Sidebar = () => {
           </Menu.Item>
           <Menu.Item key="settings" icon={<UploadOutlined />}>
             Settings
+          </Menu.Item>
+          <Menu.Item key="all-components" icon={<GlobalOutlined />}>
+            AllComponents
           </Menu.Item>
         </Menu>
       </Sider>
