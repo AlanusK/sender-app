@@ -96,7 +96,7 @@ const SendMoneyContainer = () => {
           label={<label style={{ color: "gray" }}>Payout method</label>}
           style={{width: screens.xs ? "200px" : "412px"}}
         >
-          <Select>
+          <Select disabled={!isCurrencySelected}>
             <Select.Option value='M-pesa Kenya'>M-pesa Kenya</Select.Option>
             <Select.Option value='M-pesa Tanzania'>M-pesa Tanzania</Select.Option>
           </Select>
@@ -106,14 +106,14 @@ const SendMoneyContainer = () => {
           label={<label style={{ color: "gray" }}>Mobile money number</label>}
           style={{width: screens.xs ? "200px" : "412px"}}
         >
-          <Input placeholder="0763212347" />
+          <Input placeholder="0763212347" disabled={!isCurrencySelected} />
         </Form.Item>
 
         <Form.Item
           label={<label style={{ color: "gray" }}>Name receiver</label>}
           style={{width: screens.xs ? "200px" : "412px"}}
         >
-          <Input placeholder="John Doe" />
+          <Input placeholder="John Doe" disabled={!isCurrencySelected} />
         </Form.Item>
 
         {isCurrencySelected && (
