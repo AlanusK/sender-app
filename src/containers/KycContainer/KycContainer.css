@@ -1,0 +1,26 @@
+.title {
+    margin-top: -10px;
+    margin-bottom: 5px;
+}
+
+.line {
+    margin: 0px -15px 15px;
+    border-top: 1px solid lightgray;
+}
+
+.form-section {
+    margin-bottom: 15px;
+}
+
+.upload-button {
+    position: absolute;
+    margin-top: -20px;
+    text-align: left;
+}
+
+.form-button {
+    position: absolute;
+    margin-top: -20px;
+    width: 130px;
+    right: 0;
+}
