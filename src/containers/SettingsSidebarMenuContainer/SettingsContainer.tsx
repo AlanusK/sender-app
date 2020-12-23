@@ -1,6 +1,7 @@
 import { Tabs } from "antd";
 import React from "react";
 import GeneralSettingsContainer from "../GeneralSettingsContainer/GeneralSettingsContainer";
+import SecuritySettingsContainer from "../SecuritySettingsContainer/SecuritySettingsContainer";
 import './SettingsContainer.css'
 const { TabPane } = Tabs;
 export default function SettingsContainer() {
@@ -19,7 +20,7 @@ export default function SettingsContainer() {
           <GeneralSettingsContainer/>
         </TabPane>
         <TabPane tab="Security" key="2">
-          Content of Tab Pane 2
+          <SecuritySettingsContainer/>
         </TabPane>
         <TabPane tab="Payments" key="3">
           Content of Tab Pane 3
