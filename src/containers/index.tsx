@@ -8,6 +8,7 @@ import WithdrawalFormContainer from "./WithdrawalFormContainer/WithdrawalFormCon
 import SendMoneyContainer from "./SendMoneyContainer/SendMoneyContainer";
 import GeneralSettingsContainer from "./GeneralSettingsContainer/GeneralSettingsContainer";
 import SettingsContainer from "./SettingsSidebarMenuContainer/SettingsContainer";
+import IndividualTransactionsContainer from "./IndividualTransactionsContainer/IndividualTransactionsContainer";
 import SecuritySettingsContainer from "./SecuritySettingsContainer/SecuritySettingsContainer"
 
 export {
@@ -21,5 +22,6 @@ export {
   SendMoneyContainer,
   SettingsContainer,
   GeneralSettingsContainer,
+  IndividualTransactionsContainer,
   SecuritySettingsContainer
 };
