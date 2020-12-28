@@ -9,7 +9,7 @@ import SendMoneyContainer from "./SendMoneyContainer/SendMoneyContainer";
 import GeneralSettingsContainer from "./GeneralSettingsContainer/GeneralSettingsContainer";
 import SettingsContainer from "./SettingsSidebarMenuContainer/SettingsContainer";
 import IndividualTransactionsContainer from "./IndividualTransactionsContainer/IndividualTransactionsContainer";
-import SecuritySettingsContainer from "./SecuritySettingsContainer/SecuritySettingsContainer"
+import PaymentSettingsContainer from "./PaymentSettingsContainer/PaymentSettingsContainer";
 
 export {
   WalletBallanceContainer,
@@ -23,5 +23,5 @@ export {
   SettingsContainer,
   GeneralSettingsContainer,
   IndividualTransactionsContainer,
-  SecuritySettingsContainer
+  PaymentSettingsContainer
 };

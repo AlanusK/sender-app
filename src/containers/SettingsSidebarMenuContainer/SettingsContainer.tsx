@@ -2,6 +2,7 @@ import { Tabs } from "antd";
 import React from "react";
 import GeneralSettingsContainer from "../GeneralSettingsContainer/GeneralSettingsContainer";
 import './SettingsContainer.css'
+import PaymentSettingsContainer from "../PaymentSettingsContainer/PaymentSettingsContainer";
 const { TabPane } = Tabs;
 export default function SettingsContainer() {
   function callback(key: string) {
@@ -22,7 +23,7 @@ export default function SettingsContainer() {
           Content of Tab Pane 2
         </TabPane>
         <TabPane tab="Payments" key="3">
-          Content of Tab Pane 3
+        <PaymentSettingsContainer/>
         </TabPane>
         <TabPane tab="Notifications" key="4">
           Content of Tab Pane 4
