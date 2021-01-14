@@ -10,6 +10,8 @@ import {
   SendMoneyContainer,
   IndividualTransactionsContainer,
   PaymentSettingsContainer,
+  SecuritySettingsContainer,
+  UserLiteKycContainer,
 } from "../../containers";
 import { ColumnsType } from "antd/lib/table";
 
@@ -82,7 +84,9 @@ const columns: ColumnsType<transactions> = [
 const Dashboard = () => {
   return (
     <div className="site-wrapper">
-      <IndividualTransactionsContainer />
+      <SecuritySettingsContainer/>
+        <UserLiteKycContainer />
+        <IndividualTransactionsContainer />
       <div style={{ marginTop: "40px" }}></div>
       <PaymentSettingsContainer />
       <div style={{ marginTop: "40px" }}>
