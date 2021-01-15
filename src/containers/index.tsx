@@ -11,8 +11,9 @@ import SettingsContainer from "./SettingsSidebarMenuContainer/SettingsContainer"
 import IndividualTransactionsContainer from "./IndividualTransactionsContainer/IndividualTransactionsContainer";
 import PaymentSettingsContainer from "./PaymentSettingsContainer/PaymentSettingsContainer";
 
-import SecuritySettingsContainer from "./SecuritySettingsContainer/SecuritySettingsContainer"
-import UserLiteKycContainer from "./UserLiteKycContainer/UserLiteKycContainer"
+import SecuritySettingsContainer from "./SecuritySettingsContainer/SecuritySettingsContainer";
+import UserLiteKycContainer from "./UserLiteKycContainer/UserLiteKycContainer";
+import ResetPasswordContainer from "./ResetPasswordContainer/ResetPasswordContainer";
 export {
   WalletBallanceContainer,
   ExtendedWalletBallanceContainer,
@@ -27,5 +28,6 @@ export {
   IndividualTransactionsContainer,
   PaymentSettingsContainer,
   UserLiteKycContainer,
-  SecuritySettingsContainer
+  SecuritySettingsContainer,
+  ResetPasswordContainer
 };

@@ -12,6 +12,7 @@ import {
     IndividualTransactionsContainer,
     SecuritySettingsContainer,
     UserLiteKycContainer,
+    ResetPasswordContainer,
 } from "../../containers";
 import { ColumnsType } from "antd/lib/table";
 
@@ -110,6 +111,9 @@ const AllComponents = () => {
                 <div className="data-entry-section">
                     <div className="data-display-heading-wrapper">
                         <h1 className="data-entry-heading">Data Entry components</h1>
+                    </div>
+                    <div style={{ marginTop: "40px" }}>
+                        <ResetPasswordContainer />
                     </div>
                     <div style={{ marginTop: "40px" }}></div>
                     <SecuritySettingsContainer />
