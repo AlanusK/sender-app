@@ -48,7 +48,7 @@ const Sidebar = () => {
             Settings
           </Menu.Item>
           <Menu.Item key="all-components" icon={<GlobalOutlined />}>
-            AllComponents
+            Components
           </Menu.Item>
         </Menu>
       </Sider>
