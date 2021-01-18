@@ -2,21 +2,8 @@
     margin: 0px -20px;
 }
 
-.user-lite-heading-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 20px;
-    padding-left: 10px;
-    border-bottom: 1px solid #f0f2f5;
-}
-
 .user-lite-form-wrapper {
     height: auto;
-}
-
-.user-lite-heading {
-    padding-bottom: 10px;
 }
 
 .login-form {

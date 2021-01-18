@@ -122,6 +122,9 @@ const AllComponents = () => {
                         <KycContainer />
                     </div>
                     <div style={{ marginTop: "40px" }}>
+                        <div className="user-lite-heading-wrapper">
+                            <h3 className="user-lite-heading">User lite KYC Form</h3>
+                        </div>
                         <UserLiteKycContainer />
                     </div>
                     <div style={{ marginTop: "40px" }}>
