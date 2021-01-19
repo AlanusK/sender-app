@@ -23,9 +23,6 @@ const UserLiteKycContainer = () => {
     return (
         <>
             <div className="user-lite-KYC-container-wrapper">
-                <div className="user-lite-heading-wrapper">
-                    <h3 className="user-lite-heading">User lite KYC Form</h3>
-                </div>
                 <div className="user-lite-form-wrapper">
                     <Form
                         name="normal_login"
@@ -72,7 +69,7 @@ const UserLiteKycContainer = () => {
                             />
                         </Form.Item>
                         <Form.Item>
-                            <Checkbox 
+                            <Checkbox
                                 checked={showWallet}
                                 onChange={onCheckboxChange}
                             >
@@ -94,7 +91,7 @@ const UserLiteKycContainer = () => {
                             <Button type="primary" htmlType="submit" className="login-form-button">
                                 Register
                             </Button>
-                            Or <a href="">Login now!</a>
+                            Already have an account? <a href="/login">Login now!</a>
                         </Form.Item>
                     </Form>
                 </div>

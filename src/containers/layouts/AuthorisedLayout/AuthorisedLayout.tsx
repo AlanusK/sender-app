@@ -6,14 +6,16 @@ import "./AuthorisedLayout.css";
 import { AuthorisedLayoutContextProvider } from "../../../context/authorised-layout-context";
 import SiteFooter from "./Footer/Footer";
 import { useRouter } from "../../../hooks/useRouter";
+import useBreakpoint from "../../../hooks/useBreakpoint";
 
 const { Content } = Layout;
 const AuthorisedLayout = ({ children }: any) => {
   const { pathname } = useRouter();
+  const screens = useBreakpoint();
   return (
     <Layout>
       <AuthorisedLayoutContextProvider>
-        <Sidebar />
+        <Sidebar isSmallScreen={screens.xs === true ? true : false} />
         <Layout className="site-layout">
           <CustomHeader />
           <Content

@@ -6,7 +6,7 @@ const { Footer } = Layout;
 const SiteFooter = () => {
   return (
       <Footer style={{ textAlign: "center" }}>
-        ClickPesa ©2020
+        ©{new Date().getFullYear()} | ClickPesa
       </Footer>
   );
 };

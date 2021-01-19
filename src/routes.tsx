@@ -17,6 +17,7 @@ const NotFound = lazy(() => import("./pages/NotFound/NotFound"));
 const Dashboard = lazy(() => import("./pages/Dashboard/Dashboard"));
 const Settings = lazy(() => import("./pages/Settings/Settings"));
 const AllComponents = lazy(() => import("./pages/AllComponents/AllComponents"));
+const Register = lazy(() => import("./pages/Register/Register"));
 /**
  *
  *  A wrapper for <Route> that redirects to the login
@@ -94,6 +95,11 @@ const Routes = () => {
         <Route path={"/login"}>
           <UnauthorisedLayout>
             <Login />
+          </UnauthorisedLayout>
+        </Route>
+        <Route path={"/register"}>
+          <UnauthorisedLayout>
+            <Register />
           </UnauthorisedLayout>
         </Route>
         <Route component={NotFound} />
