@@ -69,7 +69,7 @@ const UserLiteKycContainer = () => {
                             />
                         </Form.Item>
                         <Form.Item>
-                            <Checkbox 
+                            <Checkbox
                                 checked={showWallet}
                                 onChange={onCheckboxChange}
                             >
@@ -91,7 +91,7 @@ const UserLiteKycContainer = () => {
                             <Button type="primary" htmlType="submit" className="login-form-button">
                                 Register
                             </Button>
-                            Or <a href="/login">Login now!</a>
+                            Already have an account? <a href="/login">Login now!</a>
                         </Form.Item>
                     </Form>
                 </div>
