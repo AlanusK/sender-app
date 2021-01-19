@@ -1,0 +1,17 @@
+.site-wrapper {
+    background-color: #f0f2f5;
+    margin: -25px -25px;
+}
+
+.transaction-table-column {
+    background-color: #fff;
+    padding: 20px 10px;
+    margin-right: 10px;
+    margin-bottom: 15px;
+}
+
+/* .transaction-table-column,
+.send-money-column {
+    background-color: #fff;
+    padding: 20px 10px;
+} */
