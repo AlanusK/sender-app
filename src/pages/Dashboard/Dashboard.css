@@ -3,15 +3,17 @@
     margin: -25px -25px;
 }
 
-.transaction-table-column {
+.transaction-table-column,
+.send-money-column {
     background-color: #fff;
     padding: 20px 10px;
+}
+
+.transaction-table-column {
     margin-right: 10px;
     margin-bottom: 15px;
 }
 
-/* .transaction-table-column,
 .send-money-column {
-    background-color: #fff;
-    padding: 20px 10px;
-} */
+    margin-bottom: 15px;
+}

@@ -80,9 +80,9 @@ const Dashboard = () => {
       <Col className="transaction-table-column" flex="auto"> 
         <TransactionsTableContainer columns={columns} transactions={data} />
       </Col>
-      {/* <Col className="send-money-column" flex="420px" >
+      <Col className="send-money-column" flex="420px" >
         <SendMoneyContainer />  
-      </Col> */}
+      </Col>
     </Row>
   );
 };
