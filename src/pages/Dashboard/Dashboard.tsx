@@ -2,6 +2,7 @@ import React from "react";
 import {
   TransactionsTableContainer,
   SendMoneyContainer,
+  WalletBallanceContainer,
 } from "../../containers";
 import { ColumnsType } from "antd/lib/table";
 import "./Dashboard.css";
@@ -76,14 +77,20 @@ const columns: ColumnsType<transactions> = [
 
 const Dashboard = () => {
   return (
-    <Row className="site-wrapper">
-      <Col className="transaction-table-column" flex="auto"> 
-        <TransactionsTableContainer columns={columns} transactions={data} />
-      </Col>
-      <Col className="send-money-column" flex="420px" >
-        <SendMoneyContainer />  
-      </Col>
-    </Row>
+    <>
+      <Row className="wallet-balance-wrapper">
+        <WalletBallanceContainer />
+      </Row>
+
+      <Row className="site-wrapper">
+        <Col className="transaction-table-column" flex="auto">
+          <TransactionsTableContainer columns={columns} transactions={data} />
+        </Col>
+        <Col className="send-money-column" flex="420px" >
+          <SendMoneyContainer />
+        </Col>
+      </Row>
+    </>
   );
 };
 

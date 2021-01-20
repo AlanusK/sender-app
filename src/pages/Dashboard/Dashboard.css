@@ -1,10 +1,12 @@
-.site-wrapper {
+.site-wrapper, 
+.wallet-balance-wrapper {
     background-color: #f0f2f5;
     margin: -25px -25px;
 }
 
 .transaction-table-column,
-.send-money-column {
+.send-money-column,
+.wallet-balance-wrapper {
     background-color: #fff;
     padding: 20px 10px;
 }
@@ -16,4 +18,8 @@
 
 .send-money-column {
     margin-bottom: 15px;
+}
+
+.wallet-balance-wrapper {
+    margin-bottom: 40px;
 }
