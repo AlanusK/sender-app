@@ -6,6 +6,7 @@ import { useAuth } from "./hooks/useAuth";
 import Deposit from "./pages/Deposit/Deposit";
 import Withdrawal from "./pages/Withdrawal/Withdrawal";
 import { CustomSpin } from "./components";
+import Wallet from "./pages/Wallet/Wallet";
 const AuthorisedLayout = lazy(
   () => import("./containers/layouts/AuthorisedLayout/AuthorisedLayout")
 );
@@ -61,6 +62,13 @@ const Routes = () => {
           <AuthorisedLayout>
             <Suspense fallback={<CustomSpin />}>
               <Dashboard />
+            </Suspense>
+          </AuthorisedLayout>
+        </PrivateRoute>
+        <PrivateRoute exact={true} path={"/wallet"}>
+          <AuthorisedLayout>
+            <Suspense fallback={<CustomSpin />}>
+              <Wallet />
             </Suspense>
           </AuthorisedLayout>
         </PrivateRoute>
