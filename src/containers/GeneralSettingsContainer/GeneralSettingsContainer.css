@@ -21,3 +21,22 @@
    border: 3px solid #fedb02;
    border-radius: 50%;
 }
+
+.general-form-input::placeholder {
+  color: black;
+}
+
+.general-form-button-wrapper {
+  display: flex;
+  height: auto;
+  align-items: center;
+  margin-right: 20px;
+  border-top: 1px solid #f0f2f5;
+  border-bottom: 1px solid #f0f2f5;
+}
+
+.general-form-button {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  background-color: gray;
+}

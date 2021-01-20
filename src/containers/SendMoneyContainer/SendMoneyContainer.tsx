@@ -6,7 +6,7 @@ import {
   SelectCurrencyContainer,
 } from "../../containers";
 import { CustomCurrencyInput } from "../../components";
-import { toDecimalMark } from "../../utility";
+import { debounce, toDecimalMark } from "../../utility";
 import useBreakpoint from "antd/lib/grid/hooks/useBreakpoint";
 
 const SendMoneyContainer = () => {
@@ -19,20 +19,29 @@ const SendMoneyContainer = () => {
   >("");
   const [helpMessage, setHelpMessage] = useState<string>("");
   const [minmumAmount, SetMinmumAmount] = useState<number>(999);
+  const [maxmumAmount, SetMaxmumAmount] = useState<number>(1000000);
+  const [balanceAmount, SetBalanceAmount] = useState<number>(6000);
   const [hasSufficientBalance, SetHasSufficientBalance] = useState<boolean>(
     true
   );
   const [withdrawalAmount, SetWithdrawalAmount] = useState<number>(0);
   const [withdrawalFee, SetwithdrawalFee] = useState<number>(2000);
-  const [balanceAmount, SetBalanceAmount] = useState<number>(10000);
-
   const handleCurrencyChange = (currency: string, options: any) => {
     SetSelectedCurrency(options);
     SetIsCurrencySelected(true);
   };
-
   const handleAmountChange = (value: string) => {
     validateAmount(Number(value));
+    validateWalletBalance(Number(value));
+    const debouncedSetWithdrawalAmount = debounce(SetWithdrawalAmount, 1000);
+    debouncedSetWithdrawalAmount(Number(value) ? Number(value) : 0);
+  };
+  const validateWalletBalance = (value: number) => {
+    if (value > balanceAmount) {
+      SetHasSufficientBalance(false);
+      return;
+    }
+    SetHasSufficientBalance(true);
   };
 
   const validateAmount = (value: number) => {
@@ -43,15 +52,27 @@ const SendMoneyContainer = () => {
       );
       return;
     }
+    if (value >= maxmumAmount) {
+      SetValidationStatus("error");
+      setHelpMessage(
+        `Max: ${selectedCurrency.key}${toDecimalMark(maxmumAmount)}`
+      );
+      return;
+    }
+
     SetValidationStatus("success");
     setHelpMessage("");
   };
 
 
   return (
-    <>
-      <h3 className="title">Send</h3>
-      <hr className="line-top" />
+    <div className="send-money-container-wrapper">
+
+      <div style={{ width: screens.xs ? "200px" : "412px" }}>
+        <h3 className="title">Send</h3>
+        <hr className="line-top" />
+      </div>
+
       <Form
         form={form}
         layout={'vertical'}
@@ -96,7 +117,7 @@ const SendMoneyContainer = () => {
           label={<label style={{ color: "gray" }}>Payout method</label>}
           style={{width: screens.xs ? "200px" : "412px"}}
         >
-          <Select>
+          <Select disabled={!isCurrencySelected}>
             <Select.Option value='M-pesa Kenya'>M-pesa Kenya</Select.Option>
             <Select.Option value='M-pesa Tanzania'>M-pesa Tanzania</Select.Option>
           </Select>
@@ -106,14 +127,14 @@ const SendMoneyContainer = () => {
           label={<label style={{ color: "gray" }}>Mobile money number</label>}
           style={{width: screens.xs ? "200px" : "412px"}}
         >
-          <Input placeholder="0763212347" />
+          <Input placeholder="0763212347" disabled={!isCurrencySelected} />
         </Form.Item>
 
         <Form.Item
           label={<label style={{ color: "gray" }}>Name receiver</label>}
           style={{width: screens.xs ? "200px" : "412px"}}
         >
-          <Input placeholder="John Doe" />
+          <Input placeholder="John Doe" disabled={!isCurrencySelected} />
         </Form.Item>
 
         {isCurrencySelected && (
@@ -163,7 +184,7 @@ const SendMoneyContainer = () => {
               >
                 <h4 style={{ fontFamily: "Circular-Bold" }}>
                   {`${selectedCurrency.key} ${toDecimalMark(
-                    withdrawalAmount - withdrawalFee
+                    (withdrawalAmount - withdrawalFee) < 0 ? 0 : withdrawalAmount - withdrawalFee
                   )}`}
                 </h4>
               </Col>
@@ -173,14 +194,15 @@ const SendMoneyContainer = () => {
 
         <hr className="line-bottom" />
 
-        <Form.Item 
+        <Form.Item
           className="form-item-button"
           style={{width: screens.xs ? "200px" : "412px"}}
         >
           <Button className="button" type="primary">Send</Button>
         </Form.Item>
       </Form>
-    </>
+      
+    </div>
   );
 };
 

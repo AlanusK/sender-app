@@ -1,0 +1,41 @@
+.security-container-wrapper {
+    margin-top: 15px;
+    padding-right: 20px;
+}
+
+.password-heading-wrapper, 
+.password-description-wrapper,
+.password-input-wrapper,
+.password-button-wrapper {
+    display: flex;
+    align-items: center;
+    height: 20px;
+    border-bottom: 1px solid #f0f2f5;
+}
+
+.password-description-wrapper,
+.password-input-wrapper,
+.password-button-wrapper {
+    height: auto;
+}
+
+.password-heading {
+    padding-bottom: 10px;
+}
+
+.password-description {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    color: gray;
+}
+
+.password-form {
+    margin-top: 10px;
+    width: 100%;
+}
+
+.password-button {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background-color: gray;
+}

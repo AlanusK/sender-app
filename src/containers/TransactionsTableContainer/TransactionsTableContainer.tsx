@@ -25,7 +25,6 @@ const TransactionsTableContainer = (props:ITransactionsTableProps) => {
         <h3 >Transactions</h3>
         {screens.xs ? <Button className="button">More</Button> : null}
       </div>
-      <hr className="line-top"></hr>
       <TransactionsTable 
         columns={columns}
         transactions={props.transactions}

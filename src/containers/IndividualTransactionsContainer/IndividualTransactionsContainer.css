@@ -1,0 +1,25 @@
+.title-individual-transactions {
+    display: flex;
+    align-items: center;
+    height: 45px;
+    padding-top: 10px;
+    padding-left: 10px;
+    border: 1px solid #f0f2f5;
+}
+
+.content-individual-transactions {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px 0 10px; 
+    border: 1px solid #f0f2f5;
+    border-top: none;
+}
+
+.single-data {
+    margin-bottom: 20px;
+}
+
+.title-single-data {
+    color: gray;
+    margin-bottom: 0;
+}

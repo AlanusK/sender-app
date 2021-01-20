@@ -1,4 +1,4 @@
-import { Button, Form, Input, Row, Space, Upload } from "antd";
+import { Button, Form, Input, Row, Space, Upload, Select } from "antd";
 import React, { useState } from "react";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import Avatar from "antd/lib/avatar/avatar";
@@ -66,25 +66,38 @@ export default function GeneralSettingsContainer() {
           style={{width:"100%"}}
         >
           <Form.Item
-            label="Field A"
-            required
-            tooltip="This is a required field"
+            label={<label style={{ color: "gray" }}>Name</label>}
+          // required
+          // tooltip="This is a required field"
           >
-            <Input placeholder="input placeholder" name="nani"/>
+            <Input className="general-form-input" placeholder="Bill Rush" name="nani" />
           </Form.Item>
           <Form.Item
-            label="Field B"
-            tooltip={{
-              title: "Tooltip with customize icon",
-              icon: <InfoCircleOutlined />,
-            }}
+            label={<label style={{ color: "gray" }}>Email</label>}
+          // tooltip={{
+          //   title: "Tooltip with customize icon",
+          //   icon: <InfoCircleOutlined />,
+          // }}
           >
-            <Input placeholder="input placeholder" name="nini"/>
+            <Input className="general-form-input" placeholder="makemoney@club.com" name="nini" />
           </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit">Submit</Button>
+          <Form.Item
+            label={<label style={{ color: "gray" }}>Phone</label>}
+          >
+            <Input placeholder="Your Phone Number..." />
+          </Form.Item>
+          <Form.Item
+            label={<label style={{ color: "gray" }}>Language</label>}
+          >
+            <Select defaultValue='English'>
+              <Select.Option value='English'>English</Select.Option>
+              <Select.Option value='Swahili'>Swahili</Select.Option>
+            </Select>
           </Form.Item>
         </Form>
+      </Row>
+      <Row className="general-form-button-wrapper">
+        <Button type="primary" className="general-form-button">Save Changes</Button>
       </Row>
     </>
   );
