@@ -85,68 +85,59 @@ const columns: ColumnsType<transactions> = [
 const AllComponents = () => {
 
     return (
-        <>
-            <div className="all-components-wrapper">
-                <div className="data-display-section">
-                    <div className="data-display-heading-wrapper">
-                        <h1 className="data-display-heading">Data Display components</h1>
-                    </div>
-                    <div style={{ marginTop: "40px" }}>
-                        <h1>Individual Transactions Container</h1>
-                        <IndividualTransactionsContainer />
-                    </div>
-                    <div style={{ marginTop: "40px" }}>
-                        <h1>Transaction Table</h1>
-                        <TransactionsTableContainer columns={columns} transactions={data} />
-                    </div>
-                    <div style={{ marginTop: "40px" }}>
-                        <h1>Wallet Balance Cards</h1>
-                        <WalletBallanceContainer />
-                    </div>
-                    <div style={{ marginTop: "40px" }}>
-                        <h1> Extended Wallet Balance Cards </h1>
-                        <ExtendedWalletBallanceContainer />
-                    </div>
+        <div className="all-components-wrapper">
+            <div className="data-display-section">
+                <div className="data-display-heading-wrapper">
+                    <h1 className="data-display-heading">Data Display components</h1>
                 </div>
-                <div className="data-entry-section">
-                    <div className="data-display-heading-wrapper">
-                        <h1 className="data-entry-heading">Data Entry components</h1>
-                    </div>
-                    <div style={{ marginTop: "40px" }}>
-                        <ResetPasswordContainer />
-                    </div>
-                    <div style={{ marginTop: "40px" }}></div>
-                    <SecuritySettingsContainer />
-                    <div style={{ marginTop: "40px" }}>
-                        <h1>Extensive KYC Form</h1>
-                        <KycContainer />
-                    </div>
-                    <div style={{ marginTop: "40px" }}>
-                        <div className="user-lite-heading-wrapper">
-                            <h3 className="user-lite-heading">User lite KYC Form</h3>
-                        </div>
-                        <UserLiteKycContainer />
-                    </div>
-                    <div style={{ marginTop: "40px" }}>
-                        <h1>Select Currency Components</h1>
-                        <SelectCurrencyContainer />
-                    </div>
-                    <div style={{ marginTop: "80px" }}>
-                        <h1>Deposit Form Container</h1>
-                        <DepositFormContainer />
-                    </div>
-                    <div style={{ marginTop: "20px" }}>
-                        <h1>Withdrawal Form Container</h1>
-                        <WithdrawalFormContainer />
-                    </div>
-                    <div style={{ marginTop: "80px" }}>
-                        <h1>Send Money Form Container</h1>
-                        <SendMoneyContainer />
-                    </div>
+                <div style={{ marginTop: "40px" }}>
+                    <h1>Individual Transactions Container</h1>
+                    <IndividualTransactionsContainer />
+                </div>
+                <div style={{ marginTop: "40px" }}>
+                    <h1>Transaction Table</h1>
+                    <TransactionsTableContainer columns={columns} transactions={data} />
+                </div>
+                <div style={{ marginTop: "40px" }}>
+                    <h1>Wallet Balance Cards</h1>
+                    <WalletBallanceContainer />
+                </div>
+                <div style={{ marginTop: "40px" }}>
+                    <h1> Extended Wallet Balance Cards </h1>
+                    <ExtendedWalletBallanceContainer />
                 </div>
             </div>
-
-        </>
+            <div className="data-entry-section">
+                <div className="data-display-heading-wrapper">
+                    <h1 className="data-entry-heading">Data Entry components</h1>
+                </div>
+                <div style={{ marginTop: "40px" }}></div>
+                <SecuritySettingsContainer />
+                <div style={{ marginTop: "40px" }}>
+                    <h1>Extensive KYC Form</h1>
+                    <KycContainer />
+                </div>
+                <div style={{ marginTop: "40px" }}>
+                    <UserLiteKycContainer />
+                </div>
+                <div style={{ marginTop: "40px" }}>
+                    <h1>Select Currency Components</h1>
+                    <SelectCurrencyContainer />
+                </div>
+                <div style={{ marginTop: "80px" }}>
+                    <h1>Deposit Form Container</h1>
+                    <DepositFormContainer />
+                </div>
+                <div style={{ marginTop: "20px" }}>
+                    <h1>Withdrawal Form Container</h1>
+                    <WithdrawalFormContainer />
+                </div>
+                <div style={{ marginTop: "80px" }}>
+                    <h1>Send Money Form Container</h1>
+                    <SendMoneyContainer />
+                </div>
+            </div>
+        </div>
     );
 };
 
