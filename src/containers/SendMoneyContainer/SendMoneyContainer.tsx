@@ -66,9 +66,13 @@ const SendMoneyContainer = () => {
 
 
   return (
-    <>
-      <h3 className="title">Send</h3>
-      <hr className="line-top" />
+    <div className="send-money-container-wrapper">
+
+      <div style={{ width: screens.xs ? "200px" : "412px" }}>
+        <h3 className="title">Send</h3>
+        <hr className="line-top" />
+      </div>
+
       <Form
         form={form}
         layout={'vertical'}
@@ -79,17 +83,17 @@ const SendMoneyContainer = () => {
               label={<label style={{ color: "gray" }}>Wallet</label>}
             >
               <SelectCurrencyContainer onCurrencyChange={handleCurrencyChange} />
-            <p
-              className={"account-balance-tag"}
-              style={{ marginTop: 5 }}
-              hidden={!isCurrencySelected}
-            >
-              <Tag color={hasSufficientBalance ? "green" : "red"}>
-                {`Balance: ${selectedCurrency.key}${toDecimalMark(
-                  balanceAmount
-                )}`}
-              </Tag>
-            </p>
+              <p
+                className={"account-balance-tag"}
+                style={{ marginTop: 5 }}
+                hidden={!isCurrencySelected}
+              >
+                <Tag color={hasSufficientBalance ? "green" : "red"}>
+                  {`Balance: ${selectedCurrency.key}${toDecimalMark(
+                    balanceAmount
+                  )}`}
+                </Tag>
+              </p>
             </Form.Item>
           </Col>
 
@@ -190,14 +194,15 @@ const SendMoneyContainer = () => {
 
         <hr className="line-bottom" />
 
-        <Form.Item 
+        <Form.Item
           className="form-item-button"
           style={{width: screens.xs ? "200px" : "412px"}}
         >
           <Button className="button" type="primary">Send</Button>
         </Form.Item>
       </Form>
-    </>
+      
+    </div>
   );
 };
 
