@@ -78,9 +78,9 @@ const columns: ColumnsType<transactions> = [
 const Dashboard = () => {
   return (
     <>
-      <Row className="wallet-balance-wrapper">
+      <div className="wallet-balance-wrapper">
         <WalletBallanceContainer />
-      </Row>
+      </div>
 
       <Row className="site-wrapper">
         <Col className="transaction-table-column" flex="auto">
