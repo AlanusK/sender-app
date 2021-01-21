@@ -1,51 +1,36 @@
 import { Col, Row } from "antd";
 import React from "react";
 import { AddCurrencyCard, ExtendedCurrencyCard } from "../../components";
+import { WalletBalance } from "../../types";
 
-interface ICurrency {
-  amount: number;
-  currency: "TZS" | "USD" | "GBP" | "KES" | "RWF";
-  key: string;
+
+interface IExtendedWalletBalanceProps {
+  sendMoney: () => void;
+  depositMoney: () => void;
+  withdrawalMoney: () => void;
+  addCurrency: () => void;
+  userBalances: Array<WalletBalance>;
 }
 
-function ExtendedWalletBallanceContainer() {
-  const sendMoney = () => {
-    console.log("sending money");
-  };
-  const depositMoney = () => {
-    console.log("depositin");
-  };
-  const withdrawalMoney = () => {
-    console.log("withdrawaling");
-  };
-
-  const addCurrency = () => {
-    console.log("add currency");
-  }
-
-  const allowedCurrencies: Array<ICurrency> = [
-    { currency: "TZS", amount: 3000, key: "1" },
-    { currency: "USD", amount: 6000, key: "2" },
-    { currency: "RWF", amount: 65000, key: "3" },
-  ];
+function ExtendedWalletBallanceContainer(props: IExtendedWalletBalanceProps) {
   return (
     <>
       <Row gutter={[12, 12]}>
-        {allowedCurrencies.map((item) => (
+        {props.userBalances.map((item) => (
           <Col xs={24} md={8} lg={6} key={item.key}>
             <ExtendedCurrencyCard
               amount={item.amount}
               currency={item.currency}
-              handleSendAction={sendMoney}
-              handledeposit={depositMoney}
-              handleWithdrawalAction={withdrawalMoney}
+              handleSendAction={props.sendMoney}
+              handledeposit={props.depositMoney}
+              handleWithdrawalAction={props.withdrawalMoney}
             />
           </Col>
         ))}
       </Row>
       <Row>
         <Col span={24} md={8} lg={6}>
-          <AddCurrencyCard handleAddCurrency={addCurrency}/>
+          <AddCurrencyCard handleAddCurrency={props.addCurrency} />
         </Col>
       </Row>
     </>

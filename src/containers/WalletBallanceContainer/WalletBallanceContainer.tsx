@@ -1,15 +1,10 @@
 import { Col, Row } from "antd";
 import React from "react";
 import { AddCurrencyCard, CurrencyCard } from "../../components";
-
-interface ICurrency {
-  amount: number;
-  currency: "TZS" | "USD" | "GBP" | "KES" | "RWF";
-  key: string;
-}
+import { WalletBalance } from "../../types";
 
 function WalletBallanceContainer() {
-  const allowedCurrencies: Array<ICurrency> = [
+  const allowedCurrencies: Array<WalletBalance> = [
     { currency: "TZS", amount: 3000, key: "1" },
     { currency: "USD", amount: 6000, key: "2" },
     { currency: "RWF", amount: 65000, key: "3" },
