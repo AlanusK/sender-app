@@ -12,7 +12,7 @@ import {
     IndividualTransactionsContainer,
     SecuritySettingsContainer,
     UserLiteKycContainer,
-    ResetPasswordContainer,
+    AllTransactionsTableContainer,
 } from "../../containers";
 import { ColumnsType } from "antd/lib/table";
 
@@ -97,6 +97,10 @@ const AllComponents = () => {
                 <div style={{ marginTop: "40px" }}>
                     <h1>Transaction Table</h1>
                     <TransactionsTableContainer columns={columns} transactions={data} />
+                </div>
+                <div style={{ marginTop: "40px" }}>
+                    <h1>All Transactions Table</h1>
+                    <AllTransactionsTableContainer columns={columns} transactions={data} />
                 </div>
                 <div style={{ marginTop: "40px" }}>
                     <h1>Wallet Balance Cards</h1>

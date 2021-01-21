@@ -44,6 +44,9 @@ const Sidebar = (props: ISidebar) => {
           <Menu.Item key="wallet" icon={<VideoCameraOutlined />}>
             Wallet
           </Menu.Item>
+          <Menu.Item key="transactions" icon={<VideoCameraOutlined />}>
+            Transactions
+          </Menu.Item>
           <Menu.Item key="deposit" icon={<VideoCameraOutlined />}>
             Deposit
           </Menu.Item>
