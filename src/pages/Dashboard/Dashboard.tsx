@@ -77,8 +77,8 @@ const columns: ColumnsType<transactions> = [
 
 const Dashboard = () => {
   return (
-    <>
-      <div className="wallet-balance-wrapper">
+    <div className="dashboard-wrapper">
+      <div className="wallet-balance-wrapper"> 
         <WalletBallanceContainer />
       </div>
 
@@ -90,7 +90,7 @@ const Dashboard = () => {
           <SendMoneyContainer />
         </Col>
       </Row>
-    </>
+    </div>
   );
 };
 

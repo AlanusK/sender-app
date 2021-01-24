@@ -34,8 +34,16 @@ body.dark-mode,
 .dark-mode .site-layout .site-layout-background,
 .dark-mode .ant-layout-footer,
 .dark-mode .ant-menu,
-.dark-mode .ant-layout-sider {
-  background-color: #424242;
+.dark-mode .ant-layout-sider,
+.dark-mode .transaction-table-column,
+.dark-mode .send-money-column,
+.dark-mode .wallet-balance-wrapper {
+  background-color: hsl(0, 0%, 26%);
+  color: silver;
+}
+
+.dark-mode .dashboard-wrapper {
+  background-color: #303030;
   color: silver;
 }
 
@@ -133,6 +141,7 @@ body.dark-mode,
 .dark-mode .ant-checkbox-inner,
 .dark-mode .ant-input-affix-wrapper, 
 .dark-mode .ant-input,
+.dark-mode .search-input,
 .dark-mode #normal_login_firstName, 
 .dark-mode #normal_login_lastName,       
 .dark-mode #normal_login_email, 
@@ -151,7 +160,8 @@ body.dark-mode,
   color: silver;
 }
 
-.dark-mode .ant-table {
+.dark-mode .ant-table,
+.dark-mode .transactions-table {
   background: #303030;
   color: silver;
 }
