@@ -36,8 +36,7 @@ const Wallet = () => {
 
   return (
     <>
-      <h1> Wallet </h1>
-      <hr className="wallet-line" />
+      <h1 className="wallet-title"> Wallet </h1>
       <ExtendedWalletBallanceContainer
         sendMoney={() => setshowSendMoneyModal(true)}
         depositMoney={depositMoney}

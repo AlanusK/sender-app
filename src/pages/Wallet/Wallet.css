@@ -1,8 +1,8 @@
-.wallet-line {
-  margin: 0 -20px 20px -20px;
-  border-top: 1px solid lightgray;
-}
-
 .send-money-modal .ant-modal{
   width: 460px !important;
+}
+.wallet-title {
+    border-bottom: 1px solid lightgray;
+    padding-bottom: 5px;
+    margin-bottom: 20px;
 }
