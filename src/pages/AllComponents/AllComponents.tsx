@@ -150,7 +150,10 @@ const AllComponents = () => {
         </div>
         <div style={{ marginTop: "20px" }}>
           <h1>Withdrawal Form Container</h1>
-          <WithdrawalFormContainer />
+          <WithdrawalFormContainer
+            userBalances={userWallets}
+            setWithdrawalMoneyFuncRef={()=>{}}
+          />
         </div>
         <div style={{ marginTop: "80px" }}>
           <h1>Send Money Form Container</h1>

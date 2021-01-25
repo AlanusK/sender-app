@@ -4,10 +4,15 @@ import React, { useState } from "react";
 import { SelectCurrencyContainer } from "..";
 import { CustomCurrencyInput } from "../../components";
 import { debounce, toDecimalMark } from "../../utility";
-
+import { userWalletsBalanceProps } from "../../types";
 import "./WithdrawalFormContainer.css";
 
-export default function WithdrawalFormContainer() {
+interface IWithdrawalFormProps {
+  userBalances: userWalletsBalanceProps[];
+  setWithdrawalMoneyFuncRef: any;
+}
+
+export default function WithdrawalFormContainer(props: IWithdrawalFormProps) {
   const screens = useBreakpoint();
   const [isCurrencySelected, SetIsCurrencySelected] = useState<boolean>(false);
   const [selectedCurrency, SetSelectedCurrency] = useState<any>(" ");

@@ -4,6 +4,7 @@ import {
   ExtendedWalletBallanceContainer,
   SendMoneyContainer,
   DepositFormContainer,
+  WithdrawalFormContainer,
 } from "../../containers";
 import { useAuthorisedContext } from "../../context/authorised-layout-context";
 import "./Wallet.css";
@@ -11,9 +12,11 @@ import "./Wallet.css";
 const Wallet = () => {
   const [showSendMoneyModal, setshowSendMoneyModal] = useState(false);
   const [showDepositMoneyModal, setshowDepositMoneyModal] = useState(false);
+  const [showWithdrawalMoneyModal, setshowWithdrawalMoneyModal] = useState(false);
   const { userWallets } = useAuthorisedContext();
   const [sendMoneyFuncRef, setSendMoneyFuncRef] = useState<any>();
   const [depositMoneyFuncRef, setDepositMoneyFuncRef] = useState<any>();
+  const [withdrawalMoneyFuncRef, setWithdrawalMoneyFuncRef] = useState<any>();
 
   // initiate Sending Money
   const sendMoney = () => {
@@ -25,6 +28,7 @@ const Wallet = () => {
   const handleCancel = () => {
     setshowSendMoneyModal(false);
     setshowDepositMoneyModal(false);
+    setshowWithdrawalMoneyModal(false);
   };
 
   const depositMoney = () => {
@@ -34,7 +38,10 @@ const Wallet = () => {
     }
   };
   const withdrawalMoney = () => {
-    console.log("withdrawaling");
+    // console.log("withdrawaling");
+    if (withdrawalMoneyFuncRef) {
+      withdrawalMoneyFuncRef.current();
+    }
   };
 
   const addCurrency = () => {
@@ -48,7 +55,8 @@ const Wallet = () => {
         sendMoney={() => setshowSendMoneyModal(true)}
         // depositMoney={depositMoney}
         depositMoney={() => setshowDepositMoneyModal(true)}
-        withdrawalMoney={withdrawalMoney}
+        // withdrawalMoney={withdrawalMoney}
+        withdrawalMoney={() => setshowDepositMoneyModal(true)}
         userBalances={userWallets}
         addCurrency={addCurrency}
       />
@@ -77,6 +85,20 @@ const Wallet = () => {
       >
         <DepositFormContainer
           setDepositMoneyFuncRef={setDepositMoneyFuncRef}
+          userBalances={userWallets}
+        />
+      </Modal>
+      <Modal
+        title="Withdrawal Money"
+        visible={showWithdrawalMoneyModal}
+        onOk={withdrawalMoney}
+        onCancel={handleCancel}
+        okText="Withdrawal"
+        wrapClassName="withdrawal-money-modal"
+        //confirmLoading={true}
+      >
+        <WithdrawalFormContainer
+          setWithdrawalMoneyFuncRef={setWithdrawalMoneyFuncRef}
           userBalances={userWallets}
         />
       </Modal>
