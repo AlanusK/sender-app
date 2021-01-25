@@ -4,9 +4,12 @@ import { SelectCurrencyContainer } from "..";
 import { CustomCurrencyInput } from "../../components";
 import { toDecimalMark } from "../../utility";
 import "./DepositFormContainer.css";
+import { userWalletsBalanceProps } from "../../types";
 
 interface IDepositFormProps {
   onValueChange?(): void;
+  userBalances: userWalletsBalanceProps[];
+  setDepositMoneyFuncRef: any;
 }
 
 export default function DepositFormContainer(props: IDepositFormProps) {

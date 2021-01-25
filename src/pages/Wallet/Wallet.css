@@ -1,4 +1,6 @@
-.send-money-modal .ant-modal{
+.send-money-modal
+.deposit-money-modal
+.ant-modal {
   width: 460px !important;
 }
 .wallet-title {
