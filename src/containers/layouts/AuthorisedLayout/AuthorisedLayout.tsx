@@ -25,7 +25,6 @@ const AuthorisedLayout = ({ children }: any) => {
             style={{
               margin: pathname === "/settings" ? 0 : "20px 14px",
               padding: pathname === "/settings" ? 0 : 24,
-              backgroundColor: pathname === "/dashboard" ? "#f0f2f5" : "#fff",
               minHeight: 280,
             }}
           >

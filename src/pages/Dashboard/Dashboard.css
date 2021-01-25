@@ -1,7 +1,10 @@
-.site-wrapper, 
-.wallet-balance-wrapper {
+.dashboard-wrapper {
     background-color: #f0f2f5;
     margin: -25px -25px;
+}
+
+.site-wrapper {
+    margin-top: -25px;
 }
 
 .transaction-table-column,
