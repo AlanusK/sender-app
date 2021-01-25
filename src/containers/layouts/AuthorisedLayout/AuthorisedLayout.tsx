@@ -7,6 +7,7 @@ import { AuthorisedLayoutContextProvider } from "../../../context/authorised-lay
 import SiteFooter from "./Footer/Footer";
 import { useRouter } from "../../../hooks/useRouter";
 import useBreakpoint from "../../../hooks/useBreakpoint";
+import { ModalContextProvider } from "../../../context/modal-context";
 
 const { Content } = Layout;
 const AuthorisedLayout = ({ children }: any) => {
@@ -15,6 +16,7 @@ const AuthorisedLayout = ({ children }: any) => {
   return (
     <Layout>
       <AuthorisedLayoutContextProvider>
+        <ModalContextProvider>
         <Sidebar isSmallScreen={screens.xs === true ? true : false} />
         <Layout className="site-layout">
           <CustomHeader />
@@ -31,6 +33,7 @@ const AuthorisedLayout = ({ children }: any) => {
           </Content>
           <SiteFooter />
         </Layout>
+        </ModalContextProvider>
       </AuthorisedLayoutContextProvider>
     </Layout>
   );

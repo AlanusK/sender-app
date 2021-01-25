@@ -1,37 +1,33 @@
 import { Col, Row } from "antd";
 import React from "react";
 import { AddCurrencyCard, CurrencyCard } from "../../components";
-import { WalletBalance } from "../../types";
+import { useAuthorisedContext } from "../../context/authorised-layout-context";
+interface IWalletBallanceContainerProps {
+  addCurrency: () => void;
+}
 
-function WalletBallanceContainer() {
-  const allowedCurrencies: Array<WalletBalance> = [
-    { currency: "TZS", amount: 3000, key: "1" },
-    { currency: "USD", amount: 6000, key: "2" },
-    { currency: "RWF", amount: 65000, key: "3" },
-  ];
-
-  const setActiveCurrency = () => {
-    console.log("set active currency");
-  };
-
-  const addCurrency = () => {
-    console.log("add currency");
-  }
-
-
+function WalletBallanceContainer({
+  addCurrency,
+}: IWalletBallanceContainerProps) {
+  const { setactiveWallet, userWallets } = useAuthorisedContext();
   return (
     <Row gutter={[12, 12]}>
-      {allowedCurrencies.map((item) => (
-        <Col xs={24} md={8} lg={6} key={item.key}>
+      {userWallets.map((item) => (
+        <Col xs={24} md={8} lg={6} key={item.currency}>
           <CurrencyCard
             amount={item.amount}
             currency={item.currency}
-            handleCardClick={setActiveCurrency}
+            handleCardClick={() =>
+              setactiveWallet({
+                currency: item.currency,
+                balance: item.amount,
+              })
+            }
           />
         </Col>
       ))}
       <Col span={24} md={8} lg={6}>
-        <AddCurrencyCard handleAddCurrency={addCurrency}/>
+        <AddCurrencyCard handleAddCurrency={addCurrency} />
       </Col>
     </Row>
   );

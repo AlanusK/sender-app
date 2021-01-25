@@ -1,12 +1,28 @@
-import React from "react";
-import { ExtendedWalletBallanceContainer } from "../../containers";
-import { WalletBalance } from "../../types";
+import { Modal } from "antd";
+import React, { useState } from "react";
+import {
+  ExtendedWalletBallanceContainer,
+  SendMoneyContainer,
+} from "../../containers";
+import { useAuthorisedContext } from "../../context/authorised-layout-context";
 import "./Wallet.css";
 
 const Wallet = () => {
+  const [showSendMoneyModal, setshowSendMoneyModal] = useState(false);
+  const { userWallets } = useAuthorisedContext();
+  const [sendMoneyFuncRef, setSendMoneyFuncRef] = useState<any>();
+
+  // initiate Sending Money
   const sendMoney = () => {
-    console.log("sending money");
+    if (sendMoneyFuncRef) {
+      sendMoneyFuncRef.current();
+    }
   };
+
+  const handleCancel = () => {
+    setshowSendMoneyModal(false);
+  };
+
   const depositMoney = () => {
     console.log("depositin");
   };
@@ -18,25 +34,31 @@ const Wallet = () => {
     console.log("add currency");
   };
 
-  const allowedCurrencies: Array<WalletBalance> = [
-    { currency: "TZS", amount: 3000, key: "1" },
-    { currency: "USD", amount: 6000, key: "2" },
-    { currency: "RWF", amount: 65000, key: "3" },
-    { currency: "GBP", amount: 65000, key: "4" },
-    { currency: "KES", amount: 65000, key: "5" },
-  ];
-
   return (
     <>
       <h1> Wallet </h1>
       <hr className="wallet-line" />
       <ExtendedWalletBallanceContainer
-        sendMoney={sendMoney}
+        sendMoney={() => setshowSendMoneyModal(true)}
         depositMoney={depositMoney}
         withdrawalMoney={withdrawalMoney}
-        userBalances={allowedCurrencies}
+        userBalances={userWallets}
         addCurrency={addCurrency}
       />
+      <Modal
+        title="Send Money"
+        visible={showSendMoneyModal}
+        onOk={sendMoney}
+        onCancel={handleCancel}
+        okText="Send"
+        wrapClassName="send-money-modal"
+        //confirmLoading={true}
+      >
+        <SendMoneyContainer
+          setSendMoneyFuncRef={setSendMoneyFuncRef}
+          userBalances={userWallets}
+        />
+      </Modal>
     </>
   );
 };

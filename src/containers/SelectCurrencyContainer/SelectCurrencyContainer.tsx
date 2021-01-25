@@ -1,33 +1,52 @@
 import { Avatar, Select } from "antd";
 import React from "react";
-import { AuthorisedCurrencies } from "../../constants";
+import { supportedCurrencies } from "../../constants";
+import { useAuthorisedContext } from "../../context/authorised-layout-context";
 
 interface ISelectCurrency {
-  onCurrencyChange?(value:string, option: any): void;
+  currencyOptions: { currency: string }[];
+  onCurrencyChange?(value: string, option: any): void;
+  width?: number | string;
 }
 
-export default function SelectCurrencyContainer(props: ISelectCurrency) {
-  const formatedCurrencies = Object.entries(AuthorisedCurrencies); // converts currencies object list to an array
+export default function SelectCurrencyContainer({
+  currencyOptions,
+  onCurrencyChange,
+  width,
+}: ISelectCurrency) {
+  const { activeWallet } = useAuthorisedContext();
   const { Option } = Select;
   return (
     <Select
       showSearch
-      style={{ width: 200 }}
+      style={{ width: width || 200 }}
       placeholder="Select Currency"
       optionFilterProp="children"
-      filterOption={(input, option) =>
-        option?.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
+      filterOption={(input, Option) =>
+        Option?.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
       }
-      onChange={props.onCurrencyChange}
+      onChange={onCurrencyChange}
+      value={activeWallet.currency || "Select Currency"}
     >
-      {formatedCurrencies.map((currency) => {
+      {currencyOptions.map((option) => {
         return (
-          <Option value={currency[0]} key={currency[1].symbol}>
-            <span>{currency[0]}</span>
+          <Option
+            value={option.currency}
+            key={
+              supportedCurrencies.filter(
+                (curr) => curr.currency === option.currency
+              )[0].symbol
+            }
+          >
+            <span>{option.currency}</span>
             <Avatar
               size={20}
               shape="circle"
-              src={currency[1].icon}
+              src={
+                supportedCurrencies.filter(
+                  (curr) => curr.currency === option.currency
+                )[0].icon
+              }
               style={{ float: "right", marginTop: "4px" }}
             />
           </Option>

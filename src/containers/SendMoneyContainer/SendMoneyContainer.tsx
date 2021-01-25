@@ -1,41 +1,67 @@
-import React, { useState } from 'react';
-import { Form, Input, Button, Radio, Select, Row, Col, Tag } from 'antd';
+import React, { useEffect, useRef, useState } from "react";
+import { Form, Input, Button, Radio, Select, Row, Col, Tag } from "antd";
 import "./SendMoneyContainer.css";
-import {
-  DepositFormContainer,
-  SelectCurrencyContainer,
-} from "../../containers";
+import { SelectCurrencyContainer } from "../../containers";
 import { CustomCurrencyInput } from "../../components";
 import { debounce, toDecimalMark } from "../../utility";
 import useBreakpoint from "antd/lib/grid/hooks/useBreakpoint";
+import { useAuthorisedContext } from "../../context/authorised-layout-context";
+import { supportedCurrencies } from "../../constants";
+import { userWalletsBalanceProps } from "../../types";
 
-const SendMoneyContainer = () => {
+interface ISendMoneyContainerProps {
+  userBalances: userWalletsBalanceProps[];
+  setSendMoneyFuncRef: any;
+}
+
+const SendMoneyContainer = ({
+  userBalances,
+  setSendMoneyFuncRef,
+}: ISendMoneyContainerProps) => {
   const [form] = Form.useForm();
   const screens = useBreakpoint();
-  const [isCurrencySelected, SetIsCurrencySelected] = useState<boolean>(false);
+  const { activeWallet, setactiveWallet, userWallets } = useAuthorisedContext();
   const [selectedCurrency, SetSelectedCurrency] = useState<any>(" ");
   const [validationStatus, SetValidationStatus] = useState<
     "" | "error" | "success" | "warning" | "validating"
   >("");
   const [helpMessage, setHelpMessage] = useState<string>("");
-  const [minmumAmount, SetMinmumAmount] = useState<number>(999);
-  const [maxmumAmount, SetMaxmumAmount] = useState<number>(1000000);
-  const [balanceAmount, SetBalanceAmount] = useState<number>(6000);
   const [hasSufficientBalance, SetHasSufficientBalance] = useState<boolean>(
     true
   );
-  const [withdrawalAmount, SetWithdrawalAmount] = useState<number>(0);
-  const [withdrawalFee, SetwithdrawalFee] = useState<number>(2000);
+  const [transferAmount, SetTransferAmount] = useState<number>(0);
+
+  const balanceAmount = activeWallet.balance;
+  let isCurrencySelected = activeWallet?.currency ? true : false;
+  const minmumAmount =
+    supportedCurrencies.find((curr) => curr.currency === activeWallet.currency)
+      ?.minTransfer || 0;
+  const maxmumAmount =
+    supportedCurrencies.find((curr) => curr.currency === activeWallet.currency)
+      ?.maxTransfer || 0;
+  const transferFee =
+    supportedCurrencies.find((curr) => curr.currency === activeWallet.currency)
+      ?.transferFee || 0;
+
   const handleCurrencyChange = (currency: string, options: any) => {
+    const currencyBalance = userBalances.find(
+      (walletBalance: any) => walletBalance.currency === currency
+    );
+    setactiveWallet({
+      currency: currencyBalance?.currency || "",
+      balance: currencyBalance?.amount || 0,
+    });
     SetSelectedCurrency(options);
-    SetIsCurrencySelected(true);
+    isCurrencySelected = true;
   };
+
   const handleAmountChange = (value: string) => {
     validateAmount(Number(value));
     validateWalletBalance(Number(value));
-    const debouncedSetWithdrawalAmount = debounce(SetWithdrawalAmount, 1000);
-    debouncedSetWithdrawalAmount(Number(value) ? Number(value) : 0);
+    const debouncedSetTransferAmount = debounce(SetTransferAmount, 1000);
+    debouncedSetTransferAmount(Number(value) ? Number(value) : 0);
   };
+
   const validateWalletBalance = (value: number) => {
     if (value > balanceAmount) {
       SetHasSufficientBalance(false);
@@ -48,50 +74,73 @@ const SendMoneyContainer = () => {
     if (value <= minmumAmount) {
       SetValidationStatus("error");
       setHelpMessage(
-        `Min: ${selectedCurrency.key}${toDecimalMark(minmumAmount + 1)}`
+        `Min: ${
+          supportedCurrencies.find(
+            (curr) => curr.currency === activeWallet.currency
+          )?.symbol
+        }${toDecimalMark(minmumAmount + 1)}`
       );
       return;
     }
     if (value >= maxmumAmount) {
       SetValidationStatus("error");
       setHelpMessage(
-        `Max: ${selectedCurrency.key}${toDecimalMark(maxmumAmount)}`
+        `Max: ${
+          supportedCurrencies.find(
+            (curr) => curr.currency === activeWallet.currency
+          )?.symbol
+        }${toDecimalMark(maxmumAmount)}`
       );
       return;
     }
-
     SetValidationStatus("success");
     setHelpMessage("");
   };
 
+  const initiateSendingMoney = () => {
+    const sendingData = {
+      sendCurrency: selectedCurrency.value,
+      sendingFee: transferFee,
+      sendingChannel: "deade",
+      sendAmount: transferAmount,
+      receiverAccountNumber: "121212",
+      receiverAccountName: "Mueewer",
+    };
+    console.log("Data to Send :>> ", sendingData);
+  };
+
+  // create reference for initiateSendingMoney function
+  const sendMoneyFuncRef = useRef<any>(null);
+  useEffect(() => {
+    if (!!setSendMoneyFuncRef) {
+      setSendMoneyFuncRef(sendMoneyFuncRef);
+    }
+  });
+  sendMoneyFuncRef.current = initiateSendingMoney;
 
   return (
     <div className="send-money-container-wrapper">
-
-      <div style={{ width: screens.xs ? "200px" : "412px" }}>
-        <h3 className="title">Send</h3>
-        <hr className="line-top" />
-      </div>
-
-      <Form
-        form={form}
-        layout={'vertical'}
-      >
+      <Form form={form} layout={"vertical"}>
         <Row gutter={12}>
           <Col>
-            <Form.Item
-              label={<label style={{ color: "gray" }}>Wallet</label>}
-            >
-              <SelectCurrencyContainer onCurrencyChange={handleCurrencyChange} />
+            <Form.Item label={<label style={{ color: "gray" }}>Wallet</label>}>
+              <SelectCurrencyContainer
+                onCurrencyChange={handleCurrencyChange}
+                currencyOptions={userWallets.map((curr) => {
+                  return { currency: curr.currency };
+                })}
+              />
               <p
                 className={"account-balance-tag"}
                 style={{ marginTop: 5 }}
                 hidden={!isCurrencySelected}
               >
                 <Tag color={hasSufficientBalance ? "green" : "red"}>
-                  {`Balance: ${selectedCurrency.key}${toDecimalMark(
-                    balanceAmount
-                  )}`}
+                  {`Balance: ${
+                    supportedCurrencies.filter(
+                      (curr) => curr.currency === activeWallet.currency
+                    )[0]?.symbol
+                  }${toDecimalMark(balanceAmount)}`}
                 </Tag>
               </p>
             </Form.Item>
@@ -104,7 +153,11 @@ const SendMoneyContainer = () => {
               help={helpMessage}
             >
               <CustomCurrencyInput
-                prefix={selectedCurrency.key}
+                prefix={
+                  supportedCurrencies.find(
+                    (curr) => curr.currency === activeWallet.currency
+                  )?.symbol || ""
+                }
                 disabled={!isCurrencySelected}
                 onChange={handleAmountChange}
                 height={32}
@@ -115,24 +168,29 @@ const SendMoneyContainer = () => {
 
         <Form.Item
           label={<label style={{ color: "gray" }}>Payout method</label>}
-          style={{width: screens.xs ? "200px" : "412px"}}
+          style={{ width: screens.xs ? "200px" : "412px" }}
+          name="payment-channel"
         >
           <Select disabled={!isCurrencySelected}>
-            <Select.Option value='M-pesa Kenya'>M-pesa Kenya</Select.Option>
-            <Select.Option value='M-pesa Tanzania'>M-pesa Tanzania</Select.Option>
+            <Select.Option value="M-pesa Kenya">M-pesa Kenya</Select.Option>
+            <Select.Option value="M-pesa Tanzania">
+              M-pesa Tanzania
+            </Select.Option>
           </Select>
         </Form.Item>
 
         <Form.Item
           label={<label style={{ color: "gray" }}>Mobile money number</label>}
-          style={{width: screens.xs ? "200px" : "412px"}}
+          style={{ width: screens.xs ? "200px" : "412px" }}
+          name="receiving-account-number"
         >
           <Input placeholder="0763212347" disabled={!isCurrencySelected} />
         </Form.Item>
 
         <Form.Item
           label={<label style={{ color: "gray" }}>Name receiver</label>}
-          style={{width: screens.xs ? "200px" : "412px"}}
+          style={{ width: screens.xs ? "200px" : "412px" }}
+          name="receiving-account-name"
         >
           <Input placeholder="John Doe" disabled={!isCurrencySelected} />
         </Form.Item>
@@ -151,7 +209,11 @@ const SendMoneyContainer = () => {
                 }}
               >
                 <h4 style={{ fontFamily: "Circular-Bold" }}>
-                  {`${selectedCurrency.key} ${toDecimalMark(withdrawalAmount)}`}
+                  {`${
+                    supportedCurrencies.find(
+                      (curr) => curr.currency === activeWallet.currency
+                    )?.symbol
+                  } ${toDecimalMark(transferAmount)}`}
                 </h4>
               </Col>
             </Row>
@@ -167,7 +229,11 @@ const SendMoneyContainer = () => {
                 }}
               >
                 <h4 style={{ fontFamily: "Circular-Bold" }}>
-                  {`${selectedCurrency.key} ${toDecimalMark(withdrawalFee)}`}
+                  {`${
+                    supportedCurrencies.find(
+                      (curr) => curr.currency === activeWallet.currency
+                    )?.symbol
+                  } ${toDecimalMark(transferFee)}`}
                 </h4>
               </Col>
             </Row>
@@ -183,25 +249,21 @@ const SendMoneyContainer = () => {
                 }}
               >
                 <h4 style={{ fontFamily: "Circular-Bold" }}>
-                  {`${selectedCurrency.key} ${toDecimalMark(
-                    (withdrawalAmount - withdrawalFee) < 0 ? 0 : withdrawalAmount - withdrawalFee
+                  {`${
+                    supportedCurrencies.find(
+                      (curr) => curr.currency === activeWallet.currency
+                    )?.symbol
+                  } ${toDecimalMark(
+                    transferAmount - transferFee < 0
+                      ? 0
+                      : transferAmount - transferFee
                   )}`}
                 </h4>
               </Col>
             </Row>
           </>
         )}
-
-        <hr className="line-bottom" />
-
-        <Form.Item
-          className="form-item-button"
-          style={{width: screens.xs ? "200px" : "412px"}}
-        >
-          <Button className="button" type="primary">Send</Button>
-        </Form.Item>
       </Form>
-      
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   TransactionsTableContainer,
   SendMoneyContainer,
@@ -6,7 +6,8 @@ import {
 } from "../../containers";
 import { ColumnsType } from "antd/lib/table";
 import "./Dashboard.css";
-import { Row, Col } from "antd";
+import { Row, Col, Button } from "antd";
+import { useAuthorisedContext } from "../../context/authorised-layout-context";
 
 const data = [
   {
@@ -73,21 +74,37 @@ const columns: ColumnsType<transactions> = [
     // align: 'center',
   },
 ];
-
-
 const Dashboard = () => {
+  const { userWallets } = useAuthorisedContext();
+  const [sendMoneyFunc, setSendMoneyFuncRef] = useState<any>();
+
+  const sendMoney = () => {
+    if (sendMoneyFunc) {
+      sendMoneyFunc.current(); // initiateSendingMoney
+    }
+  };
+  const addCurrency = () => {
+    console.log("add currency");
+  };
+
   return (
     <>
       <div className="wallet-balance-wrapper">
-        <WalletBallanceContainer />
+        <WalletBallanceContainer addCurrency={addCurrency} />
       </div>
 
       <Row className="site-wrapper">
         <Col className="transaction-table-column" flex="auto">
           <TransactionsTableContainer columns={columns} transactions={data} />
         </Col>
-        <Col className="send-money-column" flex="420px" >
-          <SendMoneyContainer />
+        <Col className="send-money-column" flex="420px">
+          <SendMoneyContainer
+            userBalances={userWallets}
+            setSendMoneyFuncRef={setSendMoneyFuncRef}
+          />
+          <Button type="primary" htmlType="submit" onClick={sendMoney}>
+            Send
+          </Button>
         </Col>
       </Row>
     </>

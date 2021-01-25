@@ -42,7 +42,10 @@ export default function DepositFormContainer(props: IDepositFormProps) {
       <Input.Group size="large">
         <Row gutter={[12, 12]}>
           <Col>
-            <SelectCurrencyContainer onCurrencyChange={handleCurrencyChange} />
+            <SelectCurrencyContainer
+              onCurrencyChange={handleCurrencyChange}
+              currencyOptions={[{ currency: "TZS" }]}
+            />
             <p
               className={"account-balance-tag"}
               style={{ marginTop: 5 }}

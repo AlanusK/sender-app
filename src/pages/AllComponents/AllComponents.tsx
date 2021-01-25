@@ -15,6 +15,7 @@ import {
   AllTransactionsTableContainer,
 } from "../../containers";
 import { ColumnsType } from "antd/lib/table";
+import { useAuthorisedContext } from "../../context/authorised-layout-context";
 
 const data = [
   {
@@ -83,6 +84,7 @@ const columns: ColumnsType<transactions> = [
 ];
 
 const AllComponents = () => {
+  const { userWallets } = useAuthorisedContext();
   return (
     <div className="all-components-wrapper">
       <div className="data-display-section">
@@ -106,7 +108,7 @@ const AllComponents = () => {
         </div>
         <div style={{ marginTop: "40px" }}>
           <h1>Wallet Balance Cards</h1>
-          <WalletBallanceContainer />
+          <WalletBallanceContainer addCurrency={() => {}} />
         </div>
         <div style={{ marginTop: "40px" }}>
           <h1> Extended Wallet Balance Cards </h1>
@@ -115,8 +117,8 @@ const AllComponents = () => {
             depositMoney={() => {}}
             withdrawalMoney={() => {}}
             userBalances={[
-              { currency: "TZS", amount: 3000, key: "1" },
-              { currency: "USD", amount: 6000, key: "2" },
+              { currency: "TZS", amount: 3000 },
+              { currency: "USD", amount: 6000 },
             ]}
             addCurrency={() => {}}
           />
@@ -137,7 +139,7 @@ const AllComponents = () => {
         </div>
         <div style={{ marginTop: "40px" }}>
           <h1>Select Currency Components</h1>
-          <SelectCurrencyContainer />
+          <SelectCurrencyContainer currencyOptions={[{ currency: "TZS" }]} />
         </div>
         <div style={{ marginTop: "80px" }}>
           <h1>Deposit Form Container</h1>
@@ -149,7 +151,11 @@ const AllComponents = () => {
         </div>
         <div style={{ marginTop: "80px" }}>
           <h1>Send Money Form Container</h1>
-          <SendMoneyContainer />
+          <SendMoneyContainer
+            userBalances={userWallets}
+            setSendMoneyFuncRef={()=>{}}
+          />
+          ;
         </div>
       </div>
     </div>

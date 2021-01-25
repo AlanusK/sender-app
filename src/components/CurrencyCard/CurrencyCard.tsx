@@ -1,30 +1,36 @@
 import React from "react";
 import { Avatar, Card, Statistic } from "antd";
-import { AuthorisedCurrencies } from "../../constants";
+import { supportedCurrencies } from "../../constants";
 
 interface ICurrencyCard {
   amount: number;
   currency: "TZS" | "USD" | "GBP" | "KES" | "RWF";
-  handleCardClick?():void;
+  handleCardClick?(): any;
 }
-function CurrencyCard(props: ICurrencyCard) {
+function CurrencyCard({ amount, currency, handleCardClick }: ICurrencyCard) {
   return (
     <Card
-      title={props.currency}
+      title={currency}
       bordered={true}
       hoverable={true}
       extra={
         <Avatar
           shape="circle"
           size={36}
-          src={AuthorisedCurrencies[props.currency].icon}
+          src={
+            supportedCurrencies.filter((curr) => curr.currency === currency)[0]
+              .icon
+          }
         />
       }
-      onClick={props.handleCardClick}
+      onClick={handleCardClick}
     >
       <Statistic
-        title={AuthorisedCurrencies[props.currency].symbol}
-        value={props.amount}
+        title={
+          supportedCurrencies.filter((curr) => curr.currency === currency)[0]
+            .symbol
+        }
+        value={amount}
         precision={2}
         valueStyle={{ color: "#3f8600" }}
         prefix={""}

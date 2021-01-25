@@ -7,7 +7,8 @@ interface ICustomCurrencyInputProps {
   allowNegativeValue?: boolean;
   defaultValue?: number;
   onChange?(value: string | undefined): any;
-  height?:number
+  height?: number;
+  width?: number | string;
 }
 
 export default function CustomCurrencyInput(props: ICustomCurrencyInputProps) {
@@ -15,7 +16,11 @@ export default function CustomCurrencyInput(props: ICustomCurrencyInputProps) {
     <div className="ant-input-number-input-wrap">
       <CurrencyInput
         className={"ant-input-number"}
-        style={{ width: 200, height: props?.height || 28, paddingLeft: 10 }}
+        style={{
+          width: props?.width || 200,
+          height: props?.height || 28,
+          paddingLeft: 10,
+        }}
         prefix={`${props?.prefix} ` || ""}
         disabled={props?.disabled || false}
         defaultValue={props?.defaultValue}
