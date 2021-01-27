@@ -56,7 +56,7 @@ const Wallet = () => {
         // depositMoney={depositMoney}
         depositMoney={() => setshowDepositMoneyModal(true)}
         // withdrawalMoney={withdrawalMoney}
-        withdrawalMoney={() => setshowDepositMoneyModal(true)}
+        withdrawalMoney={() => setshowWithdrawalMoneyModal(true)}
         userBalances={userWallets}
         addCurrency={addCurrency}
       />
