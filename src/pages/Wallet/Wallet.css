@@ -1,6 +1,8 @@
 .send-money-modal
 .ant-modal, 
 .deposit-money-modal
+.ant-modal,
+.withdrawal-money-modal
 .ant-modal {
   width: 465px !important;
 }

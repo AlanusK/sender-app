@@ -19,15 +19,11 @@ export default function DepositFormContainer({
   setDepositMoneyFuncRef,
 }: IDepositFormProps) {
   const { activeWallet, setactiveWallet, userWallets } = useAuthorisedContext();
-  // const [isCurrencySelected, SetIsCurrencySelected] = useState<boolean>(false);
   const [selectedCurrency, SetSelectedCurrency] = useState<any>(" ");
   const [validationStatus, SetValidationStatus] = useState<
     "" | "error" | "success" | "warning" | "validating"
   >("");
   const [helpMessage, setHelpMessage] = useState<string>("");
-  // const [minmumAmount, SetMinmumAmount] = useState<number>(999);
-  // const [balanceAmount, SetBalanceAmount] = useState<number>(6000);
-  
   const [hasSufficientBalance, SetHasSufficientBalance] = useState<boolean>(
     true
   );
@@ -45,12 +41,6 @@ export default function DepositFormContainer({
     supportedCurrencies.find((curr) => curr.currency === activeWallet.currency)
       ?.transferFee || 0;
 
-
-  // const handleCurrencyChange = (currency: string, options: any) => {
-  //   SetSelectedCurrency(options);
-  //   SetIsCurrencySelected(true);
-  // };
-
   const handleCurrencyChange = (currency: string, options: any) => {
     const currencyBalance = userBalances.find(
       (walletBalance: any) => walletBalance.currency === currency
@@ -62,11 +52,6 @@ export default function DepositFormContainer({
     SetSelectedCurrency(options);
     isCurrencySelected = true;
   };
-
-  // const handleAmountChange = (value: string) => {
-  //   validateAmount(Number(value));
-    
-  // };
 
   const handleAmountChange = (value: string) => {
     validateAmount(Number(value));
@@ -95,7 +80,7 @@ export default function DepositFormContainer({
     setHelpMessage("");
   };
 
-  const initiateSendingMoney = () => {
+  const initiateDepositingMoney = () => {
     const sendingData = {
       sendCurrency: selectedCurrency.value,
       sendingFee: transferFee,
@@ -107,24 +92,20 @@ export default function DepositFormContainer({
     console.log("Data to Send :>> ", sendingData);
   };
 
-  // create reference for initiateSendingMoney function
+  // create reference for initiateDepositingMoney function
   const depositMoneyFuncRef = useRef<any>(null);
   useEffect(() => {
     if (!!setDepositMoneyFuncRef) {
       setDepositMoneyFuncRef(depositMoneyFuncRef);
     }
   });
-  depositMoneyFuncRef.current = initiateSendingMoney;
+  depositMoneyFuncRef.current = initiateDepositingMoney;
 
   return (
     <div>
       <Input.Group size="large">
         <Row gutter={[12, 12]}>
           <Col>
-            {/* <SelectCurrencyContainer
-              onCurrencyChange={handleCurrencyChange}
-              currencyOptions={[{ currency: "TZS" }]}
-            /> */}
             <SelectCurrencyContainer
               onCurrencyChange={handleCurrencyChange}
               currencyOptions={userWallets.map((curr) => {
@@ -136,12 +117,7 @@ export default function DepositFormContainer({
               style={{ marginTop: 5 }}
               hidden={!isCurrencySelected}
             >
-              {/* <Tag color="default">
-                {`Balance: ${selectedCurrency.key}${toDecimalMark(
-                  balanceAmount
-                )}`}
-              </Tag> */}
-              <Tag color={hasSufficientBalance ? "green" : "red"}>
+              <Tag color="default">
                 {`Balance: ${supportedCurrencies.filter(
                   (curr) => curr.currency === activeWallet.currency
                 )[0]?.symbol
@@ -151,12 +127,6 @@ export default function DepositFormContainer({
           </Col>
           <Col>
             <Form.Item validateStatus={validationStatus} help={helpMessage}>
-              {/* <CustomCurrencyInput
-                prefix={selectedCurrency.key}
-                disabled={!isCurrencySelected}
-                onChange={handleAmountChange}
-                height={32}
-              /> */}
               <CustomCurrencyInput
                 prefix={
                   supportedCurrencies.find(
