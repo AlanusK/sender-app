@@ -95,7 +95,7 @@ export default function DepositFormContainer({
     setHelpMessage("");
   };
 
-  const initiateSendingMoney = () => {
+  const initiateDepositingMoney = () => {
     const sendingData = {
       sendCurrency: selectedCurrency.value,
       sendingFee: transferFee,
@@ -107,14 +107,14 @@ export default function DepositFormContainer({
     console.log("Data to Send :>> ", sendingData);
   };
 
-  // create reference for initiateSendingMoney function
+  // create reference for initiateDepositingMoney function
   const depositMoneyFuncRef = useRef<any>(null);
   useEffect(() => {
     if (!!setDepositMoneyFuncRef) {
       setDepositMoneyFuncRef(depositMoneyFuncRef);
     }
   });
-  depositMoneyFuncRef.current = initiateSendingMoney;
+  depositMoneyFuncRef.current = initiateDepositingMoney;
 
   return (
     <div>
