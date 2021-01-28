@@ -1,8 +1,12 @@
 .send-money-modal
+.ant-modal, 
 .deposit-money-modal
+.ant-modal,
+.withdrawal-money-modal
 .ant-modal {
-  width: 460px !important;
+  width: 465px !important;
 }
+
 .wallet-title {
     border-bottom: 1px solid lightgray;
     padding-bottom: 5px;
