@@ -20,15 +20,11 @@ export default function WithdrawalFormContainer({
 }: IWithdrawalFormProps) {
   const screens = useBreakpoint();
   const { activeWallet, setactiveWallet, userWallets } = useAuthorisedContext();
-  // const [isCurrencySelected, SetIsCurrencySelected] = useState<boolean>(false);
   const [selectedCurrency, SetSelectedCurrency] = useState<any>(" ");
   const [validationStatus, SetValidationStatus] = useState<
     "" | "error" | "success" | "warning" | "validating"
   >("");
   const [helpMessage, setHelpMessage] = useState<string>("");
-  // const [minmumAmount, SetMinmumAmount] = useState<number>(999);
-  // const [maxmumAmount, SetMaxmumAmount] = useState<number>(1000000);
-  // const [balanceAmount, SetBalanceAmount] = useState<number>(6000);
   const [hasSufficientBalance, SetHasSufficientBalance] = useState<boolean>(
     true
   );
@@ -48,11 +44,6 @@ export default function WithdrawalFormContainer({
 
   const [withdrawalAmount, SetWithdrawalAmount] = useState<number>(0);
   const [withdrawalFee, SetwithdrawalFee] = useState<number>(2000);
-  
-  // const handleCurrencyChange = (currency: string, options: any) => {
-  //   SetSelectedCurrency(options);
-  //   SetIsCurrencySelected(true);
-  // };
 
   const handleCurrencyChange = (currency: string, options: any) => {
     const currencyBalance = userBalances.find(
@@ -89,13 +80,6 @@ export default function WithdrawalFormContainer({
       );
       return;
     }
-    // if (value >= maxmumAmount) {
-    //   SetValidationStatus("error");
-    //   setHelpMessage(
-    //     `Max: ${selectedCurrency.key}${toDecimalMark(maxmumAmount)}`
-    //   );
-    //   return;
-    // }
 
     SetValidationStatus("success");
     setHelpMessage("");
@@ -127,10 +111,6 @@ export default function WithdrawalFormContainer({
       <Input.Group size="large">
         <Row gutter={[12, 12]}>
           <Col>
-            {/* <SelectCurrencyContainer 
-              onCurrencyChange={handleCurrencyChange} 
-              currencyOptions={[{currency:'TZS'}]} 
-            /> */}
             <SelectCurrencyContainer
               onCurrencyChange={handleCurrencyChange}
               currencyOptions={userWallets.map((curr) => {

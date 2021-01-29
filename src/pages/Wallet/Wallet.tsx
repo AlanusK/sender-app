@@ -32,13 +32,11 @@ const Wallet = () => {
   };
 
   const depositMoney = () => {
-    // console.log("depositin");
     if (depositMoneyFuncRef) {
       depositMoneyFuncRef.current();
     }
   };
   const withdrawalMoney = () => {
-    // console.log("withdrawaling");
     if (withdrawalMoneyFuncRef) {
       withdrawalMoneyFuncRef.current();
     }
@@ -53,9 +51,7 @@ const Wallet = () => {
       <h1 className="wallet-title"> Wallet </h1>
       <ExtendedWalletBallanceContainer
         sendMoney={() => setshowSendMoneyModal(true)}
-        // depositMoney={depositMoney}
         depositMoney={() => setshowDepositMoneyModal(true)}
-        // withdrawalMoney={withdrawalMoney}
         withdrawalMoney={() => setshowWithdrawalMoneyModal(true)}
         userBalances={userWallets}
         addCurrency={addCurrency}
@@ -67,7 +63,6 @@ const Wallet = () => {
         onCancel={handleCancel}
         okText="Send"
         wrapClassName="send-money-modal"
-        //confirmLoading={true}
       >
         <SendMoneyContainer
           setSendMoneyFuncRef={setSendMoneyFuncRef}
@@ -81,7 +76,6 @@ const Wallet = () => {
         onCancel={handleCancel}
         okText="Deposit"
         wrapClassName="deposit-money-modal"
-        //confirmLoading={true}
       >
         <DepositFormContainer
           setDepositMoneyFuncRef={setDepositMoneyFuncRef}
@@ -95,7 +89,6 @@ const Wallet = () => {
         onCancel={handleCancel}
         okText="Withdrawal"
         wrapClassName="withdrawal-money-modal"
-        //confirmLoading={true}
       >
         <WithdrawalFormContainer
           setWithdrawalMoneyFuncRef={setWithdrawalMoneyFuncRef}
