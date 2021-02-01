@@ -13,6 +13,12 @@ const TransactionsTable = (props: ITransactionsTableProps) => {
   const handleCancel = () => {
     setShowSingleTransactionModal(false);
   };
+  const [key, setKey] = useState("");
+  const [date, setDate] = useState("");
+  const [amount, setAmount] = useState("");
+  const [type, setType] = useState("");
+  const [status, setStatus] = useState("");
+
   return (
     <>
       <Table
@@ -24,7 +30,15 @@ const TransactionsTable = (props: ITransactionsTableProps) => {
 
         onRow={(record, rowIndex) => {
           return {
-            onClick: event => setShowSingleTransactionModal(true), // click row
+            onClick: event => {
+              setKey(record.key);
+              setDate(record.date);
+              setAmount(record.amount);
+              setType(record.type);
+              setStatus(record.status);
+              setShowSingleTransactionModal(true);
+              console.log(rowIndex);
+            } // click row
             // onDoubleClick: event => { }, // double click row
             // onContextMenu: event => { }, // right button click row
             // onMouseEnter: event => { }, // mouse enter row
@@ -33,15 +47,21 @@ const TransactionsTable = (props: ITransactionsTableProps) => {
         }}
       />
       <Modal
-        title="Transaction GB-1002"
+        title={`Transaction GB-${key}`}
         visible={showSingleTransactionModal}
         // onOk={}
         onCancel={handleCancel}
         // okText=""
         wrapClassName="single-transaction-modal"
-        // confirmLoading={true}
+      // confirmLoading={true}
       >
-        <IndividualTransactionsContainer />
+        <IndividualTransactionsContainer
+          key={key}
+          date={date}
+          amount={amount}
+          type={type}
+          status={status}
+        />
       </Modal>
     </>
   );

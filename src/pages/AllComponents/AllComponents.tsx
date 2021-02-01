@@ -93,7 +93,13 @@ const AllComponents = () => {
         </div>
         <div style={{ marginTop: "40px" }}>
           <h1>Individual Transactions Container</h1>
-          <IndividualTransactionsContainer />
+          <IndividualTransactionsContainer
+            key=""
+            date=""
+            amount=""
+            type=""
+            status=""
+          />
         </div>
         <div style={{ marginTop: "40px" }}>
           <h1>Transaction Table</h1>
@@ -108,19 +114,19 @@ const AllComponents = () => {
         </div>
         <div style={{ marginTop: "40px" }}>
           <h1>Wallet Balance Cards</h1>
-          <WalletBallanceContainer addCurrency={() => {}} />
+          <WalletBallanceContainer addCurrency={() => { }} />
         </div>
         <div style={{ marginTop: "40px" }}>
           <h1> Extended Wallet Balance Cards </h1>
           <ExtendedWalletBallanceContainer
-            sendMoney={() => {}}
-            depositMoney={() => {}}
-            withdrawalMoney={() => {}}
+            sendMoney={() => { }}
+            depositMoney={() => { }}
+            withdrawalMoney={() => { }}
             userBalances={[
               { currency: "TZS", amount: 3000 },
               { currency: "USD", amount: 6000 },
             ]}
-            addCurrency={() => {}}
+            addCurrency={() => { }}
           />
         </div>
       </div>
@@ -153,7 +159,7 @@ const AllComponents = () => {
           <h1>Send Money Form Container</h1>
           <SendMoneyContainer
             userBalances={userWallets}
-            setSendMoneyFuncRef={()=>{}}
+            setSendMoneyFuncRef={() => { }}
           />
           ;
         </div>
