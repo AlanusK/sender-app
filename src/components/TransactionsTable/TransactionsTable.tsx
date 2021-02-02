@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Table, Modal } from 'antd';
+import { Table, Modal, Button } from 'antd';
 import { IndividualTransactionsContainer } from "../../containers";
 import "./TransactionsTable.css";
 
@@ -13,11 +13,8 @@ const TransactionsTable = (props: ITransactionsTableProps) => {
   const handleCancel = () => {
     setShowSingleTransactionModal(false);
   };
-  const [key, setKey] = useState("");
-  const [date, setDate] = useState("");
-  const [amount, setAmount] = useState("");
-  const [type, setType] = useState("");
-  const [status, setStatus] = useState("");
+  const [key, setKey] = useState({});
+  const [data, setData] = useState({});
 
   return (
     <>
@@ -32,36 +29,27 @@ const TransactionsTable = (props: ITransactionsTableProps) => {
           return {
             onClick: event => {
               setKey(record.key);
-              setDate(record.date);
-              setAmount(record.amount);
-              setType(record.type);
-              setStatus(record.status);
+              setData(record);
               setShowSingleTransactionModal(true);
-              console.log(rowIndex);
             } // click row
-            // onDoubleClick: event => { }, // double click row
-            // onContextMenu: event => { }, // right button click row
-            // onMouseEnter: event => { }, // mouse enter row
-            // onMouseLeave: event => { }, // mouse leave row
           };
         }}
       />
       <Modal
-        title={`Transaction GB-${key}`}
+        title={`Transaction - ${key}`}
         visible={showSingleTransactionModal}
         // onOk={}
         onCancel={handleCancel}
         // okText=""
         wrapClassName="single-transaction-modal"
-      // confirmLoading={true}
+        // confirmLoading={true}
+        footer={[
+          <Button key="back" onClick={handleCancel}>
+            Close
+          </Button>,
+        ]}
       >
-        <IndividualTransactionsContainer
-          key={key}
-          date={date}
-          amount={amount}
-          type={type}
-          status={status}
-        />
+        <IndividualTransactionsContainer data={data} />
       </Modal>
     </>
   );
