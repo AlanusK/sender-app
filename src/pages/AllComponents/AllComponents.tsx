@@ -94,11 +94,7 @@ const AllComponents = () => {
         <div style={{ marginTop: "40px" }}>
           <h1>Individual Transactions Container</h1>
           <IndividualTransactionsContainer
-            key=""
-            date=""
-            amount=""
-            type=""
-            status=""
+            data=""
           />
         </div>
         <div style={{ marginTop: "40px" }}>

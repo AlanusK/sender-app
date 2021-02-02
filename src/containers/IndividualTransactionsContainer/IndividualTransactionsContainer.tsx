@@ -2,24 +2,20 @@ import React from 'react';
 import "./IndividualTransactionsContainer.css";
 
 interface IIndividualTransactionsProps {
-    key: string;
-    date: string;
-    amount: string;
-    type: String;
-    status: String;
+    data: any;
 }
 
-const IndividualTransactionsContainer = (props: IIndividualTransactionsProps) => {
+const IndividualTransactionsContainer = ({data: {date, amount, status}}: IIndividualTransactionsProps) => {
 
     return (
         <div className="content-individual-transactions">
             <div className="single-data">
                 <h3 className="title-single-data">Date</h3>
-                <p>{props.date}</p>
+                <p>{date}</p>
             </div>
             <div className="single-data">
                 <h3 className="title-single-data">Amount</h3>
-                <p>{props.amount}</p>
+                <p>{amount}</p>
             </div>
             <div className="single-data">
                 <h3 className="title-single-data">Fee</h3>
@@ -27,7 +23,7 @@ const IndividualTransactionsContainer = (props: IIndividualTransactionsProps) =>
             </div>
             <div className="single-data">
                 <h3 className="title-single-data">Status</h3>
-                <p>{props.status}</p>
+                <p>{status}</p>
             </div>
             <div className="single-data">
                 <h3 className="title-single-data">Sender</h3>
