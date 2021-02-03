@@ -13,6 +13,7 @@ import {
   SecuritySettingsContainer,
   UserLiteKycContainer,
   AllTransactionsTableContainer,
+  PaymentSummaryContainer,
 } from "../../containers";
 import { ColumnsType } from "antd/lib/table";
 import { useAuthorisedContext } from "../../context/authorised-layout-context";
@@ -90,6 +91,10 @@ const AllComponents = () => {
       <div className="data-display-section">
         <div className="data-display-heading-wrapper">
           <h1 className="data-display-heading">Data Display components</h1>
+        </div>
+        <div style={{ marginTop: "40px" }}>
+          <h1>Payment Summary Container</h1>
+          <PaymentSummaryContainer />
         </div>
         <div style={{ marginTop: "40px" }}>
           <h1>Individual Transactions Container</h1>
