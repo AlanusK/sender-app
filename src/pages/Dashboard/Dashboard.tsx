@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   TransactionsTableContainer,
   SendMoneyContainer,
@@ -8,6 +8,7 @@ import { ColumnsType } from "antd/lib/table";
 import "./Dashboard.css";
 import { Row, Col, Button } from "antd";
 import { useAuthorisedContext } from "../../context/authorised-layout-context";
+import { usePayoutContext } from "../../context/payout-context";
 
 const data = [
   {
@@ -76,11 +77,12 @@ const columns: ColumnsType<transactions> = [
 ];
 const Dashboard = () => {
   const { userWallets } = useAuthorisedContext();
-  const [sendMoneyFunc, setSendMoneyFuncRef] = useState<any>();
+  const { payoutAmount } = usePayoutContext();
 
   const sendMoney = () => {
-    if (sendMoneyFunc) {
-      sendMoneyFunc.current(); // initiateSendingMoney
+    console.log("eaf :>> ", payoutAmount);
+    if (payoutAmount) {
+      console.log("wew :>> ", payoutAmount);
     }
   };
   const addCurrency = () => {
@@ -98,10 +100,7 @@ const Dashboard = () => {
           <TransactionsTableContainer columns={columns} transactions={data} />
         </Col>
         <Col className="send-money-column" flex="420px">
-          <SendMoneyContainer
-            userBalances={userWallets}
-            setSendMoneyFuncRef={setSendMoneyFuncRef}
-          />
+          <SendMoneyContainer userBalances={userWallets} />
           <Button type="primary" htmlType="submit" onClick={sendMoney}>
             Send
           </Button>

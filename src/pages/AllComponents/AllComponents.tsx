@@ -94,7 +94,7 @@ const AllComponents = () => {
         </div>
         <div style={{ marginTop: "40px" }}>
           <h1>Payment Summary Container</h1>
-          <PaymentSummaryContainer feeAmount={0} amount={0} />
+          <PaymentSummaryContainer />
         </div>
         <div style={{ marginTop: "40px" }}>
           <h1>Individual Transactions Container</h1>
@@ -157,16 +157,11 @@ const AllComponents = () => {
           <h1>Withdrawal Form Container</h1>
           <WithdrawalFormContainer
             userBalances={userWallets}
-            setWithdrawalMoneyFuncRef={() => {}}
           />
         </div>
         <div style={{ marginTop: "80px" }}>
           <h1>Send Money Form Container</h1>
-          <SendMoneyContainer
-            userBalances={userWallets}
-            setSendMoneyFuncRef={() => {}}
-          />
-          ;
+          <SendMoneyContainer userBalances={userWallets} />;
         </div>
       </div>
     </div>
