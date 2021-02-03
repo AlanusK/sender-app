@@ -94,10 +94,7 @@ const AllComponents = () => {
         </div>
         <div style={{ marginTop: "40px" }}>
           <h1>Payment Summary Container</h1>
-          <PaymentSummaryContainer
-            userBalances={userWallets}
-            // setSendMoneyFuncRef={()=>{}}
-          />
+          <PaymentSummaryContainer />
         </div>
         <div style={{ marginTop: "40px" }}>
           <h1>Individual Transactions Container</h1>

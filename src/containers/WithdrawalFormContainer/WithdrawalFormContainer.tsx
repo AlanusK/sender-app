@@ -1,7 +1,7 @@
 import { Col, Form, Input, Row, Tag } from "antd";
 import useBreakpoint from "antd/lib/grid/hooks/useBreakpoint";
 import React, { useEffect, useRef, useState } from "react";
-import { SelectCurrencyContainer } from "..";
+import { SelectCurrencyContainer, PaymentSummaryContainer, } from "..";
 import { CustomCurrencyInput } from "../../components";
 import { debounce, toDecimalMark } from "../../utility";
 import { userWalletsBalanceProps } from "../../types";
@@ -157,85 +157,8 @@ export default function WithdrawalFormContainer({
           </Col>
         </Row>
       </Input.Group>
-      {isCurrencySelected && (
-        <>
-          <Row gutter={[12, 12]}>
-            <Col style={{ width: 200 }}>
-              <h4 className="summary-label">Amount</h4>
-            </Col>
-            <Col
-              style={{
-                textAlign: screens.xs ? "unset" : "right",
-                marginLeft: screens.xs ? "unset" : 20,
-                width: 200,
-              }}
-            >
-              {/* <h4 style={{ fontFamily: "Circular-Bold" }}>
-                {`${selectedCurrency.key} ${toDecimalMark(withdrawalAmount)}`}
-              </h4> */}
-              <h4 style={{ fontFamily: "Circular-Bold" }}>
-                  {`${
-                    supportedCurrencies.find(
-                      (curr) => curr.currency === activeWallet.currency
-                    )?.symbol
-                  } ${toDecimalMark(transferAmount)}`}
-                </h4>
-            </Col>
-          </Row>
-          <Row gutter={[12, 12]}>
-            <Col style={{ width: 200 }}>
-              <h4 className="summary-label">Fee</h4>
-            </Col>
-            <Col
-              style={{
-                textAlign: screens.xs ? "unset" : "right",
-                marginLeft: screens.xs ? "unset" : 20,
-                width: 200,
-              }}
-            >
-              {/* <h4 style={{ fontFamily: "Circular-Bold" }}>
-                {`${selectedCurrency.key} ${toDecimalMark(withdrawalFee)}`}
-              </h4> */}
-              <h4 style={{ fontFamily: "Circular-Bold" }}>
-                  {`${
-                    supportedCurrencies.find(
-                      (curr) => curr.currency === activeWallet.currency
-                    )?.symbol
-                  } ${toDecimalMark(transferFee)}`}
-                </h4>
-            </Col>
-          </Row>
-          <Row gutter={[12, 12]}>
-            <Col style={{ width: 200 }}>
-              <h4 className="summary-label">Net-Payout Amount</h4>
-            </Col>
-            <Col
-              style={{
-                textAlign: screens.xs ? "unset" : "right",
-                marginLeft: screens.xs ? "unset" : 20,
-                width: 200,
-              }}
-            >
-              {/* <h4 style={{ fontFamily: "Circular-Bold" }}>
-                {`${selectedCurrency.key} ${toDecimalMark(
-                  withdrawalAmount - withdrawalFee
-                )}`}
-              </h4> */}
-              <h4 style={{ fontFamily: "Circular-Bold" }}>
-                  {`${
-                    supportedCurrencies.find(
-                      (curr) => curr.currency === activeWallet.currency
-                    )?.symbol
-                  } ${toDecimalMark(
-                    transferAmount - transferFee < 0
-                      ? 0
-                      : transferAmount - transferFee
-                  )}`}
-                </h4>
-            </Col>
-          </Row>
-        </>
-      )}
+
+      {isCurrencySelected && <PaymentSummaryContainer />}
     </div>
   );
 }
