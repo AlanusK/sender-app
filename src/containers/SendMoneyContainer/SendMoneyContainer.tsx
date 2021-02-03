@@ -195,7 +195,7 @@ const SendMoneyContainer = ({
           <Input placeholder="John Doe" disabled={!isCurrencySelected} />
         </Form.Item>
 
-        {isCurrencySelected && <PaymentSummaryContainer userBalances={userWallets}/>}
+        {isCurrencySelected && <PaymentSummaryContainer />}
       </Form>
     </div>
   );
