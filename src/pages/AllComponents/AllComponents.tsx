@@ -94,13 +94,11 @@ const AllComponents = () => {
         </div>
         <div style={{ marginTop: "40px" }}>
           <h1>Payment Summary Container</h1>
-          <PaymentSummaryContainer />
+          <PaymentSummaryContainer feeAmount={0} amount={0} />
         </div>
         <div style={{ marginTop: "40px" }}>
           <h1>Individual Transactions Container</h1>
-          <IndividualTransactionsContainer
-            data=""
-          />
+          <IndividualTransactionsContainer data="" />
         </div>
         <div style={{ marginTop: "40px" }}>
           <h1>Transaction Table</h1>
@@ -115,19 +113,19 @@ const AllComponents = () => {
         </div>
         <div style={{ marginTop: "40px" }}>
           <h1>Wallet Balance Cards</h1>
-          <WalletBallanceContainer addCurrency={() => { }} />
+          <WalletBallanceContainer addCurrency={() => {}} />
         </div>
         <div style={{ marginTop: "40px" }}>
           <h1> Extended Wallet Balance Cards </h1>
           <ExtendedWalletBallanceContainer
-            sendMoney={() => { }}
-            depositMoney={() => { }}
-            withdrawalMoney={() => { }}
+            sendMoney={() => {}}
+            depositMoney={() => {}}
+            withdrawalMoney={() => {}}
             userBalances={[
               { currency: "TZS", amount: 3000 },
               { currency: "USD", amount: 6000 },
             ]}
-            addCurrency={() => { }}
+            addCurrency={() => {}}
           />
         </div>
       </div>
@@ -150,23 +148,23 @@ const AllComponents = () => {
         </div>
         <div style={{ marginTop: "80px" }}>
           <h1>Deposit Form Container</h1>
-          <DepositFormContainer 
+          <DepositFormContainer
             userBalances={userWallets}
-            setDepositMoneyFuncRef={()=>{}}
+            setDepositMoneyFuncRef={() => {}}
           />
         </div>
         <div style={{ marginTop: "20px" }}>
           <h1>Withdrawal Form Container</h1>
           <WithdrawalFormContainer
             userBalances={userWallets}
-            setWithdrawalMoneyFuncRef={()=>{}}
+            setWithdrawalMoneyFuncRef={() => {}}
           />
         </div>
         <div style={{ marginTop: "80px" }}>
           <h1>Send Money Form Container</h1>
           <SendMoneyContainer
             userBalances={userWallets}
-            setSendMoneyFuncRef={() => { }}
+            setSendMoneyFuncRef={() => {}}
           />
           ;
         </div>

@@ -1,7 +1,7 @@
 import { Col, Form, Input, Row, Tag } from "antd";
 import useBreakpoint from "antd/lib/grid/hooks/useBreakpoint";
 import React, { useEffect, useRef, useState } from "react";
-import { SelectCurrencyContainer, PaymentSummaryContainer, } from "..";
+import { SelectCurrencyContainer, PaymentSummaryContainer } from "..";
 import { CustomCurrencyInput } from "../../components";
 import { debounce, toDecimalMark } from "../../utility";
 import { userWalletsBalanceProps } from "../../types";
@@ -76,7 +76,11 @@ export default function WithdrawalFormContainer({
     if (value <= minmumAmount) {
       SetValidationStatus("error");
       setHelpMessage(
-        `Min: ${selectedCurrency.key}${toDecimalMark(minmumAmount + 1)}`
+        `Min:  ${
+          supportedCurrencies.find(
+            (curr) => curr.currency === activeWallet.currency
+          )?.symbol
+        } ${toDecimalMark(minmumAmount + 1)}`
       );
       return;
     }
@@ -128,10 +132,11 @@ export default function WithdrawalFormContainer({
                 )}`}
               </Tag> */}
               <Tag color={hasSufficientBalance ? "green" : "red"}>
-                {`Balance: ${supportedCurrencies.filter(
-                  (curr) => curr.currency === activeWallet.currency
-                )[0]?.symbol
-                  }${toDecimalMark(balanceAmount)}`}
+                {`Balance: ${
+                  supportedCurrencies.filter(
+                    (curr) => curr.currency === activeWallet.currency
+                  )[0]?.symbol
+                }${toDecimalMark(balanceAmount)}`}
               </Tag>
             </p>
           </Col>
@@ -158,7 +163,12 @@ export default function WithdrawalFormContainer({
         </Row>
       </Input.Group>
 
-      {isCurrencySelected && <PaymentSummaryContainer />}
+      {isCurrencySelected && (
+        <PaymentSummaryContainer
+          feeAmount={withdrawalFee}
+          amount={withdrawalAmount}
+        />
+      )}
     </div>
   );
 }

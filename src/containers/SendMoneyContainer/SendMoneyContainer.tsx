@@ -194,8 +194,7 @@ const SendMoneyContainer = ({
         >
           <Input placeholder="John Doe" disabled={!isCurrencySelected} />
         </Form.Item>
-
-        {isCurrencySelected && <PaymentSummaryContainer />}
+        {isCurrencySelected && <PaymentSummaryContainer amount={transferAmount} feeAmount={transferFee}/>}
       </Form>
     </div>
   );
