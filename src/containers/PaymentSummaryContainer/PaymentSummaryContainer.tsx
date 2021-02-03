@@ -13,7 +13,6 @@ interface IPaymentSummaryContainerProps {
 const PaymentSummaryContainer = ({
   userBalances,
 }: IPaymentSummaryContainerProps) => {
-  const [form] = Form.useForm();
   const screens = useBreakpoint();
   const { activeWallet, setactiveWallet, userWallets } = useAuthorisedContext();
   const [selectedCurrency, SetSelectedCurrency] = useState<any>(" ");
