@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Table, Modal, Button } from 'antd';
+import { Table, Modal, Button } from "antd";
 import { IndividualTransactionsContainer } from "../../containers";
 import "./TransactionsTable.css";
 
@@ -9,12 +9,17 @@ interface ITransactionsTableProps {
 }
 
 const TransactionsTable = (props: ITransactionsTableProps) => {
-  const [showSingleTransactionModal, setShowSingleTransactionModal] = useState(false);
+  const [showSingleTransactionModal, setShowSingleTransactionModal] = useState(
+    false
+  );
   const handleCancel = () => {
     setShowSingleTransactionModal(false);
   };
-  const [key, setKey] = useState({});
-  const [data, setData] = useState({});
+  const [
+    singleTransactionReferenceId,
+    setsingleTransactionReferenceId,
+  ] = useState({});
+  const [singleTransactionData, setsingleTransactionData] = useState({});
 
   return (
     <>
@@ -22,34 +27,29 @@ const TransactionsTable = (props: ITransactionsTableProps) => {
         columns={props.columns}
         dataSource={props.transactions}
         pagination={false}
-        // scroll={{ y: 280}}
-        size='small'
-
+        size="small"
         onRow={(record, rowIndex) => {
           return {
-            onClick: event => {
-              setKey(record.key);
-              setData(record);
+            onClick: () => {
+              setsingleTransactionReferenceId(record.key);
+              setsingleTransactionData(record);
               setShowSingleTransactionModal(true);
-            } // click row
+            }, // click row
           };
         }}
       />
       <Modal
-        title={`Transaction - ${key}`}
+        title={`Transaction - ${singleTransactionReferenceId}`}
         visible={showSingleTransactionModal}
-        // onOk={}
         onCancel={handleCancel}
-        // okText=""
         wrapClassName="single-transaction-modal"
-        // confirmLoading={true}
         footer={[
           <Button key="back" onClick={handleCancel}>
             Close
           </Button>,
         ]}
       >
-        <IndividualTransactionsContainer data={data} />
+        <IndividualTransactionsContainer data={singleTransactionData} />
       </Modal>
     </>
   );
