@@ -31,6 +31,17 @@ const SendMoneyContainer = ({
   );
   const [transferAmount, SetTransferAmount] = useState<number>(0);
 
+  const payoutMethod = [
+    { type: "MNO", name: "M-pesa Kenya", value: "MPESA_KENYA", key: "MPESA_KENYA" },
+    { type: "MNO", name: "M-pesa Tanzania", value: "MPESA_TANZANIA", key: "MPESA_TANZANIA" },
+    { type: "MNO", name: "Tigopesa", value: "TIGOPESA", key: "TIGOPESA" },
+    { type: "BANK", name: "Crdb", value: "CRDB", key: "CRDB" },
+    { type: "BANK", name: "Nmb", value: "NMB", key: "NMB" },
+  ];
+
+  const [selectedMNO, setSelectedMNO] = useState<boolean>(false);
+  const [selectedBank, setSelectedBank] = useState<boolean>(false);
+
   const balanceAmount = activeWallet.balance;
   let isCurrencySelected = activeWallet?.currency ? true : false;
   const minmumAmount =
@@ -171,29 +182,72 @@ const SendMoneyContainer = ({
           style={{ width: screens.xs ? "200px" : "412px" }}
           name="payment-channel"
         >
-          <Select disabled={!isCurrencySelected}>
-            <Select.Option value="M-pesa Kenya">M-pesa Kenya</Select.Option>
-            <Select.Option value="M-pesa Tanzania">
-              M-pesa Tanzania
-            </Select.Option>
+          <Select
+            disabled={!isCurrencySelected}
+            onChange={(value) => {
+              if (value == "CRDB" || value == "NMB") {
+                setSelectedBank(true)
+                setSelectedMNO(false)
+              }  
+              else {
+                setSelectedBank(false)
+                setSelectedMNO(true)
+              }
+            }}
+          >
+            {payoutMethod.map((payout) =>
+              <Select.Option value={payout.value}>{payout.name}</Select.Option>
+            )}
           </Select>
         </Form.Item>
 
-        <Form.Item
-          label={<label style={{ color: "gray" }}>Mobile money number</label>}
-          style={{ width: screens.xs ? "200px" : "412px" }}
-          name="receiving-account-number"
-        >
-          <Input placeholder="0763212347" disabled={!isCurrencySelected} />
-        </Form.Item>
+        {selectedMNO &&
+          <>
+            <Form.Item
+              label={<label style={{ color: "gray" }}>Mobile money number</label>}
+              style={{ width: screens.xs ? "200px" : "412px" }}
+              name="receiving-account-number"
+            >
+              <Input placeholder="0763212347" disabled={!isCurrencySelected} />
+            </Form.Item>
 
-        <Form.Item
-          label={<label style={{ color: "gray" }}>Name receiver</label>}
-          style={{ width: screens.xs ? "200px" : "412px" }}
-          name="receiving-account-name"
-        >
-          <Input placeholder="John Doe" disabled={!isCurrencySelected} />
-        </Form.Item>
+            <Form.Item
+              label={<label style={{ color: "gray" }}>Name receiver</label>}
+              style={{ width: screens.xs ? "200px" : "412px" }}
+              name="receiving-account-name"
+            >
+              <Input placeholder="John Doe" disabled={!isCurrencySelected} />
+            </Form.Item>
+          </>
+        }
+
+        {selectedBank &&
+          <>
+            <Form.Item
+              label={<label style={{ color: "gray" }}>Account Name</label>}
+              style={{ width: screens.xs ? "200px" : "412px" }}
+              name="receiving-account-name"
+            >
+              <Input placeholder="Paul John" disabled={!isCurrencySelected} />
+            </Form.Item>
+
+            <Form.Item
+              label={<label style={{ color: "gray" }}>Account Number</label>}
+              style={{ width: screens.xs ? "200px" : "412px" }}
+              name="receiving-account-number"
+            >
+              <Input placeholder="01523455322" disabled={!isCurrencySelected} />
+            </Form.Item>
+
+            <Form.Item
+              label={<label style={{ color: "gray" }}>Swift code</label>}
+              style={{ width: screens.xs ? "200px" : "412px" }}
+              name="receiving-account-swiftcode"
+            >
+              <Input placeholder="EQBLTZTZ" disabled={!isCurrencySelected} />
+            </Form.Item>
+          </>
+        }
 
         {isCurrencySelected && <PaymentSummaryContainer />}
       </Form>
