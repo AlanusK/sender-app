@@ -1,27 +1,31 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Form, Input, Button, Radio, Select, Row, Col, Tag } from "antd";
+import React, { useEffect, useState } from "react";
+import { Form, Input, Select, Row, Col, Tag } from "antd";
 import "./SendMoneyContainer.css";
-import { SelectCurrencyContainer, PaymentSummaryContainer } from "../../containers";
+import {
+  SelectCurrencyContainer,
+  PaymentSummaryContainer,
+} from "../../containers";
 import { CustomCurrencyInput } from "../../components";
 import { debounce, toDecimalMark } from "../../utility";
 import useBreakpoint from "antd/lib/grid/hooks/useBreakpoint";
 import { useAuthorisedContext } from "../../context/authorised-layout-context";
 import { supportedCurrencies } from "../../constants";
 import { userWalletsBalanceProps } from "../../types";
+import { usePayoutContext } from "../../context/payout-context";
 
 interface ISendMoneyContainerProps {
   userBalances: userWalletsBalanceProps[];
-  setSendMoneyFuncRef: any;
 }
 
-const SendMoneyContainer = ({
-  userBalances,
-  setSendMoneyFuncRef,
-}: ISendMoneyContainerProps) => {
+const SendMoneyContainer = ({ userBalances }: ISendMoneyContainerProps) => {
   const [form] = Form.useForm();
   const screens = useBreakpoint();
   const { activeWallet, setactiveWallet, userWallets } = useAuthorisedContext();
-  const [selectedCurrency, SetSelectedCurrency] = useState<any>(" ");
+  const {
+    SetPayoutAmount,
+    SetPayoutCurrency,
+    SetFeeAmount,
+  } = usePayoutContext();
   const [validationStatus, SetValidationStatus] = useState<
     "" | "error" | "success" | "warning" | "validating"
   >("");
@@ -54,6 +58,10 @@ const SendMoneyContainer = ({
     supportedCurrencies.find((curr) => curr.currency === activeWallet.currency)
       ?.transferFee || 0;
 
+  useEffect(() => {
+    SetFeeAmount(transferFee);
+  }, [SetFeeAmount, transferFee]);
+
   const handleCurrencyChange = (currency: string, options: any) => {
     const currencyBalance = userBalances.find(
       (walletBalance: any) => walletBalance.currency === currency
@@ -62,9 +70,12 @@ const SendMoneyContainer = ({
       currency: currencyBalance?.currency || "",
       balance: currencyBalance?.amount || 0,
     });
-    SetSelectedCurrency(options);
     isCurrencySelected = true;
   };
+
+  useEffect(() => {
+    SetPayoutCurrency(activeWallet?.currency);
+  }, [SetPayoutCurrency, activeWallet?.currency]);
 
   const handleAmountChange = (value: string) => {
     validateAmount(Number(value));
@@ -72,6 +83,10 @@ const SendMoneyContainer = ({
     const debouncedSetTransferAmount = debounce(SetTransferAmount, 1000);
     debouncedSetTransferAmount(Number(value) ? Number(value) : 0);
   };
+
+  useEffect(() => {
+    SetPayoutAmount(transferAmount);
+  }, [SetPayoutAmount, transferAmount]);
 
   const validateWalletBalance = (value: number) => {
     if (value > balanceAmount) {
@@ -107,27 +122,6 @@ const SendMoneyContainer = ({
     SetValidationStatus("success");
     setHelpMessage("");
   };
-
-  const initiateSendingMoney = () => {
-    const sendingData = {
-      sendCurrency: selectedCurrency.value,
-      sendingFee: transferFee,
-      sendingChannel: "deade",
-      sendAmount: transferAmount,
-      receiverAccountNumber: "121212",
-      receiverAccountName: "Mueewer",
-    };
-    console.log("Data to Send :>> ", sendingData);
-  };
-
-  // create reference for initiateSendingMoney function
-  const sendMoneyFuncRef = useRef<any>(null);
-  useEffect(() => {
-    if (!!setSendMoneyFuncRef) {
-      setSendMoneyFuncRef(sendMoneyFuncRef);
-    }
-  });
-  sendMoneyFuncRef.current = initiateSendingMoney;
 
   return (
     <div className="send-money-container-wrapper">

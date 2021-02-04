@@ -1,26 +1,27 @@
 import { Col, Form, Input, Row, Tag } from "antd";
-import useBreakpoint from "antd/lib/grid/hooks/useBreakpoint";
-import React, { useEffect, useRef, useState } from "react";
-import { SelectCurrencyContainer, PaymentSummaryContainer, } from "..";
+import React, { useEffect, useState } from "react";
+import { SelectCurrencyContainer, PaymentSummaryContainer } from "..";
 import { CustomCurrencyInput } from "../../components";
 import { debounce, toDecimalMark } from "../../utility";
 import { userWalletsBalanceProps } from "../../types";
 import "./WithdrawalFormContainer.css";
 import { useAuthorisedContext } from "../../context/authorised-layout-context";
 import { supportedCurrencies } from "../../constants";
+import { usePayoutContext } from "../../context/payout-context";
 
 interface IWithdrawalFormProps {
   userBalances: userWalletsBalanceProps[];
-  setWithdrawalMoneyFuncRef: any;
 }
 
 export default function WithdrawalFormContainer({
   userBalances,
-  setWithdrawalMoneyFuncRef,
 }: IWithdrawalFormProps) {
-  const screens = useBreakpoint();
   const { activeWallet, setactiveWallet, userWallets } = useAuthorisedContext();
-  const [selectedCurrency, SetSelectedCurrency] = useState<any>(" ");
+  const {
+    SetPayoutAmount,
+    SetPayoutCurrency,
+    SetFeeAmount,
+  } = usePayoutContext();
   const [validationStatus, SetValidationStatus] = useState<
     "" | "error" | "success" | "warning" | "validating"
   >("");
@@ -28,8 +29,6 @@ export default function WithdrawalFormContainer({
   const [hasSufficientBalance, SetHasSufficientBalance] = useState<boolean>(
     true
   );
-  const [transferAmount, SetTransferAmount] = useState<number>(0);
-
   const balanceAmount = activeWallet.balance;
   let isCurrencySelected = activeWallet?.currency ? true : false;
   const minmumAmount =
@@ -38,12 +37,14 @@ export default function WithdrawalFormContainer({
   const maxmumAmount =
     supportedCurrencies.find((curr) => curr.currency === activeWallet.currency)
       ?.maxTransfer || 0;
-  const transferFee =
+  const withdrawalFee =
     supportedCurrencies.find((curr) => curr.currency === activeWallet.currency)
       ?.transferFee || 0;
-
   const [withdrawalAmount, SetWithdrawalAmount] = useState<number>(0);
-  const [withdrawalFee, SetwithdrawalFee] = useState<number>(2000);
+
+  useEffect(() => {
+    SetFeeAmount(withdrawalFee);
+  }, [SetFeeAmount, withdrawalFee]);
 
   const handleCurrencyChange = (currency: string, options: any) => {
     const currencyBalance = userBalances.find(
@@ -53,9 +54,12 @@ export default function WithdrawalFormContainer({
       currency: currencyBalance?.currency || "",
       balance: currencyBalance?.amount || 0,
     });
-    SetSelectedCurrency(options);
     isCurrencySelected = true;
   };
+
+  useEffect(() => {
+    SetPayoutCurrency(activeWallet?.currency);
+  }, [SetPayoutCurrency, activeWallet?.currency]);
 
   const handleAmountChange = (value: string) => {
     validateAmount(Number(value));
@@ -63,6 +67,10 @@ export default function WithdrawalFormContainer({
     const debouncedSetWithdrawalAmount = debounce(SetWithdrawalAmount, 1000);
     debouncedSetWithdrawalAmount(Number(value) ? Number(value) : 0);
   };
+
+  useEffect(() => {
+    SetPayoutAmount(withdrawalAmount);
+  }, [SetPayoutAmount, withdrawalAmount]);
 
   const validateWalletBalance = (value: number) => {
     if (value > balanceAmount) {
@@ -76,35 +84,28 @@ export default function WithdrawalFormContainer({
     if (value <= minmumAmount) {
       SetValidationStatus("error");
       setHelpMessage(
-        `Min: ${selectedCurrency.key}${toDecimalMark(minmumAmount + 1)}`
+        `Min:  ${
+          supportedCurrencies.find(
+            (curr) => curr.currency === activeWallet.currency
+          )?.symbol
+        } ${toDecimalMark(minmumAmount + 1)}`
       );
       return;
     }
-
+    if (value >= maxmumAmount) {
+      SetValidationStatus("error");
+      setHelpMessage(
+        `Max: ${
+          supportedCurrencies.find(
+            (curr) => curr.currency === activeWallet.currency
+          )?.symbol
+        }${toDecimalMark(maxmumAmount)}`
+      );
+      return;
+    }
     SetValidationStatus("success");
     setHelpMessage("");
   };
-
-  const initiateWithdrawingMoney = () => {
-    const sendingData = {
-      sendCurrency: selectedCurrency.value,
-      sendingFee: transferFee,
-      sendingChannel: "deade",
-      sendAmount: transferAmount,
-      receiverAccountNumber: "121212",
-      receiverAccountName: "Mueewer",
-    };
-    console.log("Data to Send :>> ", sendingData);
-  };
-
-  // create reference for initiateWithdrawingMoney function
-  const withdrawalMoneyFuncRef = useRef<any>(null);
-  useEffect(() => {
-    if (!!setWithdrawalMoneyFuncRef) {
-      setWithdrawalMoneyFuncRef(withdrawalMoneyFuncRef);
-    }
-  });
-  withdrawalMoneyFuncRef.current = initiateWithdrawingMoney;
 
   return (
     <div>
@@ -122,27 +123,17 @@ export default function WithdrawalFormContainer({
               style={{ marginTop: 5 }}
               hidden={!isCurrencySelected}
             >
-              {/* <Tag color={hasSufficientBalance ? "green" : "red"}>
-                {`Balance: ${selectedCurrency.key}${toDecimalMark(
-                  balanceAmount
-                )}`}
-              </Tag> */}
               <Tag color={hasSufficientBalance ? "green" : "red"}>
-                {`Balance: ${supportedCurrencies.filter(
-                  (curr) => curr.currency === activeWallet.currency
-                )[0]?.symbol
-                  }${toDecimalMark(balanceAmount)}`}
+                {`Balance: ${
+                  supportedCurrencies.filter(
+                    (curr) => curr.currency === activeWallet.currency
+                  )[0]?.symbol
+                }${toDecimalMark(balanceAmount)}`}
               </Tag>
             </p>
           </Col>
           <Col>
             <Form.Item validateStatus={validationStatus} help={helpMessage}>
-              {/* <CustomCurrencyInput
-                prefix={selectedCurrency.key}
-                disabled={!isCurrencySelected}
-                onChange={handleAmountChange}
-                height={32}
-              /> */}
               <CustomCurrencyInput
                 prefix={
                   supportedCurrencies.find(

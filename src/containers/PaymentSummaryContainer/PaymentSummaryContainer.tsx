@@ -1,19 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
 import { Row, Col } from "antd";
 import { toDecimalMark } from "../../utility";
 import useBreakpoint from "antd/lib/grid/hooks/useBreakpoint";
-import { useAuthorisedContext } from "../../context/authorised-layout-context";
 import { supportedCurrencies } from "../../constants";
+import { usePayoutContext } from "../../context/payout-context";
 
 const PaymentSummaryContainer = () => {
   const screens = useBreakpoint();
-  const { activeWallet } = useAuthorisedContext();
-  const [transferAmount] = useState<number>(0);
-
-  const transferFee =
-    supportedCurrencies.find((curr) => curr.currency === activeWallet.currency)
-      ?.transferFee || 0;
-
+  const { payoutAmount, payoutCurrency, payoutFee } = usePayoutContext();
   return (
     <>
       <Row gutter={[12, 12]}>
@@ -28,10 +22,11 @@ const PaymentSummaryContainer = () => {
           }}
         >
           <h4 style={{ fontFamily: "Circular-Bold" }}>
-            {`${supportedCurrencies.find(
-              (curr) => curr.currency === activeWallet.currency
-            )?.symbol
-              } ${toDecimalMark(transferAmount)}`}
+            {`${
+              supportedCurrencies.find(
+                (curr) => curr.currency === payoutCurrency
+              )?.symbol
+            } ${toDecimalMark(payoutAmount)}`}
           </h4>
         </Col>
       </Row>
@@ -47,10 +42,11 @@ const PaymentSummaryContainer = () => {
           }}
         >
           <h4 style={{ fontFamily: "Circular-Bold" }}>
-            {`${supportedCurrencies.find(
-              (curr) => curr.currency === activeWallet.currency
-            )?.symbol
-              } ${toDecimalMark(transferFee)}`}
+            {`${
+              supportedCurrencies.find(
+                (curr) => curr.currency === payoutCurrency
+              )?.symbol
+            } ${toDecimalMark(payoutFee)}`}
           </h4>
         </Col>
       </Row>
@@ -66,14 +62,13 @@ const PaymentSummaryContainer = () => {
           }}
         >
           <h4 style={{ fontFamily: "Circular-Bold" }}>
-            {`${supportedCurrencies.find(
-              (curr) => curr.currency === activeWallet.currency
-            )?.symbol
-              } ${toDecimalMark(
-                transferAmount - transferFee < 0
-                  ? 0
-                  : transferAmount - transferFee
-              )}`}
+            {`${
+              supportedCurrencies.find(
+                (curr) => curr.currency === payoutCurrency
+              )?.symbol
+            } ${toDecimalMark(
+              payoutAmount - payoutFee < 0 ? 0 : payoutAmount - payoutFee
+            )}`}
           </h4>
         </Col>
       </Row>

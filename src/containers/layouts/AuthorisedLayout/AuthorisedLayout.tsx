@@ -7,7 +7,8 @@ import { AuthorisedLayoutContextProvider } from "../../../context/authorised-lay
 import SiteFooter from "./Footer/Footer";
 import { useRouter } from "../../../hooks/useRouter";
 import useBreakpoint from "../../../hooks/useBreakpoint";
-import { ModalContextProvider } from "../../../context/modal-context";
+import { PayoutContextProvider } from "../../../context/payout-context";
+//import { ModalContextProvider } from "../../../context/payout-context";
 
 const { Content } = Layout;
 const AuthorisedLayout = ({ children }: any) => {
@@ -16,10 +17,10 @@ const AuthorisedLayout = ({ children }: any) => {
   return (
     <Layout>
       <AuthorisedLayoutContextProvider>
-        <ModalContextProvider>
         <Sidebar isSmallScreen={screens.xs === true ? true : false} />
         <Layout className="site-layout">
           <CustomHeader />
+          <PayoutContextProvider>
           <Content
             className="site-layout-background"
             style={{
@@ -30,9 +31,9 @@ const AuthorisedLayout = ({ children }: any) => {
           >
             {children}
           </Content>
+          </PayoutContextProvider>
           <SiteFooter />
         </Layout>
-        </ModalContextProvider>
       </AuthorisedLayoutContextProvider>
     </Layout>
   );

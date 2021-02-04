@@ -14,15 +14,10 @@ const Wallet = () => {
   const [showDepositMoneyModal, setshowDepositMoneyModal] = useState(false);
   const [showWithdrawalMoneyModal, setshowWithdrawalMoneyModal] = useState(false);
   const { userWallets } = useAuthorisedContext();
-  const [sendMoneyFuncRef, setSendMoneyFuncRef] = useState<any>();
   const [depositMoneyFuncRef, setDepositMoneyFuncRef] = useState<any>();
-  const [withdrawalMoneyFuncRef, setWithdrawalMoneyFuncRef] = useState<any>();
 
   // initiate Sending Money
   const sendMoney = () => {
-    if (sendMoneyFuncRef) {
-      sendMoneyFuncRef.current();
-    }
   };
 
   const handleCancel = () => {
@@ -37,9 +32,6 @@ const Wallet = () => {
     }
   };
   const withdrawalMoney = () => {
-    if (withdrawalMoneyFuncRef) {
-      withdrawalMoneyFuncRef.current();
-    }
   };
 
   const addCurrency = () => {
@@ -65,7 +57,6 @@ const Wallet = () => {
         wrapClassName="send-money-modal"
       >
         <SendMoneyContainer
-          setSendMoneyFuncRef={setSendMoneyFuncRef}
           userBalances={userWallets}
         />
       </Modal>
@@ -91,7 +82,6 @@ const Wallet = () => {
         wrapClassName="withdrawal-money-modal"
       >
         <WithdrawalFormContainer
-          setWithdrawalMoneyFuncRef={setWithdrawalMoneyFuncRef}
           userBalances={userWallets}
         />
       </Modal>
