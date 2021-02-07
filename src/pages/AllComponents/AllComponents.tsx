@@ -14,6 +14,7 @@ import {
   UserLiteKycContainer,
   AllTransactionsTableContainer,
   PaymentSummaryContainer,
+  PayoutChannelContainer,
 } from "../../containers";
 import { ColumnsType } from "antd/lib/table";
 import { useAuthorisedContext } from "../../context/authorised-layout-context";
@@ -161,7 +162,11 @@ const AllComponents = () => {
         </div>
         <div style={{ marginTop: "80px" }}>
           <h1>Send Money Form Container</h1>
-          <SendMoneyContainer userBalances={userWallets} />;
+          <SendMoneyContainer userBalances={userWallets} />
+        </div>
+        <div style={{ marginTop: "50px" }}>
+          <h1>Payout channel Container</h1>
+          <PayoutChannelContainer userBalances={userWallets} />
         </div>
       </div>
     </div>

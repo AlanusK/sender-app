@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Form, Input, Select, Row, Col, Tag } from "antd";
+import { Form, Row, Col, Tag } from "antd";
 import "./SendMoneyContainer.css";
 import {
   SelectCurrencyContainer,
-  PaymentSummaryContainer,
+  PayoutChannelContainer,
 } from "../../containers";
 import { CustomCurrencyInput } from "../../components";
 import { debounce, toDecimalMark } from "../../utility";
-import useBreakpoint from "antd/lib/grid/hooks/useBreakpoint";
 import { useAuthorisedContext } from "../../context/authorised-layout-context";
 import { supportedCurrencies } from "../../constants";
 import { userWalletsBalanceProps } from "../../types";
@@ -19,7 +18,6 @@ interface ISendMoneyContainerProps {
 
 const SendMoneyContainer = ({ userBalances }: ISendMoneyContainerProps) => {
   const [form] = Form.useForm();
-  const screens = useBreakpoint();
   const { activeWallet, setactiveWallet, userWallets } = useAuthorisedContext();
   const {
     SetPayoutAmount,
@@ -34,17 +32,6 @@ const SendMoneyContainer = ({ userBalances }: ISendMoneyContainerProps) => {
     true
   );
   const [transferAmount, SetTransferAmount] = useState<number>(0);
-
-  const payoutMethod = [
-    { type: "MNO", name: "M-pesa Kenya", value: "MPESA_KENYA", key: "MPESA_KENYA" },
-    { type: "MNO", name: "M-pesa Tanzania", value: "MPESA_TANZANIA", key: "MPESA_TANZANIA" },
-    { type: "MNO", name: "Tigopesa", value: "TIGOPESA", key: "TIGOPESA" },
-    { type: "BANK", name: "Crdb", value: "CRDB", key: "CRDB" },
-    { type: "BANK", name: "Nmb", value: "NMB", key: "NMB" },
-    { type: "CLICKPESA", name: "Clickpesa", value: "CLICKPESA", key: "CLICKPESA" },
-  ];
-
-  const [selectedPayoutType, setSelectedPayoutType] = useState<string>("");
 
   const balanceAmount = activeWallet.balance;
   let isCurrencySelected = activeWallet?.currency ? true : false;
@@ -167,93 +154,8 @@ const SendMoneyContainer = ({ userBalances }: ISendMoneyContainerProps) => {
             </Form.Item>
           </Col>
         </Row>
-
-        <Form.Item
-          label={<label style={{ color: "gray" }}>Payout method</label>}
-          style={{ width: screens.xs ? "200px" : "412px" }}
-          name="payment-channel"
-        >
-          <Select
-            disabled={!isCurrencySelected}
-            onChange={(value, option: any) => {
-              option.type === "MNO" ? setSelectedPayoutType("MNO") : setSelectedPayoutType(option.type === "BANK" ? "BANK" : "CLICKPESA")
-              // console.log(option.type)
-              // if (value === "CRDB" || value === "NMB") {
-              //   setSelectedBank(true)
-              //   setSelectedMNO(false)
-              // }
-              // else {
-              //   setSelectedBank(false)
-              //   setSelectedMNO(true)
-              // }
-            }}
-          >
-            {payoutMethod.map((payout) =>
-              <Select.Option value={payout.value} key={payout.key} type={payout.type}>{payout.name}</Select.Option>
-            )}
-          </Select>
-        </Form.Item>
-
-        {selectedPayoutType === "MNO" &&
-          <>
-            <Form.Item
-              label={<label style={{ color: "gray" }}>Mobile money number</label>}
-              style={{ width: screens.xs ? "200px" : "412px" }}
-              name="receiving-account-number"
-            >
-              <Input placeholder="0763212347" disabled={!isCurrencySelected} />
-            </Form.Item>
-
-            <Form.Item
-              label={<label style={{ color: "gray" }}>Name receiver</label>}
-              style={{ width: screens.xs ? "200px" : "412px" }}
-              name="receiving-account-name"
-            >
-              <Input placeholder="John Doe" disabled={!isCurrencySelected} />
-            </Form.Item>
-          </>
-        }
-
-        {selectedPayoutType === "BANK" &&
-          <>
-            <Form.Item
-              label={<label style={{ color: "gray" }}>Account Name</label>}
-              style={{ width: screens.xs ? "200px" : "412px" }}
-              name="receiving-account-name"
-            >
-              <Input placeholder="Paul John" disabled={!isCurrencySelected} />
-            </Form.Item>
-
-            <Form.Item
-              label={<label style={{ color: "gray" }}>Account Number</label>}
-              style={{ width: screens.xs ? "200px" : "412px" }}
-              name="receiving-account-number"
-            >
-              <Input placeholder="01523455322" disabled={!isCurrencySelected} />
-            </Form.Item>
-
-            <Form.Item
-              label={<label style={{ color: "gray" }}>Swift code</label>}
-              style={{ width: screens.xs ? "200px" : "412px" }}
-              name="receiving-account-swiftcode"
-            >
-              <Input placeholder="EQBLTZTZ" disabled={!isCurrencySelected} />
-            </Form.Item>
-          </>
-        }
-
-        {selectedPayoutType === "CLICKPESA" &&
-          <Form.Item
-            label={<label style={{ color: "gray" }}>Clickpesa address</label>}
-            style={{ width: screens.xs ? "200px" : "412px" }}
-            name="receiving-account-clickpesa-address"
-          >
-            <Input placeholder="Clickpesa Limited" disabled={!isCurrencySelected} />
-          </Form.Item>
-        }
-
-        {isCurrencySelected && <PaymentSummaryContainer />}
       </Form>
+      <PayoutChannelContainer userBalances={userWallets}/>
     </div>
   );
 };
