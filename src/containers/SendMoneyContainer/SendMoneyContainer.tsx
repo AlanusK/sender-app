@@ -41,10 +41,10 @@ const SendMoneyContainer = ({ userBalances }: ISendMoneyContainerProps) => {
     { type: "MNO", name: "Tigopesa", value: "TIGOPESA", key: "TIGOPESA" },
     { type: "BANK", name: "Crdb", value: "CRDB", key: "CRDB" },
     { type: "BANK", name: "Nmb", value: "NMB", key: "NMB" },
+    { type: "CLICKPESA", name: "Clickpesa", value: "CLICKPESA", key: "CLICKPESA" },
   ];
 
-  const [selectedMNO, setSelectedMNO] = useState<boolean>(false);
-  const [selectedBank, setSelectedBank] = useState<boolean>(false);
+  const [selectedPayoutType, setSelectedPayoutType] = useState<string>("");
 
   const balanceAmount = activeWallet.balance;
   let isCurrencySelected = activeWallet?.currency ? true : false;
@@ -100,10 +100,9 @@ const SendMoneyContainer = ({ userBalances }: ISendMoneyContainerProps) => {
     if (value <= minmumAmount) {
       SetValidationStatus("error");
       setHelpMessage(
-        `Min: ${
-          supportedCurrencies.find(
-            (curr) => curr.currency === activeWallet.currency
-          )?.symbol
+        `Min: ${supportedCurrencies.find(
+          (curr) => curr.currency === activeWallet.currency
+        )?.symbol
         }${toDecimalMark(minmumAmount + 1)}`
       );
       return;
@@ -111,10 +110,9 @@ const SendMoneyContainer = ({ userBalances }: ISendMoneyContainerProps) => {
     if (value >= maxmumAmount) {
       SetValidationStatus("error");
       setHelpMessage(
-        `Max: ${
-          supportedCurrencies.find(
-            (curr) => curr.currency === activeWallet.currency
-          )?.symbol
+        `Max: ${supportedCurrencies.find(
+          (curr) => curr.currency === activeWallet.currency
+        )?.symbol
         }${toDecimalMark(maxmumAmount)}`
       );
       return;
@@ -141,11 +139,10 @@ const SendMoneyContainer = ({ userBalances }: ISendMoneyContainerProps) => {
                 hidden={!isCurrencySelected}
               >
                 <Tag color={hasSufficientBalance ? "green" : "red"}>
-                  {`Balance: ${
-                    supportedCurrencies.filter(
-                      (curr) => curr.currency === activeWallet.currency
-                    )[0]?.symbol
-                  }${toDecimalMark(balanceAmount)}`}
+                  {`Balance: ${supportedCurrencies.filter(
+                    (curr) => curr.currency === activeWallet.currency
+                  )[0]?.symbol
+                    }${toDecimalMark(balanceAmount)}`}
                 </Tag>
               </p>
             </Form.Item>
@@ -178,24 +175,26 @@ const SendMoneyContainer = ({ userBalances }: ISendMoneyContainerProps) => {
         >
           <Select
             disabled={!isCurrencySelected}
-            onChange={(value) => {
-              if (value == "CRDB" || value == "NMB") {
-                setSelectedBank(true)
-                setSelectedMNO(false)
-              }  
-              else {
-                setSelectedBank(false)
-                setSelectedMNO(true)
-              }
+            onChange={(value, option: any) => {
+              option.type === "MNO" ? setSelectedPayoutType("MNO") : setSelectedPayoutType(option.type === "BANK" ? "BANK" : "CLICKPESA")
+              // console.log(option.type)
+              // if (value === "CRDB" || value === "NMB") {
+              //   setSelectedBank(true)
+              //   setSelectedMNO(false)
+              // }
+              // else {
+              //   setSelectedBank(false)
+              //   setSelectedMNO(true)
+              // }
             }}
           >
             {payoutMethod.map((payout) =>
-              <Select.Option value={payout.value}>{payout.name}</Select.Option>
+              <Select.Option value={payout.value} key={payout.key} type={payout.type}>{payout.name}</Select.Option>
             )}
           </Select>
         </Form.Item>
 
-        {selectedMNO &&
+        {selectedPayoutType === "MNO" &&
           <>
             <Form.Item
               label={<label style={{ color: "gray" }}>Mobile money number</label>}
@@ -215,7 +214,7 @@ const SendMoneyContainer = ({ userBalances }: ISendMoneyContainerProps) => {
           </>
         }
 
-        {selectedBank &&
+        {selectedPayoutType === "BANK" &&
           <>
             <Form.Item
               label={<label style={{ color: "gray" }}>Account Name</label>}
@@ -241,6 +240,16 @@ const SendMoneyContainer = ({ userBalances }: ISendMoneyContainerProps) => {
               <Input placeholder="EQBLTZTZ" disabled={!isCurrencySelected} />
             </Form.Item>
           </>
+        }
+
+        {selectedPayoutType === "CLICKPESA" &&
+          <Form.Item
+            label={<label style={{ color: "gray" }}>Clickpesa address</label>}
+            style={{ width: screens.xs ? "200px" : "412px" }}
+            name="receiving-account-clickpesa-address"
+          >
+            <Input placeholder="Clickpesa Limited" disabled={!isCurrencySelected} />
+          </Form.Item>
         }
 
         {isCurrencySelected && <PaymentSummaryContainer />}
