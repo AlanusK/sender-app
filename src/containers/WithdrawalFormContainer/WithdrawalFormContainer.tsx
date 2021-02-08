@@ -8,6 +8,7 @@ import "./WithdrawalFormContainer.css";
 import { useAuthorisedContext } from "../../context/authorised-layout-context";
 import { supportedCurrencies } from "../../constants";
 import { usePayoutContext } from "../../context/payout-context";
+import { PayoutChannelContainer } from "../../containers";
 
 interface IWithdrawalFormProps {
   userBalances: userWalletsBalanceProps[];
@@ -149,7 +150,7 @@ export default function WithdrawalFormContainer({
         </Row>
       </Input.Group>
 
-      {isCurrencySelected && <PaymentSummaryContainer />}
+      <PayoutChannelContainer userBalances={userWallets}/>
     </div>
   );
 }
