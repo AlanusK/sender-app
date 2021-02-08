@@ -2,6 +2,7 @@ import { Col, Row } from "antd";
 import React from "react";
 import { AddCurrencyCard, CurrencyCard } from "../../components";
 import { useAuthorisedContext } from "../../context/authorised-layout-context";
+
 interface IWalletBallanceContainerProps {
   addCurrency: () => void;
 }
@@ -10,6 +11,7 @@ function WalletBallanceContainer({
   addCurrency,
 }: IWalletBallanceContainerProps) {
   const { setactiveWallet, userWallets } = useAuthorisedContext();
+
   return (
     <Row gutter={[12, 12]}>
       {userWallets.map((item) => (
