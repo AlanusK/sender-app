@@ -5,6 +5,7 @@ import {
   SendMoneyContainer,
   DepositFormContainer,
   WithdrawalFormContainer,
+  DepositChannelContainer,
 } from "../../containers";
 import { useAuthorisedContext } from "../../context/authorised-layout-context";
 import "./Wallet.css";
@@ -72,6 +73,7 @@ const Wallet = () => {
           setDepositMoneyFuncRef={setDepositMoneyFuncRef}
           userBalances={userWallets}
         />
+        <DepositChannelContainer userBalances={userWallets} />
       </Modal>
       <Modal
         title="Withdrawal Money"

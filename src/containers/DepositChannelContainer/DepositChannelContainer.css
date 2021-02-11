@@ -1,0 +1,60 @@
+.deposit-channel-container-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+}
+
+.label-heading {
+    color: gray;
+    width: 100vw;
+    background-color: #f0f2f5;
+    padding: 10px;
+    padding-bottom: 5px;
+}
+
+.display-content {
+    margin-top: -30px;
+    background-color: #f0f2f5;
+    padding: 10px;
+    padding-top: 0;
+}
+
+.border-top-line {
+    border-top: 2px dotted gray;
+}
+
+.bank-details {
+    background-color: #e0e0d1;
+    padding: 15px;
+}
+
+.bank-details-line {
+    border-bottom: 2px dotted gray;
+}
+
+.bank-details-line,
+.deposit-reference {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 10px;
+}
+
+.reference-left {
+    width: 50%;
+} 
+
+.reference-description {
+    margin-top: -8px;
+}
+
+.important-note {
+    color: #cc0000;
+    margin-top: 15px;
+    border-bottom: 2px dotted gray;
+    padding-bottom: 3px;
+}
+
+.paragraph-one {
+    margin-bottom : 5px;
+}

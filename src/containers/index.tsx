@@ -16,6 +16,7 @@ import UserLiteKycContainer from "./UserLiteKycContainer/UserLiteKycContainer";
 import ResetPasswordContainer from "./ResetPasswordContainer/ResetPasswordContainer";
 import PaymentSummaryContainer from "./PaymentSummaryContainer/PaymentSummaryContainer";
 import PayoutChannelContainer from "./PayoutChannelContainer/PayoutChannelContainer";
+import DepositChannelContainer from "./DepositChannelContainer/DepositChannelContainer";
 export {
   WalletBallanceContainer,
   ExtendedWalletBallanceContainer,
@@ -34,5 +35,6 @@ export {
   SecuritySettingsContainer,
   ResetPasswordContainer,
   PaymentSummaryContainer,
-  PayoutChannelContainer
+  PayoutChannelContainer,
+  DepositChannelContainer
 };
