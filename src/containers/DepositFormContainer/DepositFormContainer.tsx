@@ -1,6 +1,6 @@
 import { Col, Form, Input, Row, Tag } from "antd";
 import React, { useEffect, useRef, useState } from "react";
-import { SelectCurrencyContainer } from "..";
+import { DepositChannelContainer, SelectCurrencyContainer } from "..";
 import { CustomCurrencyInput } from "../../components";
 import { debounce, toDecimalMark } from "../../utility";
 import "./DepositFormContainer.css";
@@ -72,7 +72,11 @@ export default function DepositFormContainer({
     if (value <= minmumAmount) {
       SetValidationStatus("error");
       setHelpMessage(
-        `Min: ${selectedCurrency.key}${toDecimalMark(minmumAmount + 1)}`
+        `Min: ${
+          supportedCurrencies.find(
+            (curr) => curr.currency === activeWallet.currency
+          )?.symbol || ""
+        }${toDecimalMark(minmumAmount + 1)}`
       );
       return;
     }
@@ -104,7 +108,7 @@ export default function DepositFormContainer({
   return (
     <div>
       <Input.Group size="large">
-        <Row gutter={[12, 12]}>
+        <Row gutter={[12, 0]}>
           <Col>
             <SelectCurrencyContainer
               onCurrencyChange={handleCurrencyChange}
@@ -118,10 +122,11 @@ export default function DepositFormContainer({
               hidden={!isCurrencySelected}
             >
               <Tag color="default">
-                {`Balance: ${supportedCurrencies.filter(
-                  (curr) => curr.currency === activeWallet.currency
-                )[0]?.symbol
-                  }${toDecimalMark(balanceAmount)}`}
+                {`Balance: ${
+                  supportedCurrencies.filter(
+                    (curr) => curr.currency === activeWallet.currency
+                  )[0]?.symbol
+                }${toDecimalMark(balanceAmount)}`}
               </Tag>
             </p>
           </Col>
@@ -140,6 +145,12 @@ export default function DepositFormContainer({
             </Form.Item>
           </Col>
         </Row>
+        {transferAmount > 0 && validationStatus !== 'error' &&(
+          <DepositChannelContainer
+            depositAmount={transferAmount}
+            depositCurrency={activeWallet.currency}
+          />
+        )}
       </Input.Group>
     </div>
   );

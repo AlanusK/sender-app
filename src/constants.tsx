@@ -1,3 +1,9 @@
+import { bankDetails } from "./types";
+
+/**
+ * list of currencies supported by clickpesa
+ * that are allowed to send and receive payments
+ */
 export const supportedCurrencies = [
   {
     currency: "TZS",
@@ -52,5 +58,28 @@ export const supportedCurrencies = [
     minTransfer: 9,
     maxTransfer: 10000,
     transferFee: 5,
+  },
+];
+/**
+ * clickpesa bank accounts details
+ */
+export const clickPesaBankAccountDetails: bankDetails[] = [
+  {
+    currency: "TZS",
+    bankName: "ECOBANK TANZANIA",
+    branchName: "H/O",
+    accountName: "PAYCLICK LIMITED (TZS)",
+    accountNumber: 708000203,
+    bankCode: "	ECOC",
+    swiftNumber: "ECOCTZTZ",
+  },
+  {
+    currency: "KES",
+    bankName: "EQUITY BANK KENYA",
+    branchName: "H/O",
+    accountName: "CLICKPESA COMPANY KENYA LIMITED",
+    accountNumber: 1770280480747,
+    bankCode: "068",
+    swiftNumber: "EQBLKENA",
   },
 ];

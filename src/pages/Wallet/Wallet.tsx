@@ -13,13 +13,14 @@ import "./Wallet.css";
 const Wallet = () => {
   const [showSendMoneyModal, setshowSendMoneyModal] = useState(false);
   const [showDepositMoneyModal, setshowDepositMoneyModal] = useState(false);
-  const [showWithdrawalMoneyModal, setshowWithdrawalMoneyModal] = useState(false);
+  const [showWithdrawalMoneyModal, setshowWithdrawalMoneyModal] = useState(
+    false
+  );
   const { userWallets } = useAuthorisedContext();
   const [depositMoneyFuncRef, setDepositMoneyFuncRef] = useState<any>();
 
   // initiate Sending Money
-  const sendMoney = () => {
-  };
+  const sendMoney = () => {};
 
   const handleCancel = () => {
     setshowSendMoneyModal(false);
@@ -32,8 +33,7 @@ const Wallet = () => {
       depositMoneyFuncRef.current();
     }
   };
-  const withdrawalMoney = () => {
-  };
+  const withdrawalMoney = () => {};
 
   const addCurrency = () => {
     console.log("add currency");
@@ -57,9 +57,7 @@ const Wallet = () => {
         okText="Send"
         wrapClassName="send-money-modal"
       >
-        <SendMoneyContainer
-          userBalances={userWallets}
-        />
+        <SendMoneyContainer userBalances={userWallets} />
       </Modal>
       <Modal
         title="Deposit Money"
@@ -73,7 +71,6 @@ const Wallet = () => {
           setDepositMoneyFuncRef={setDepositMoneyFuncRef}
           userBalances={userWallets}
         />
-        <DepositChannelContainer userBalances={userWallets} />
       </Modal>
       <Modal
         title="Withdrawal Money"
@@ -83,9 +80,7 @@ const Wallet = () => {
         okText="Withdrawal"
         wrapClassName="withdrawal-money-modal"
       >
-        <WithdrawalFormContainer
-          userBalances={userWallets}
-        />
+        <WithdrawalFormContainer userBalances={userWallets} />
       </Modal>
     </>
   );

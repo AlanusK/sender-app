@@ -171,7 +171,7 @@ const AllComponents = () => {
         </div>
         <div style={{ marginTop: "50px" }}>
           <h1>Deposit channel Container</h1>
-          <DepositChannelContainer userBalances={userWallets} />
+          <DepositChannelContainer depositAmount={0} depositCurrency="TZS" />
         </div>
       </div>
     </div>
