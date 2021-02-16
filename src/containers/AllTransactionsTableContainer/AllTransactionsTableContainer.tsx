@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Input } from 'antd';
 import "./AllTransactionsTableContainer.css";
 import useBreakpoint from "antd/lib/grid/hooks/useBreakpoint";
@@ -14,6 +14,7 @@ const AllTransactionsTableContainer = (props:IAllTransactionsTableProps) => {
   const screens = useBreakpoint();
 
   var columns = props.columns;
+  const [transactions, setTransactions] = useState(props.transactions);
 
   if (screens.xs) {
     columns = props.columns.filter((col: any) => col.title === 'Date' || col.title === 'Amount');
@@ -22,10 +23,10 @@ const AllTransactionsTableContainer = (props:IAllTransactionsTableProps) => {
   return (
     <>
       <div className="title-all-transactions">
-        <Button className="transaction-type" type="text">All Payments</Button>
-        <Button className="transaction-type" type="text">Send</Button>
-        <Button className="transaction-type" type="text">Withdraw</Button>
-        <Button className="transaction-type" type="text">Deposit</Button>
+        <Button className="transaction-type" type="text" onClick={() => setTransactions(props.transactions)}>All Payments</Button>
+        <Button className="transaction-type" type="text" onClick={() => setTransactions(props.transactions.filter((obj: any) => obj.type === 'Send'))}>Send</Button>
+        <Button className="transaction-type" type="text" onClick={() => setTransactions(props.transactions.filter((obj: any) => obj.type === 'Withdraw'))}>Withdraw</Button>
+        <Button className="transaction-type" type="text" onClick={() => setTransactions(props.transactions.filter((obj: any) => obj.type === 'Deposit'))}>Deposit</Button>
       </div>
       <div className="search-input">
         <Input 
@@ -36,7 +37,7 @@ const AllTransactionsTableContainer = (props:IAllTransactionsTableProps) => {
       <div className="transactions-table">
         <TransactionsTable 
           columns={columns}
-          transactions={props.transactions}
+          transactions={transactions}
         /> 
       </div>
     </>

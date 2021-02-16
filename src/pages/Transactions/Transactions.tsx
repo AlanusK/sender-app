@@ -14,14 +14,14 @@ const data = [
     key: "2",
     date: "28/05/2020",
     amount: "USD 1,000/=",
-    type: "Deposit",
+    type: "Send",
     status: "Completed",
   },
   {
     key: "3",
     date: "17/11/2014",
     amount: "EUR 1,000/=",
-    type: "Deposit",
+    type: "Withdraw",
     status: "Completed",
   },
   {
