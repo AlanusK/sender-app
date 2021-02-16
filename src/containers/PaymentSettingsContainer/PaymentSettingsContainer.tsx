@@ -8,6 +8,13 @@ const PaymentSettingsContainer = () => {
     //   const screens = useBreakpoint();
     const [form] = Form.useForm();
 
+    const userPaymentDetails = {
+        stellar_address: "FRT45YD89FDE4083938E5",
+        secret_key: "hidden",
+        address: "john*clickpesa.com",
+        currency: "USD"
+    }
+
     return (
         <div className="payment-container-wrapper">
             <div className="payment-heading-wrapper">
@@ -20,16 +27,16 @@ const PaymentSettingsContainer = () => {
                     form={form}
                 >
                     <Form.Item label={<label style={{ color: "gray" }}>Stellar Address</label>}>
-                        <Input className="payment-form" placeholder="DDGHXUZIQ76213SGQ78" />
+                        <Input className="payment-form" placeholder="DDGHXUZIQ76213SGQ78" value={userPaymentDetails.stellar_address} />
                     </Form.Item>
                     <Form.Item label={<label style={{ color: "gray" }}>Secret Key</label>}>
-                        <Input className="payment-form" placeholder="Your Secret key is hidden" />
+                        <Input className="payment-form" placeholder="Your Secret key is hidden" value={userPaymentDetails.secret_key} />
                     </Form.Item>
                     <Form.Item label={<label style={{ color: "gray" }}>Address</label>}>
-                        <Input className="payment-form" placeholder="name*clickpesa.com" />
+                        <Input className="payment-form" placeholder="name*clickpesa.com" value={userPaymentDetails.address} />
                     </Form.Item>
                     <Form.Item label={<label style={{ color: "gray" }}>Default Currency</label>}>
-                        <Input className="payment-form" placeholder="TZS" />
+                        <Input className="payment-form" placeholder="TZS" value={userPaymentDetails.currency} />
                     </Form.Item>
                 </Form>
             </div>
