@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./AllComponents.css";
 import {
   DepositFormContainer,
@@ -19,6 +19,7 @@ import {
 } from "../../containers";
 import { ColumnsType } from "antd/lib/table";
 import { useAuthorisedContext } from "../../context/authorised-layout-context";
+import { Modal } from "antd";
 
 const data = [
   {
@@ -88,6 +89,21 @@ const columns: ColumnsType<transactions> = [
 
 const AllComponents = () => {
   const { userWallets } = useAuthorisedContext();
+  const [showCurrencyModal, setShowCurrencyModal] = useState(false);
+
+  const addCurrency = () => {
+    console.log("add currency");
+    setShowCurrencyModal(true);
+  };
+
+  const currencyAdd = () => {
+    console.log("currency add on wallet page");
+  };
+
+  const handleCancel = () => {
+    setShowCurrencyModal(false);
+  };
+
   return (
     <div className="all-components-wrapper">
       <div className="data-display-section">
@@ -115,21 +131,34 @@ const AllComponents = () => {
         </div>
         <div style={{ marginTop: "40px" }}>
           <h1>Wallet Balance Cards</h1>
-          <WalletBallanceContainer addCurrency={() => {}} />
+          <WalletBallanceContainer addCurrency={addCurrency} />
         </div>
         <div style={{ marginTop: "40px" }}>
           <h1> Extended Wallet Balance Cards </h1>
           <ExtendedWalletBallanceContainer
-            sendMoney={() => {}}
-            depositMoney={() => {}}
-            withdrawalMoney={() => {}}
+            sendMoney={() => { }}
+            depositMoney={() => { }}
+            withdrawalMoney={() => { }}
             userBalances={[
               { currency: "TZS", amount: 3000 },
               { currency: "USD", amount: 6000 },
             ]}
-            addCurrency={() => {}}
+            addCurrency={addCurrency}
           />
         </div>
+        <Modal
+          title="Add Currency"
+          visible={showCurrencyModal}
+          onOk={currencyAdd}
+          onCancel={handleCancel}
+          okText="Add"
+          wrapClassName="add-currency-modal"
+        >
+          <SelectCurrencyContainer
+            currencyOptions={[{ currency: "TZS" }]}
+            width={412}
+          />
+        </Modal>
       </div>
       <div className="data-entry-section">
         <div className="data-display-heading-wrapper">
@@ -152,7 +181,7 @@ const AllComponents = () => {
           <h1>Deposit Form Container</h1>
           <DepositFormContainer
             userBalances={userWallets}
-            setDepositMoneyFuncRef={() => {}}
+            setDepositMoneyFuncRef={() => { }}
           />
         </div>
         <div style={{ marginTop: "20px" }}>

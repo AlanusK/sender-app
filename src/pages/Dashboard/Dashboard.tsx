@@ -127,7 +127,10 @@ const Dashboard = () => {
         okText="Add"
         wrapClassName="add-currency-modal"
       >
-        <SelectCurrencyContainer currencyOptions={[{ currency: "TZS" }]} />
+        <SelectCurrencyContainer
+          currencyOptions={[{ currency: "TZS" }]}
+          width={412}
+        />
       </Modal>
     </div>
   );
