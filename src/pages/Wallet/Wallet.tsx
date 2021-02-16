@@ -5,7 +5,7 @@ import {
   SendMoneyContainer,
   DepositFormContainer,
   WithdrawalFormContainer,
-  DepositChannelContainer,
+  SelectCurrencyContainer,
 } from "../../containers";
 import { useAuthorisedContext } from "../../context/authorised-layout-context";
 import "./Wallet.css";
@@ -18,6 +18,7 @@ const Wallet = () => {
   );
   const { userWallets } = useAuthorisedContext();
   const [depositMoneyFuncRef, setDepositMoneyFuncRef] = useState<any>();
+  const [showCurrencyModal, setShowCurrencyModal] = useState(false);
 
   // initiate Sending Money
   const sendMoney = () => {};
@@ -26,6 +27,7 @@ const Wallet = () => {
     setshowSendMoneyModal(false);
     setshowDepositMoneyModal(false);
     setshowWithdrawalMoneyModal(false);
+    setShowCurrencyModal(false);
   };
 
   const depositMoney = () => {
@@ -37,6 +39,11 @@ const Wallet = () => {
 
   const addCurrency = () => {
     console.log("add currency");
+    setShowCurrencyModal(true);
+  };
+
+  const currencyAdd = () => {
+    console.log("currency add on wallet page");
   };
 
   return (
@@ -81,6 +88,16 @@ const Wallet = () => {
         wrapClassName="withdrawal-money-modal"
       >
         <WithdrawalFormContainer userBalances={userWallets} />
+      </Modal>
+      <Modal
+        title="Add Currency"
+        visible={showCurrencyModal}
+        onOk={currencyAdd}
+        onCancel={handleCancel}
+        okText="Add"
+        wrapClassName="add-currency-modal"
+      >
+        <SelectCurrencyContainer currencyOptions={[{ currency: "TZS" }]} />
       </Modal>
     </>
   );

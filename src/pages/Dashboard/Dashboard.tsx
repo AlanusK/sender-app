@@ -1,12 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   TransactionsTableContainer,
   SendMoneyContainer,
   WalletBallanceContainer,
+  SelectCurrencyContainer,
 } from "../../containers";
 import { ColumnsType } from "antd/lib/table";
 import "./Dashboard.css";
-import { Row, Col, Button } from "antd";
+import { Row, Col, Button, Modal } from "antd";
 import { useAuthorisedContext } from "../../context/authorised-layout-context";
 import { usePayoutContext } from "../../context/payout-context";
 
@@ -79,6 +80,8 @@ const Dashboard = () => {
   const { userWallets } = useAuthorisedContext();
   const { payoutAmount } = usePayoutContext();
 
+  const [showCurrencyModal, setShowCurrencyModal] = useState(false);
+
   const sendMoney = () => {
     console.log("eaf :>> ", payoutAmount);
     if (payoutAmount) {
@@ -87,6 +90,15 @@ const Dashboard = () => {
   };
   const addCurrency = () => {
     console.log("add currency");
+    setShowCurrencyModal(true);
+  };
+
+  const currencyAdd = () => {
+    console.log("currency add on Dashboard page");
+  };
+
+  const handleCancel = () => {
+    setShowCurrencyModal(false);
   };
 
   return (
@@ -106,6 +118,17 @@ const Dashboard = () => {
           </Button>
         </Col>
       </Row>
+
+      <Modal
+        title="Add Currency"
+        visible={showCurrencyModal}
+        onOk={currencyAdd}
+        onCancel={handleCancel}
+        okText="Add"
+        wrapClassName="add-currency-modal"
+      >
+        <SelectCurrencyContainer currencyOptions={[{ currency: "TZS" }]} />
+      </Modal>
     </div>
   );
 };
