@@ -143,7 +143,7 @@ const DepositChannelContainer = ({
                       <div className="deposit-reference">
                         <div className="reference-left">
                           <h3>Deposit Reference</h3>
-                          <span style={{ fontSize: "12px", color: "red" }}>
+                          <span style={{ fontSize: "12px"}} className="important-note">
                             * must be included on your transfer
                           </span>
                         </div>
