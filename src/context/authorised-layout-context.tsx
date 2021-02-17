@@ -83,8 +83,12 @@ function useAuthorisedLayoutContextProviderProvider() {
     // image: imageUrl,
     name: "Thomson Paul John",
     email: "tpaulJohn@rocketmail.com",
-    // phone: "+250756312987",
-    // language: "Spanish"
+    phone: "+250756312987",
+    language: "Spanish",
+    stellar_address: "FRT45YD89FDE4083938E5",
+    secret_key: "hidden",
+    address: "john*clickpesa.com",
+    currency: "USD"
   }
 
   // Returns auth methods

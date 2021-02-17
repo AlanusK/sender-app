@@ -26,11 +26,12 @@
     width: 100%;
 }
 
-.payment-button {
-    margin-top: 10px;
-    margin-bottom: 10px;
-    background-color: gray;
-    width: 100px;
+.payment-save-button,
+.payment-edit-button {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  background-color: gray;
+  width: 120px;
 }
 
 .payment-form::placeholder {
