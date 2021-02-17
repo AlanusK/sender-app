@@ -1,19 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Form, Input, Button, } from 'antd';
 import "./PaymentSettingsContainer.css";
 // import useBreakpoint from "antd/lib/grid/hooks/useBreakpoint";
+import { useAuthorisedContext } from "../../context/authorised-layout-context";
 
 const PaymentSettingsContainer = () => {
 
     //   const screens = useBreakpoint();
     const [form] = Form.useForm();
+    const [editMode, setEditMode] = useState<boolean>(false);
+    const { userDetails } = useAuthorisedContext();
 
-    const userPaymentDetails = {
-        stellar_address: "FRT45YD89FDE4083938E5",
-        secret_key: "hidden",
-        address: "john*clickpesa.com",
-        currency: "USD"
-    }
+    const handleEdit = () => {
+        setEditMode(true);
+      }
+    
+      const handleSave = () => {
+        setEditMode(false);
+      }
 
     return (
         <div className="payment-container-wrapper">
@@ -27,21 +31,42 @@ const PaymentSettingsContainer = () => {
                     form={form}
                 >
                     <Form.Item label={<label style={{ color: "gray" }}>Stellar Address</label>}>
-                        <Input className="payment-form" placeholder="DDGHXUZIQ76213SGQ78" value={userPaymentDetails.stellar_address} />
+                        <Input
+                            className="payment-form"
+                            placeholder="DDGHXUZIQ76213SGQ78"
+                            value={userDetails.stellar_address}
+                            disabled={!editMode}
+                        />
                     </Form.Item>
                     <Form.Item label={<label style={{ color: "gray" }}>Secret Key</label>}>
-                        <Input className="payment-form" placeholder="Your Secret key is hidden" value={userPaymentDetails.secret_key} />
+                        <Input
+                            className="payment-form"
+                            placeholder="Your Secret key is hidden"
+                            value={userDetails.secret_key}
+                            disabled={!editMode}
+                        />
                     </Form.Item>
                     <Form.Item label={<label style={{ color: "gray" }}>Address</label>}>
-                        <Input className="payment-form" placeholder="name*clickpesa.com" value={userPaymentDetails.address} />
+                        <Input
+                            className="payment-form"
+                            placeholder="name*clickpesa.com"
+                            value={userDetails.address}
+                            disabled={!editMode}
+                        />
                     </Form.Item>
                     <Form.Item label={<label style={{ color: "gray" }}>Default Currency</label>}>
-                        <Input className="payment-form" placeholder="TZS" value={userPaymentDetails.currency} />
+                        <Input
+                            className="payment-form"
+                            placeholder="TZS"
+                            value={userDetails.currency}
+                            disabled={!editMode}
+                        />
                     </Form.Item>
                 </Form>
             </div>
             <div className="payment-button-wrapper">
-                <Button type="primary" className="payment-button">Edit</Button>
+                {!editMode && <Button type="primary" className="payment-edit-button" onClick={handleEdit} >Edit</Button>}
+                {editMode && <Button type="primary" className="payment-save-button" onClick={handleSave} >Save Changes</Button>}
             </div>
         </div>
     );

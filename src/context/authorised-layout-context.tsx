@@ -19,6 +19,7 @@ interface AuthorisedLayoutContextProps {
     }>
   >;
   userWallets: userWalletsBalanceProps[];
+  userDetails: any;
 }
 
 interface AuthorisedLayoutContextProviderProps {
@@ -78,6 +79,18 @@ function useAuthorisedLayoutContextProviderProvider() {
     { currency: "KES", amount: 65000 },
   ];
 
+  const userDetails = {
+    // image: imageUrl,
+    name: "Thomson Paul John",
+    email: "tpaulJohn@rocketmail.com",
+    phone: "+250756312987",
+    language: "Spanish",
+    stellar_address: "FRT45YD89FDE4083938E5",
+    secret_key: "hidden",
+    address: "john*clickpesa.com",
+    currency: "USD"
+  }
+
   // Returns auth methods
   return {
     siderCollapsed: collapsed,
@@ -87,5 +100,6 @@ function useAuthorisedLayoutContextProviderProvider() {
     activeWallet: activeWallet,
     setactiveWallet: setactiveWallet,
     userWallets,
+    userDetails,
   };
 }

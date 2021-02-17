@@ -35,8 +35,13 @@
   border-bottom: 1px solid #f0f2f5;
 }
 
-.general-form-button {
+.general-form-save-button,
+.general-form-edit-button {
   margin-top: 15px;
   margin-bottom: 15px;
   background-color: gray;
+}
+
+.general-form-edit-button {
+  width: 120px;
 }
