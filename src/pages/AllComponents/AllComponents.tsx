@@ -102,7 +102,25 @@ const AllComponents = () => {
 
   const handleCancel = () => {
     setShowCurrencyModal(false);
+    setshowSendMoneyModal(false);
+    setshowDepositMoneyModal(false);
+    setshowWithdrawalMoneyModal(false);
   };
+  const [showSendMoneyModal, setshowSendMoneyModal] = useState(false);
+  const [showDepositMoneyModal, setshowDepositMoneyModal] = useState(false);
+  const [showWithdrawalMoneyModal, setshowWithdrawalMoneyModal] = useState(
+    false
+  );
+  const [depositMoneyFuncRef, setDepositMoneyFuncRef] = useState<any>();
+
+  const sendMoney = () => {};
+
+  const depositMoney = () => {
+    if (depositMoneyFuncRef) {
+      depositMoneyFuncRef.current();
+    }
+  };
+  const withdrawalMoney = () => {};
 
   return (
     <div className="all-components-wrapper">
@@ -136,15 +154,49 @@ const AllComponents = () => {
         <div style={{ marginTop: "40px" }}>
           <h1> Extended Wallet Balance Cards </h1>
           <ExtendedWalletBallanceContainer
-            sendMoney={() => { }}
-            depositMoney={() => { }}
-            withdrawalMoney={() => { }}
-            userBalances={[
-              { currency: "TZS", amount: 3000 },
-              { currency: "USD", amount: 6000 },
-            ]}
+            sendMoney={() => setshowSendMoneyModal(true)}
+            depositMoney={() => setshowDepositMoneyModal(true)}
+            withdrawalMoney={() => setshowWithdrawalMoneyModal(true)}
+            // userBalances={[
+            //   { currency: "TZS", amount: 3000 },
+            //   { currency: "USD", amount: 6000 },
+            // ]}
+            userBalances={userWallets}
             addCurrency={addCurrency}
           />
+          <Modal
+            title="Send Money"
+            visible={showSendMoneyModal}
+            onOk={sendMoney}
+            onCancel={handleCancel}
+            okText="Send"
+            wrapClassName="send-money-modal"
+          >
+            <SendMoneyContainer userBalances={userWallets} />
+          </Modal>
+          <Modal
+            title="Deposit Money"
+            visible={showDepositMoneyModal}
+            onOk={depositMoney}
+            onCancel={handleCancel}
+            okText="Deposit"
+            wrapClassName="deposit-money-modal"
+          >
+            <DepositFormContainer
+              setDepositMoneyFuncRef={setDepositMoneyFuncRef}
+              userBalances={userWallets}
+            />
+          </Modal>
+          <Modal
+            title="Withdrawal Money"
+            visible={showWithdrawalMoneyModal}
+            onOk={withdrawalMoney}
+            onCancel={handleCancel}
+            okText="Withdrawal"
+            wrapClassName="withdrawal-money-modal"
+          >
+            <WithdrawalFormContainer userBalances={userWallets} />
+          </Modal>
         </div>
         <Modal
           title="Add Currency"
