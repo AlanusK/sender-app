@@ -34,14 +34,12 @@ const AllTransactionsTableContainer = (props: IAllTransactionsTableProps) => {
           style={{ width: screens.xs ? "200px" : "450px", height: "38px" }}
           onChange={(e) => {
             console.log(e.target.value)
-            const trans = props.transactions.filter((row: any) => {
-              if (row.date.toLowerCase().includes(e.target.value.toLowerCase()) ||
-                row.amount.toLowerCase().includes(e.target.value.toLowerCase()) ||
-                row.type.toLowerCase().includes(e.target.value.toLowerCase()) ||
-                row.status.toLowerCase().includes(e.target.value.toLowerCase())
-              )
-                return row
-            })
+            const trans = props.transactions.filter((row: any) =>
+              row.date.toLowerCase().includes(e.target.value.toLowerCase()) ||
+              row.amount.toLowerCase().includes(e.target.value.toLowerCase()) ||
+              row.type.toLowerCase().includes(e.target.value.toLowerCase()) ||
+              row.status.toLowerCase().includes(e.target.value.toLowerCase())
+            )
             console.log(trans)
             setTransactions(trans)
           }}
