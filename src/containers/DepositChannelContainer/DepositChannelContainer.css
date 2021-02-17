@@ -48,7 +48,7 @@
 }
 
 .important-note {
-    color: #cc0000;
+    color: red;
     margin-top: 15px;
     border-bottom: 2px dotted gray;
     padding-bottom: 3px;
