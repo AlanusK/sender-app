@@ -1,30 +1,46 @@
-import React from "react";
-import { Form, Input, Button, Checkbox } from "antd";
+import React, { useEffect } from "react";
+import { Form, Input, Button, Checkbox, message } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import "./Login.css";
 import { useAuth } from "../../hooks/useAuth";
 import { useRouter } from "../../hooks/useRouter";
+import { useAsync } from "../../hooks/useAsync";
 
 const Login = () => {
-  const { signin } = useAuth();
+  const { signin, setAuthentication } = useAuth();
   const { replace, query } = useRouter();
-  const onFinish = (values: any) => {
-    //console.log("Success:", values);
-    signin(values);
-    return values.username && values.password
-      ? replace(query.redirect ? query.redirect : "/")
-      : null;
+  const { execute, status, value, error = "" } = useAsync(signin, false);
+
+  const onFinish = (values: { username: string; password: string }) => {
+    return execute(values);
   };
-  const onFinishFailed = (errorInfo: any) => {
-    console.log("Failed:", errorInfo);
-  };
+  //console.log(" status, value, error :>> ", status, value, error);
+  useEffect(() => {
+    if (status === "success") {
+      if (value.data.success === true) {
+        message.success("Login Success");
+        setAuthentication(true);
+        return replace(query.redirect ? query.redirect : "/");
+      }
+      return message.error("Something is wrong, contact ClickPesa support");
+    }
+  }, [query.redirect, replace, setAuthentication, status, value]);
+
+  useEffect(() => {
+    if (status === "error") {
+      setAuthentication(false);
+      const errorMessage = error?.toString().includes("400")
+        ? "Incorect username / password combination"
+        : "Something went wrong, Try again later.";
+      message.error(errorMessage);
+    }
+  }, [error, setAuthentication, status]);
   return (
     <Form
       name="normal_login"
       className="login-form"
       initialValues={{ remember: true }}
       onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
     >
       <Form.Item
         name="username"
@@ -54,10 +70,14 @@ const Login = () => {
           Forgot password
         </a>
       </Form.Item>
-
       <Form.Item>
-        <Button type="primary" htmlType="submit" className="login-form-button">
-          Log in
+        <Button
+          type="primary"
+          htmlType="submit"
+          className="login-form-button"
+          disabled={status === "pending" ? true : false}
+        >
+          {status !== "pending" ? " Log in" : "Authenticating..."}
         </Button>
         Or <a href="/register">register now!</a>
       </Form.Item>

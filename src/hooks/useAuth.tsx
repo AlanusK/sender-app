@@ -1,10 +1,11 @@
 import React, { useState, useContext, createContext } from "react";
-
+const Axios = require("axios").default;
 interface AuthContextProps {
   isAuthenticated: any;
   signin: any;
   signup: any;
   signout: any;
+  setAuthentication: any;
 }
 
 interface AuthProviderProps {
@@ -39,9 +40,11 @@ export const useAuth = () => {
 // Provider hook that creates auth object and handles state
 function useAuthProvider() {
   const [isAuthenticated, setAuthentication] = useState(isValidToken());
+
   const signin = ({ username, password }: any) => {
-    return new Promise(() => {
-      username && password ? setAuthentication(true) : setAuthentication(false);
+    return Axios.post(`${process.env.REACT_APP_API_URL}/login`, {
+      email_address: username,
+      password: password,
     });
   };
 
@@ -60,6 +63,7 @@ function useAuthProvider() {
   // Returns auth methods
   return {
     isAuthenticated: isAuthenticated,
+    setAuthentication,
     signin,
     signup,
     signout,
