@@ -21,16 +21,16 @@ const AuthorisedLayout = ({ children }: any) => {
         <Layout className="site-layout">
           <CustomHeader />
           <PayoutContextProvider>
-          <Content
-            className="site-layout-background"
-            style={{
-              margin: pathname === "/settings" ? 0 : "20px 14px",
-              padding: pathname === "/settings" ? 0 : 24,
-              minHeight: 280,
-            }}
-          >
-            {children}
-          </Content>
+            <Content
+              className="site-layout-background"
+              style={{
+                margin: "14px 14px",
+                padding: 24,
+                minHeight: 280,
+              }}
+            >
+              {children}
+            </Content>
           </PayoutContextProvider>
           <SiteFooter />
         </Layout>
