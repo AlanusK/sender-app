@@ -1,7 +1,14 @@
-import React, { useState, useContext, createContext } from "react";
+import jwtDecode from "jwt-decode";
+import React, { useState, useContext, createContext, useEffect } from "react";
+import { useAuth } from "../hooks/useAuth";
 import { useRouter } from "../hooks/useRouter";
-import { userWalletsBalanceProps } from "../types";
-
+import {
+  ExtendedJwtPayload,
+  IUserData,
+  StellarWalletBalanceProps,
+  userWalletsBalanceProps,
+} from "../types";
+const Axios = require("axios").default;
 interface IactiveWalletProps {
   currency: string;
   balance: number;
@@ -51,6 +58,69 @@ export const useAuthorisedContext = () => {
 
 // Provider hook that creates context object and handles state
 function useAuthorisedLayoutContextProviderProvider() {
+  const { replace } = useRouter();
+  const { setAuthentication } = useAuth();
+  const decodedToken = jwtDecode<ExtendedJwtPayload>(
+    localStorage.getItem("userSessionToken") || ""
+  );
+  const [userDetails, setUserDetails] = useState<IUserData>({
+    name: "",
+    email: "",
+    phone: "",
+    language: "",
+    stellar_address: "",
+    secret_key: "",
+    public_key: "",
+    address: "",
+    currency: "",
+    userWallets: [
+      { amount: 0, currency: "TZS" },
+      { amount: 0, currency: "KES" },
+    ],
+    userId: decodedToken.id,
+  });
+
+  useEffect(() => {
+    if (decodedToken.id) {
+      Axios.get(
+        `${process.env.REACT_APP_API_URL}/accounts/?registration_id=${decodedToken.id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: localStorage.getItem("userSessionToken"),
+          },
+        }
+      )
+        .then((response: any) => {
+          setUserDetails((existingUserDetails) => ({
+            ...existingUserDetails,
+            userWallets: response.data.balances
+              .filter(
+                (balance: StellarWalletBalanceProps) =>
+                  balance.asset_type !== "native" &&
+                  (balance.asset_code === "TZS" || balance.asset_code === "KES")
+              )
+              .map((balance: StellarWalletBalanceProps) => ({
+                amount: balance.balance,
+                currency: balance.asset_code,
+              })),
+            stellar_address: response.data.account_address,
+            secret_key: response.data.secret,
+            public_key: response.data.publicKey,
+          }));
+        })
+        .catch((error: any) => {
+          const errorMessage = error?.toString().includes("401")
+            ? "User has no API access"
+            : "Something is wrong";
+          console.log("Error :>> ", errorMessage);
+          setAuthentication(false);
+          localStorage.removeItem("userSessionToken")
+          return replace("/login")
+        });
+    }
+  }, [decodedToken.id, replace, setAuthentication]);
+
   const router = useRouter();
   const [collapsed, setCollapsed] = useState(false);
   const [activeWallet, setactiveWallet] = useState<IactiveWalletProps>({
@@ -60,6 +130,7 @@ function useAuthorisedLayoutContextProviderProvider() {
   const [selectedMenuItem, setSelectedMenuItem] = useState(
     router.pathname.split("/")[1]
   );
+
   const toggleSider = () => {
     return new Promise(() => {
       collapsed ? setCollapsed(false) : setCollapsed(true);
@@ -71,25 +142,6 @@ function useAuthorisedLayoutContextProviderProvider() {
       router.push(e.key);
     });
   };
-  const userWallets: Array<userWalletsBalanceProps> = [
-    { currency: "TZS", amount: 3000 },
-    { currency: "USD", amount: 6000 },
-    { currency: "RWF", amount: 65000 },
-    { currency: "GBP", amount: 65000 },
-    { currency: "KES", amount: 65000 },
-  ];
-
-  const userDetails = {
-    // image: imageUrl,
-    name: "Thomson Paul John",
-    email: "tpaulJohn@rocketmail.com",
-    phone: "+250756312987",
-    language: "Spanish",
-    stellar_address: "FRT45YD89FDE4083938E5",
-    secret_key: "hidden",
-    address: "john*clickpesa.com",
-    currency: "USD"
-  }
 
   // Returns auth methods
   return {
@@ -99,7 +151,8 @@ function useAuthorisedLayoutContextProviderProvider() {
     setMenuItem,
     activeWallet: activeWallet,
     setactiveWallet: setactiveWallet,
-    userWallets,
+    userWallets: userDetails.userWallets,
     userDetails,
+    setUserDetails,
   };
 }

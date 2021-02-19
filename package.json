@@ -16,6 +16,7 @@
     "antd": "^4.8.3",
     "axios": "^0.21.1",
     "craco-less": "^1.17.0",
+    "jwt-decode": "^3.1.2",
     "logrocket": "^1.0.14",
     "query-string": "^6.13.7",
     "react": "^17.0.1",

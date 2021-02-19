@@ -21,3 +21,4 @@ export const debounce = (fn: any, ms = 0) => {
     }, ms);
   };
 };
+

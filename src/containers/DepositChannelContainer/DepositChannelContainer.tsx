@@ -64,7 +64,7 @@ const DepositChannelContainer = ({
   ] = useState<string>();
   return (
     <div className="deposit-channel-container-wrapper">
-      {["TZS", "KES"].includes(depositCurrency || "") && (
+      {["TZS", "KES"].includes(depositCurrency) && (
         <Form form={form} layout={"vertical"}>
           <Form.Item
             style={{ width: screens.xs ? "200px" : "412px" }}

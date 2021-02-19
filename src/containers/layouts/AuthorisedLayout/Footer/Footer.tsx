@@ -5,7 +5,7 @@ const { Footer } = Layout;
 
 const SiteFooter = () => {
   return (
-      <Footer style={{ textAlign: "center" }}>
+      <Footer style={{ textAlign: "center", margin:"0 14px" }}>
         ©{new Date().getFullYear()} | ClickPesa
       </Footer>
   );

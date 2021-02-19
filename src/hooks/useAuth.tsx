@@ -1,4 +1,6 @@
+import jwtDecode from "jwt-decode";
 import React, { useState, useContext, createContext } from "react";
+import { ExtendedJwtPayload } from "../types";
 const Axios = require("axios").default;
 interface AuthContextProps {
   isAuthenticated: any;
@@ -17,10 +19,12 @@ export const authContext = createContext<AuthContextProps>(
 );
 
 const isValidToken = () => {
-  //const token = localStorage.getItem("userSessionToken");
-  //const id = getUserId(localStorage.getItem("userSessionToken"));
+  const token = localStorage.getItem("userSessionToken");
   // JWT decode & check token validity & expiration.
-  //if (token) return true;
+  if (token) {
+    const decoded = jwtDecode<ExtendedJwtPayload>(token);
+    if (decoded.exp  && Date.now() <= decoded.exp * 1000) return true;
+  }
   return false;
 };
 

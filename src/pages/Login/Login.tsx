@@ -1,10 +1,12 @@
 import React, { useEffect } from "react";
+import jwtDecode from "jwt-decode";
 import { Form, Input, Button, Checkbox, message } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import "./Login.css";
 import { useAuth } from "../../hooks/useAuth";
 import { useRouter } from "../../hooks/useRouter";
 import { useAsync } from "../../hooks/useAsync";
+import { ExtendedJwtPayload } from "../../types";
 
 const Login = () => {
   const { signin, setAuthentication } = useAuth();
@@ -14,13 +16,21 @@ const Login = () => {
   const onFinish = (values: { username: string; password: string }) => {
     return execute(values);
   };
-  //console.log(" status, value, error :>> ", status, value, error);
+
+  // if exist remove stored token on mount
+  useEffect(() => {
+    localStorage.removeItem("userSessionToken");
+  }, []);
+
   useEffect(() => {
     if (status === "success") {
       if (value.data.success === true) {
-        message.success("Login Success");
-        setAuthentication(true);
-        return replace(query.redirect ? query.redirect : "/");
+        const decodedToken = jwtDecode<ExtendedJwtPayload>(value.data.token);
+        if (decodedToken.id) {
+          setAuthentication(true);
+          localStorage.setItem("userSessionToken", value.data.token);
+          return replace(query.redirect ? query.redirect : "/");
+        }
       }
       return message.error("Something is wrong, contact ClickPesa support");
     }
