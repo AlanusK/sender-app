@@ -119,6 +119,21 @@ function useAuthorisedLayoutContextProviderProvider() {
           return replace("/login")
         });
     }
+
+    Axios.get(`${process.env.REACT_APP_API_URL}/customer/${decodedToken.id}`)
+      .then((response: any) => {
+        console.log(response.data)
+        const data = response.data;
+        setUserDetails((existingUserDetails) => ({
+          ...existingUserDetails, 
+          name: data.full_name,
+          email: data.email,
+          phone: data.phone,
+          language: data.nationality,
+        }))
+      })
+      .catch ((error: any) => console.log(error))
+      
   }, [decodedToken.id, replace, setAuthentication]);
 
   const router = useRouter();
