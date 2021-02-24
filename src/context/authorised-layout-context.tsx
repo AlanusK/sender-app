@@ -104,9 +104,10 @@ function useAuthorisedLayoutContextProviderProvider() {
                 amount: balance.balance,
                 currency: balance.asset_code,
               })),
-            stellar_address: response.data.account_address,
+            stellar_address: response.data.publicKey,
             secret_key: response.data.secret,
             public_key: response.data.publicKey,
+            address: response.data.account_address,
           }));
         })
         .catch((error: any) => {
