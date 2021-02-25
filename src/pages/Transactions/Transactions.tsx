@@ -1,7 +1,7 @@
 import React from "react";
 import { AllTransactionsTableContainer } from "../../containers";
 import { ColumnsType } from "antd/lib/table";
-import { useAuthorisedContext } from "../../context/authorised-layout-context";
+import { useAuthorisedContext } from "../../context/authorised-user-context";
 
 type transactions = {
   key: string;
