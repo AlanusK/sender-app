@@ -7,7 +7,6 @@ import {
   IUserData,
   StellarWalletBalanceProps,
   userWalletsBalanceProps,
-  IUserTransaction,
 } from "../types";
 const Axios = require("axios").default;
 interface IactiveWalletProps {
@@ -82,15 +81,7 @@ function useAuthorisedLayoutContextProviderProvider() {
     userId: decodedToken.id,
   });
 
-  const [userTransaction, setUserTransaction] = useState<IUserTransaction>(
-    {
-      key: "",
-      date: "",
-      amount: "",
-      type: "",
-      status: "",
-    },
-  );
+const [userTransaction, setUserTransaction] = useState<any>([]);
 
   useEffect(() => {
     if (decodedToken.id) {
@@ -133,37 +124,37 @@ function useAuthorisedLayoutContextProviderProvider() {
         });
 
       Axios.get(
-        `${process.env.REACT_APP_API_URL}/payout?customer_id=${decodedToken.id}`)
+        `${process.env.REACT_APP_API_URL}/deposit-request?customer_id=${decodedToken.id}`)
         .then((response: any) => {
-          const transaction = response.data.find((item: any) => item.customer_id = decodedToken.id)
+          const data = response.data.filter((item: any) => item.customer_id = decodedToken.id)
+          console.log(data)
+          const transaction = data.map((item: any) => item = {
+            key: item.id,
+            date: item.confirmation.confirmedAt,
+            amount: item.confirmation.amount,
+            type: "Deposit",
+            status: item.status,
+          })
           console.log(transaction)
-          setUserTransaction(
-            {
-              key: transaction.customer_id,
-              date: "04/11/1990",
-              amount: transaction.amount,
-              type: "Deposit",
-              status: transaction.status,
-            }
-          )
+          setUserTransaction(transaction)
         })
         .catch((error: any) => console.log(error));
     }
 
     Axios.get(`${process.env.REACT_APP_API_URL}/customer/${decodedToken.id}`)
       .then((response: any) => {
-        console.log(response.data)
+        // console.log(response.data)
         const data = response.data;
         setUserDetails((existingUserDetails) => ({
-          ...existingUserDetails, 
+          ...existingUserDetails,
           name: data.full_name,
           email: data.email,
           phone: data.phone,
           language: data.nationality,
         }))
       })
-      .catch ((error: any) => console.log(error))
-      
+      .catch((error: any) => console.log(error))
+
   }, [decodedToken.id, replace, setAuthentication]);
 
   const router = useRouter();

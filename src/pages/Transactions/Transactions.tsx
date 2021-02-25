@@ -42,7 +42,7 @@ const Transactions = () => {
 
   const { userTransaction } = useAuthorisedContext();
 
-  const data = [userTransaction];
+  const data = userTransaction;
 
   return (
     <div>
