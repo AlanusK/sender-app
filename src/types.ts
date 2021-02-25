@@ -28,7 +28,6 @@ export type IUserData = {
    userWallets: userWalletsBalanceProps[]
 }
 
-
 export type ExtendedJwtPayload = {
    iss?: string;
    sub?: string;
