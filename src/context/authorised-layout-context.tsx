@@ -81,7 +81,7 @@ function useAuthorisedLayoutContextProviderProvider() {
     userId: decodedToken.id,
   });
 
-const [userTransaction, setUserTransaction] = useState<any>([]);
+  const [userTransaction, setUserTransaction] = useState<any>([]);
 
   useEffect(() => {
     if (decodedToken.id) {
@@ -127,23 +127,36 @@ const [userTransaction, setUserTransaction] = useState<any>([]);
         `${process.env.REACT_APP_API_URL}/deposit-request?customer_id=${decodedToken.id}`)
         .then((response: any) => {
           const data = response.data.filter((item: any) => item.customer_id = decodedToken.id)
-          console.log(data)
-          const transaction = data.map((item: any) => item = {
+          const depositTransaction = data.map((item: any) => item = {
             key: item.id,
             date: item.confirmation.confirmedAt,
             amount: item.confirmation.amount,
             type: "Deposit",
             status: item.status,
           })
-          console.log(transaction)
-          setUserTransaction(transaction)
+          return depositTransaction;
+        })
+        .then((depositTransaction: any) => {
+          Axios.get(
+            `${process.env.REACT_APP_API_URL}/payout?customer_id=${decodedToken.id}`)
+            .then((response: any) => {
+              const data = response.data.filter((item: any) => item.customer_id = decodedToken.id)
+              const sendTransaction = data.map((item: any) => item = {
+                key: item.id,
+                date: item.createdAt,
+                amount: item.amount,
+                type: "Send",
+                status: item.status,
+              })
+              setUserTransaction(depositTransaction.concat(sendTransaction))
+            })
+            .catch((error: any) => console.log(error));
         })
         .catch((error: any) => console.log(error));
     }
 
     Axios.get(`${process.env.REACT_APP_API_URL}/customer/${decodedToken.id}`)
       .then((response: any) => {
-        // console.log(response.data)
         const data = response.data;
         setUserDetails((existingUserDetails) => ({
           ...existingUserDetails,
