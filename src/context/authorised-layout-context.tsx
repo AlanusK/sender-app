@@ -116,9 +116,10 @@ function useAuthorisedLayoutContextProviderProvider() {
                 amount: balance.balance,
                 currency: balance.asset_code,
               })),
-            stellar_address: response.data.account_address,
+            stellar_address: response.data.publicKey,
             secret_key: response.data.secret,
             public_key: response.data.publicKey,
+            address: response.data.account_address,
           }));
         })
         .catch((error: any) => {
@@ -149,6 +150,20 @@ function useAuthorisedLayoutContextProviderProvider() {
         .catch((error: any) => console.log(error));
     }
 
+    Axios.get(`${process.env.REACT_APP_API_URL}/customer/${decodedToken.id}`)
+      .then((response: any) => {
+        console.log(response.data)
+        const data = response.data;
+        setUserDetails((existingUserDetails) => ({
+          ...existingUserDetails, 
+          name: data.full_name,
+          email: data.email,
+          phone: data.phone,
+          language: data.nationality,
+        }))
+      })
+      .catch ((error: any) => console.log(error))
+      
   }, [decodedToken.id, replace, setAuthentication]);
 
   const router = useRouter();

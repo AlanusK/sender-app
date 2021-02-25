@@ -14,7 +14,7 @@ export default function SettingsContainer() {
       <Tabs
         defaultActiveKey="1"
         onChange={callback}
-        tabBarExtraContent="⛳"
+        tabBarExtraContent=""
         tabPosition="left"
       >
         <TabPane tab="General" key="1">
@@ -26,9 +26,9 @@ export default function SettingsContainer() {
         <TabPane tab="Payments" key="3">
         <PaymentSettingsContainer/>
         </TabPane>
-        <TabPane tab="Notifications" key="4">
+   {/*      <TabPane tab="Notifications" key="4">
           Content of Tab Pane 4
-        </TabPane>
+        </TabPane> */}
       </Tabs>
     </div>
   );
