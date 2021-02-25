@@ -130,31 +130,43 @@ function useAuthorisedLayoutContextProviderProvider() {
         });
 
       Axios.get(
-        `${process.env.REACT_APP_API_URL}/deposit-request?customer_id=${decodedToken.id}`)
+        `${process.env.REACT_APP_API_URL}/deposit-request?customer_id=${decodedToken.id}`
+      )
         .then((response: any) => {
-          const data = response.data.filter((item: any) => item.customer_id = decodedToken.id)
-          const depositTransaction = data.map((item: any) => item = {
-            key: item.id,
-            date: item.confirmation.confirmedAt,
-            amount: item.confirmation.amount,
-            type: "Deposit",
-            status: item.status,
-          })
+          const data = response.data.filter(
+            (item: any) => (item.customer_id = decodedToken.id)
+          );
+          const depositTransaction = data.map(
+            (item: any) =>
+              (item = {
+                key: item.id,
+                date: item.confirmation.confirmedAt,
+                amount: item.confirmation.amount,
+                type: "Deposit",
+                status: item.status,
+              })
+          );
           return depositTransaction;
         })
         .then((depositTransaction: any) => {
           Axios.get(
-            `${process.env.REACT_APP_API_URL}/payout?customer_id=${decodedToken.id}`)
+            `${process.env.REACT_APP_API_URL}/payout?customer_id=${decodedToken.id}`
+          )
             .then((response: any) => {
-              const data = response.data.filter((item: any) => item.customer_id = decodedToken.id)
-              const sendTransaction = data.map((item: any) => item = {
-                key: item.id,
-                date: item.createdAt,
-                amount: item.amount,
-                type: "Send",
-                status: item.status,
-              })
-              setUserTransaction(depositTransaction.concat(sendTransaction))
+              const data = response.data.filter(
+                (item: any) => (item.customer_id = decodedToken.id)
+              );
+              const sendTransaction = data.map(
+                (item: any) =>
+                  (item = {
+                    key: item.id,
+                    date: item.createdAt,
+                    amount: item.amount,
+                    type: "Send",
+                    status: item.status,
+                  })
+              );
+              setUserTransaction(depositTransaction.concat(sendTransaction));
             })
             .catch((error: any) => console.log(error));
         })
