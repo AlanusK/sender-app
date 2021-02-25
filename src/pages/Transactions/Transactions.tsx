@@ -1,37 +1,7 @@
 import React from "react";
 import { AllTransactionsTableContainer } from "../../containers";
 import { ColumnsType } from "antd/lib/table";
-
-const data = [
-  {
-    key: "1",
-    date: "04/11/1990",
-    amount: "USD 10,000/=",
-    type: "Deposit",
-    status: "Completed",
-  },
-  {
-    key: "2",
-    date: "28/05/2020",
-    amount: "USD 1,000/=",
-    type: "Send",
-    status: "Completed",
-  },
-  {
-    key: "3",
-    date: "17/11/2014",
-    amount: "EUR 1,000/=",
-    type: "Withdraw",
-    status: "Completed",
-  },
-  {
-    key: "4",
-    date: "13/09/2007",
-    amount: "EUR 1,000/=",
-    type: "Deposit",
-    status: "Cancelled",
-  },
-];
+import { useAuthorisedContext } from "../../context/authorised-layout-context";
 
 type transactions = {
   key: string;
@@ -69,6 +39,10 @@ const columns: ColumnsType<transactions> = [
 ];
 
 const Transactions = () => {
+
+  const { userTransaction } = useAuthorisedContext();
+
+  const data = [userTransaction];
 
   return (
     <div>

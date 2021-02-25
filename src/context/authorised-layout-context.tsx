@@ -7,6 +7,7 @@ import {
   IUserData,
   StellarWalletBalanceProps,
   userWalletsBalanceProps,
+  IUserTransaction,
 } from "../types";
 const Axios = require("axios").default;
 interface IactiveWalletProps {
@@ -27,6 +28,7 @@ interface AuthorisedLayoutContextProps {
   >;
   userWallets: userWalletsBalanceProps[];
   userDetails: any;
+  userTransaction: any;
 }
 
 interface AuthorisedLayoutContextProviderProps {
@@ -80,6 +82,16 @@ function useAuthorisedLayoutContextProviderProvider() {
     userId: decodedToken.id,
   });
 
+  const [userTransaction, setUserTransaction] = useState<IUserTransaction>(
+    {
+      key: "",
+      date: "",
+      amount: "",
+      type: "",
+      status: "",
+    },
+  );
+
   useEffect(() => {
     if (decodedToken.id) {
       Axios.get(
@@ -118,7 +130,25 @@ function useAuthorisedLayoutContextProviderProvider() {
           localStorage.removeItem("userSessionToken")
           return replace("/login")
         });
+
+      Axios.get(
+        `${process.env.REACT_APP_API_URL}/payout?customer_id=${decodedToken.id}`)
+        .then((response: any) => {
+          const transaction = response.data.find((item: any) => item.customer_id = decodedToken.id)
+          console.log(transaction)
+          setUserTransaction(
+            {
+              key: transaction.customer_id,
+              date: "04/11/1990",
+              amount: transaction.amount,
+              type: "Deposit",
+              status: transaction.status,
+            }
+          )
+        })
+        .catch((error: any) => console.log(error));
     }
+
   }, [decodedToken.id, replace, setAuthentication]);
 
   const router = useRouter();
@@ -154,5 +184,7 @@ function useAuthorisedLayoutContextProviderProvider() {
     userWallets: userDetails.userWallets,
     userDetails,
     setUserDetails,
+    userTransaction,
+    setUserTransaction,
   };
 }

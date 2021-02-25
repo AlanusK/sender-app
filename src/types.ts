@@ -28,6 +28,14 @@ export type IUserData = {
    userWallets: userWalletsBalanceProps[]
 }
 
+export type IUserTransaction = {
+   key: string,
+   date: string,
+   amount: string,
+   type: string,
+   status: string
+};
+
 
 export type ExtendedJwtPayload = {
    iss?: string;
