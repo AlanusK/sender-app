@@ -1,7 +1,7 @@
 import { Avatar, Select } from "antd";
 import React from "react";
 import { supportedCurrencies } from "../../constants";
-import { useAuthorisedContext } from "../../context/authorised-layout-context";
+import { useAuthorisedContext } from "../../context/authorised-user-context";
 
 interface ISelectCurrency {
   currencyOptions: { currency: string }[];

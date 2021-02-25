@@ -3,11 +3,13 @@ import { Row, Col } from "antd";
 import { toDecimalMark } from "../../utility";
 import useBreakpoint from "antd/lib/grid/hooks/useBreakpoint";
 import { supportedCurrencies } from "../../constants";
-import { usePayoutContext } from "../../context/payout-context";
+import { useWalletOperationsContext } from "../../context/wallet-operations-context";
 
 const PaymentSummaryContainer = () => {
   const screens = useBreakpoint();
-  const { payoutAmount, payoutCurrency, payoutFee } = usePayoutContext();
+  const {
+    walletOperation: { fee, currency, amount },
+  } = useWalletOperationsContext();
   return (
     <>
       <Row gutter={[12, 12]}>
@@ -23,10 +25,9 @@ const PaymentSummaryContainer = () => {
         >
           <h4 style={{ fontFamily: "Circular-Bold" }}>
             {`${
-              supportedCurrencies.find(
-                (curr) => curr.currency === payoutCurrency
-              )?.symbol
-            } ${toDecimalMark(payoutAmount)}`}
+              supportedCurrencies.find((curr) => curr.currency === currency)
+                ?.symbol
+            } ${toDecimalMark(amount)}`}
           </h4>
         </Col>
       </Row>
@@ -43,10 +44,9 @@ const PaymentSummaryContainer = () => {
         >
           <h4 style={{ fontFamily: "Circular-Bold" }}>
             {`${
-              supportedCurrencies.find(
-                (curr) => curr.currency === payoutCurrency
-              )?.symbol
-            } ${toDecimalMark(payoutFee)}`}
+              supportedCurrencies.find((curr) => curr.currency === currency)
+                ?.symbol
+            } ${toDecimalMark(fee)}`}
           </h4>
         </Col>
       </Row>
@@ -63,12 +63,9 @@ const PaymentSummaryContainer = () => {
         >
           <h4 style={{ fontFamily: "Circular-Bold" }}>
             {`${
-              supportedCurrencies.find(
-                (curr) => curr.currency === payoutCurrency
-              )?.symbol
-            } ${toDecimalMark(
-              payoutAmount - payoutFee < 0 ? 0 : payoutAmount - payoutFee
-            )}`}
+              supportedCurrencies.find((curr) => curr.currency === currency)
+                ?.symbol
+            } ${toDecimalMark(amount - fee < 0 ? 0 : amount - fee)}`}
           </h4>
         </Col>
       </Row>

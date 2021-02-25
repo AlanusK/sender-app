@@ -3,16 +3,14 @@ import { Layout } from "antd";
 import Sidebar from "./Sidebar/Sidebar";
 import CustomHeader from "./Header/Header";
 import "./AuthorisedLayout.css";
-import { AuthorisedLayoutContextProvider } from "../../../context/authorised-layout-context";
+import { AuthorisedLayoutContextProvider } from "../../../context/authorised-user-context";
 import SiteFooter from "./Footer/Footer";
-import { useRouter } from "../../../hooks/useRouter";
 import useBreakpoint from "../../../hooks/useBreakpoint";
-import { PayoutContextProvider } from "../../../context/payout-context";
+import { WalletOperationsContextProvider } from "../../../context/wallet-operations-context";
 //import { ModalContextProvider } from "../../../context/payout-context";
 
 const { Content } = Layout;
 const AuthorisedLayout = ({ children }: any) => {
-  const { pathname } = useRouter();
   const screens = useBreakpoint();
   return (
     <Layout>
@@ -20,7 +18,7 @@ const AuthorisedLayout = ({ children }: any) => {
         <Sidebar isSmallScreen={screens.xs === true ? true : false} />
         <Layout className="site-layout">
           <CustomHeader />
-          <PayoutContextProvider>
+          <WalletOperationsContextProvider>
             <Content
               className="site-layout-background"
               style={{
@@ -31,7 +29,7 @@ const AuthorisedLayout = ({ children }: any) => {
             >
               {children}
             </Content>
-          </PayoutContextProvider>
+          </WalletOperationsContextProvider>
           <SiteFooter />
         </Layout>
       </AuthorisedLayoutContextProvider>

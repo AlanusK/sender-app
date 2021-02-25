@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   TransactionsTableContainer,
   SendMoneyContainer,
@@ -8,8 +8,8 @@ import {
 import { ColumnsType } from "antd/lib/table";
 import "./Dashboard.css";
 import { Row, Col, Button, Modal } from "antd";
-import { useAuthorisedContext } from "../../context/authorised-layout-context";
-import { usePayoutContext } from "../../context/payout-context";
+import { useAuthorisedContext } from "../../context/authorised-user-context";
+import { useWalletOperationsContext } from "../../context/wallet-operations-context";
 
 const data = [
   {
@@ -77,16 +77,19 @@ const columns: ColumnsType<transactions> = [
   },
 ];
 const Dashboard = () => {
-  const { userWallets } = useAuthorisedContext();
-  const { payoutAmount } = usePayoutContext();
-
+  const { userWallets, updateWalletBalances } = useAuthorisedContext();
+  const {
+    walletOperation,
+  } = useWalletOperationsContext();
   const [showCurrencyModal, setShowCurrencyModal] = useState(false);
 
+  useEffect(() => {
+    updateWalletBalances();
+  }, []);
+
   const sendMoney = () => {
-    console.log("eaf :>> ", payoutAmount);
-    if (payoutAmount) {
-      console.log("wew :>> ", payoutAmount);
-    }
+    console.log("amount :>> ", walletOperation.amount);
+    console.log('walletOperation :>> ', walletOperation);
   };
   const addCurrency = () => {
     console.log("add currency");

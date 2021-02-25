@@ -3,7 +3,7 @@ import { supportedCurrencies } from "../../constants";
 import { DepositIcon, SendMoneyIcon, WithdrawalIcon } from "..";
 import { Card, Statistic } from "antd";
 import Avatar from "antd/lib/avatar/avatar";
-import { useAuthorisedContext } from "../../context/authorised-layout-context";
+import { useAuthorisedContext } from "../../context/authorised-user-context";
 
 interface IExtendedCurrencyCard {
   amount: number;

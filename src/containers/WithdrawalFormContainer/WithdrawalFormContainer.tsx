@@ -3,11 +3,11 @@ import React, { useEffect, useState } from "react";
 import { SelectCurrencyContainer, PaymentSummaryContainer } from "..";
 import { CustomCurrencyInput } from "../../components";
 import { debounce, toDecimalMark } from "../../utility";
-import { userWalletsBalanceProps } from "../../types";
+import { IWalletOperationProps, userWalletsBalanceProps } from "../../types";
 import "./WithdrawalFormContainer.css";
-import { useAuthorisedContext } from "../../context/authorised-layout-context";
+import { useAuthorisedContext } from "../../context/authorised-user-context";
 import { supportedCurrencies } from "../../constants";
-import { usePayoutContext } from "../../context/payout-context";
+import { useWalletOperationsContext } from "../../context/wallet-operations-context";
 import { PayoutChannelContainer } from "../../containers";
 
 interface IWithdrawalFormProps {
@@ -18,11 +18,7 @@ export default function WithdrawalFormContainer({
   userBalances,
 }: IWithdrawalFormProps) {
   const { activeWallet, setactiveWallet, userWallets } = useAuthorisedContext();
-  const {
-    SetPayoutAmount,
-    SetPayoutCurrency,
-    SetFeeAmount,
-  } = usePayoutContext();
+  const { setWalletOperation } = useWalletOperationsContext();
   const [validationStatus, SetValidationStatus] = useState<
     "" | "error" | "success" | "warning" | "validating"
   >("");
@@ -44,8 +40,18 @@ export default function WithdrawalFormContainer({
   const [withdrawalAmount, SetWithdrawalAmount] = useState<number>(0);
 
   useEffect(() => {
-    SetFeeAmount(withdrawalFee);
-  }, [SetFeeAmount, withdrawalFee]);
+    setWalletOperation((existingDetails: IWalletOperationProps) => ({
+      ...existingDetails,
+      fee: withdrawalFee,
+      currency: activeWallet?.currency,
+      amount: withdrawalAmount,
+    }));
+  }, [
+    activeWallet?.currency,
+    setWalletOperation,
+    withdrawalAmount,
+    withdrawalFee,
+  ]);
 
   const handleCurrencyChange = (currency: string, options: any) => {
     const currencyBalance = userBalances.find(
@@ -58,20 +64,12 @@ export default function WithdrawalFormContainer({
     isCurrencySelected = true;
   };
 
-  useEffect(() => {
-    SetPayoutCurrency(activeWallet?.currency);
-  }, [SetPayoutCurrency, activeWallet?.currency]);
-
   const handleAmountChange = (value: string) => {
     validateAmount(Number(value));
     validateWalletBalance(Number(value));
     const debouncedSetWithdrawalAmount = debounce(SetWithdrawalAmount, 1000);
     debouncedSetWithdrawalAmount(Number(value) ? Number(value) : 0);
   };
-
-  useEffect(() => {
-    SetPayoutAmount(withdrawalAmount);
-  }, [SetPayoutAmount, withdrawalAmount]);
 
   const validateWalletBalance = (value: number) => {
     if (value > balanceAmount) {
@@ -150,7 +148,7 @@ export default function WithdrawalFormContainer({
         </Row>
       </Input.Group>
 
-      <PayoutChannelContainer userBalances={userWallets}/>
+      <PayoutChannelContainer userBalances={userWallets} />
     </div>
   );
 }

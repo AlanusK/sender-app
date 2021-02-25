@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Form, Input, Button } from "antd";
 import "./PaymentSettingsContainer.css";
 // import useBreakpoint from "antd/lib/grid/hooks/useBreakpoint";
-import { useAuthorisedContext } from "../../context/authorised-layout-context";
+import { useAuthorisedContext } from "../../context/authorised-user-context";
 
 const PaymentSettingsContainer = () => {
   //   const screens = useBreakpoint();

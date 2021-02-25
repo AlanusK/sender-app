@@ -3,7 +3,7 @@ import { Form, Input, Select } from "antd";
 import "./PayoutChannelContainer.css";
 import { PaymentSummaryContainer } from "..";
 import useBreakpoint from "antd/lib/grid/hooks/useBreakpoint";
-import { useAuthorisedContext } from "../../context/authorised-layout-context";
+import { useAuthorisedContext } from "../../context/authorised-user-context";
 import { userWalletsBalanceProps } from "../../types";
 
 interface ISendMoneyContainerProps {

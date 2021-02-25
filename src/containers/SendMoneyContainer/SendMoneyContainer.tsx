@@ -7,10 +7,10 @@ import {
 } from "../../containers";
 import { CustomCurrencyInput } from "../../components";
 import { debounce, toDecimalMark } from "../../utility";
-import { useAuthorisedContext } from "../../context/authorised-layout-context";
+import { useAuthorisedContext } from "../../context/authorised-user-context";
 import { supportedCurrencies } from "../../constants";
-import { userWalletsBalanceProps } from "../../types";
-import { usePayoutContext } from "../../context/payout-context";
+import { IWalletOperationProps, userWalletsBalanceProps } from "../../types";
+import { useWalletOperationsContext } from "../../context/wallet-operations-context";
 
 interface ISendMoneyContainerProps {
   userBalances: userWalletsBalanceProps[];
@@ -19,11 +19,7 @@ interface ISendMoneyContainerProps {
 const SendMoneyContainer = ({ userBalances }: ISendMoneyContainerProps) => {
   const [form] = Form.useForm();
   const { activeWallet, setactiveWallet, userWallets } = useAuthorisedContext();
-  const {
-    SetPayoutAmount,
-    SetPayoutCurrency,
-    SetFeeAmount,
-  } = usePayoutContext();
+  const { setWalletOperation } = useWalletOperationsContext();
   const [validationStatus, SetValidationStatus] = useState<
     "" | "error" | "success" | "warning" | "validating"
   >("");
@@ -46,8 +42,13 @@ const SendMoneyContainer = ({ userBalances }: ISendMoneyContainerProps) => {
       ?.transferFee || 0;
 
   useEffect(() => {
-    SetFeeAmount(transferFee);
-  }, [SetFeeAmount, transferFee]);
+    setWalletOperation((existingDetails: IWalletOperationProps) => ({
+      ...existingDetails,
+      fee: transferFee,
+      currency: activeWallet?.currency,
+      amount: transferAmount,
+    }));
+  }, [activeWallet?.currency, setWalletOperation, transferAmount, transferFee]);
 
   const handleCurrencyChange = (currency: string, options: any) => {
     const currencyBalance = userBalances.find(
@@ -60,20 +61,12 @@ const SendMoneyContainer = ({ userBalances }: ISendMoneyContainerProps) => {
     isCurrencySelected = true;
   };
 
-  useEffect(() => {
-    SetPayoutCurrency(activeWallet?.currency);
-  }, [SetPayoutCurrency, activeWallet?.currency]);
-
   const handleAmountChange = (value: string) => {
     validateAmount(Number(value));
     validateWalletBalance(Number(value));
     const debouncedSetTransferAmount = debounce(SetTransferAmount, 1000);
     debouncedSetTransferAmount(Number(value) ? Number(value) : 0);
   };
-
-  useEffect(() => {
-    SetPayoutAmount(transferAmount);
-  }, [SetPayoutAmount, transferAmount]);
 
   const validateWalletBalance = (value: number) => {
     if (value > balanceAmount) {
@@ -87,9 +80,10 @@ const SendMoneyContainer = ({ userBalances }: ISendMoneyContainerProps) => {
     if (value <= minmumAmount) {
       SetValidationStatus("error");
       setHelpMessage(
-        `Min: ${supportedCurrencies.find(
-          (curr) => curr.currency === activeWallet.currency
-        )?.symbol
+        `Min: ${
+          supportedCurrencies.find(
+            (curr) => curr.currency === activeWallet.currency
+          )?.symbol
         }${toDecimalMark(minmumAmount + 1)}`
       );
       return;
@@ -97,9 +91,10 @@ const SendMoneyContainer = ({ userBalances }: ISendMoneyContainerProps) => {
     if (value >= maxmumAmount) {
       SetValidationStatus("error");
       setHelpMessage(
-        `Max: ${supportedCurrencies.find(
-          (curr) => curr.currency === activeWallet.currency
-        )?.symbol
+        `Max: ${
+          supportedCurrencies.find(
+            (curr) => curr.currency === activeWallet.currency
+          )?.symbol
         }${toDecimalMark(maxmumAmount)}`
       );
       return;
@@ -126,10 +121,11 @@ const SendMoneyContainer = ({ userBalances }: ISendMoneyContainerProps) => {
                 hidden={!isCurrencySelected}
               >
                 <Tag color={hasSufficientBalance ? "green" : "red"}>
-                  {`Balance: ${supportedCurrencies.filter(
-                    (curr) => curr.currency === activeWallet.currency
-                  )[0]?.symbol
-                    }${toDecimalMark(balanceAmount)}`}
+                  {`Balance: ${
+                    supportedCurrencies.filter(
+                      (curr) => curr.currency === activeWallet.currency
+                    )[0]?.symbol
+                  }${toDecimalMark(balanceAmount)}`}
                 </Tag>
               </p>
             </Form.Item>
@@ -155,7 +151,7 @@ const SendMoneyContainer = ({ userBalances }: ISendMoneyContainerProps) => {
           </Col>
         </Row>
       </Form>
-      <PayoutChannelContainer userBalances={userWallets}/>
+      <PayoutChannelContainer userBalances={userWallets} />
     </div>
   );
 };

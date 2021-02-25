@@ -18,7 +18,7 @@ import {
   DepositChannelContainer,
 } from "../../containers";
 import { ColumnsType } from "antd/lib/table";
-import { useAuthorisedContext } from "../../context/authorised-layout-context";
+import { useAuthorisedContext } from "../../context/authorised-user-context";
 import { Modal } from "antd";
 
 const data = [
@@ -183,7 +183,6 @@ const AllComponents = () => {
             wrapClassName="deposit-money-modal"
           >
             <DepositFormContainer
-              setDepositMoneyFuncRef={setDepositMoneyFuncRef}
               userBalances={userWallets}
             />
           </Modal>
@@ -233,7 +232,6 @@ const AllComponents = () => {
           <h1>Deposit Form Container</h1>
           <DepositFormContainer
             userBalances={userWallets}
-            setDepositMoneyFuncRef={() => { }}
           />
         </div>
         <div style={{ marginTop: "20px" }}>
@@ -252,7 +250,7 @@ const AllComponents = () => {
         </div>
         <div style={{ marginTop: "50px" }}>
           <h1>Deposit channel Container</h1>
-          <DepositChannelContainer depositAmount={0} depositCurrency="TZS" />
+          <DepositChannelContainer/>
         </div>
       </div>
     </div>

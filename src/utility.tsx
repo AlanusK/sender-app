@@ -1,3 +1,6 @@
+import { StellarWalletBalanceProps } from "./types";
+import { customAlphabet } from "nanoid";
+
 export const toCurrency = (
   amount: number,
   currency: string,
@@ -22,3 +25,23 @@ export const debounce = (fn: any, ms = 0) => {
   };
 };
 
+export const formatWalletBalances = (balances: any) =>
+  balances
+    .filter(
+      (balance: StellarWalletBalanceProps) =>
+        balance.asset_type !== "native" &&
+        (balance.asset_code === "TZS" || balance.asset_code === "KES")
+    )
+    .map((balance: StellarWalletBalanceProps) => ({
+      amount: Math.round(balance.balance * 100) / 100,
+      currency: balance.asset_code,
+    }));
+
+/**
+ * generates custom unique iD
+ * @param {*} prefex
+ */
+export const generateUniqueReferenceId = (prefex = "") => {
+  const nanoid = customAlphabet("1234567890LP", 6);
+  return prefex !== "" ? prefex + nanoid() : nanoid();
+};

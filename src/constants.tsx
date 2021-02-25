@@ -10,7 +10,7 @@ export const supportedCurrencies = [
     icon:
       "https://upload.wikimedia.org/wikipedia/commons/3/38/Flag_of_Tanzania.svg",
     symbol: "TSh",
-    minTransfer: 999,
+    minTransfer: 4999,
     maxTransfer: 10000000,
     transferFee: 2000,
   },
@@ -81,5 +81,46 @@ export const clickPesaBankAccountDetails: bankDetails[] = [
     accountNumber: 1770280480747,
     bankCode: "068",
     swiftNumber: "EQBLKENA",
+  },
+];
+
+/**
+ * supported deposit method options
+ */
+export const depositMethodOptions = [
+ /*  {
+    type: "MNO",
+    currency: "TZS",
+    optionName: "Airtel Money",
+    value: "AIRTEL_MONEY",
+    key: "AIRTEL_MONEY",
+  },
+  {
+    type: "MNO",
+    currency: "TZS",
+    optionName: "Vodacom MPesa",
+    value: "VODACOM_MPESA",
+    key: "VODACOM_MPESA",
+  },
+  {
+    type: "MNO",
+    currency: "TZS",
+    optionName: "TigoPesa",
+    value: "TIGOPESA",
+    key: "TIGOPESA",
+  }, */
+  {
+    type: "BANK",
+    currency: "KES",
+    optionName: "Bank Deposit",
+    value: "EQUITY",
+    key: "EQUITY",
+  },
+  {
+    type: "BANK",
+    currency: "TZS",
+    optionName: "Bank Deposit",
+    value: "ECOBANK",
+    key: "ECOBANK",
   },
 ];
