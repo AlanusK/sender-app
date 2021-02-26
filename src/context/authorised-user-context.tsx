@@ -140,8 +140,8 @@ function useAuthorisedLayoutContextProviderProvider() {
             (item: any) =>
               (item = {
                 key: item.id,
-                date: item.confirmation.confirmedAt,
-                amount: item.confirmation.amount,
+                date: new Date(item.confirmation.confirmedAt).toLocaleDateString(),
+                amount: `${item.currency} ${item.confirmation.amount}`,
                 type: "Deposit",
                 status: item.status,
               })
@@ -160,9 +160,9 @@ function useAuthorisedLayoutContextProviderProvider() {
                 (item: any) =>
                   (item = {
                     key: item.id,
-                    date: item.createdAt,
-                    amount: item.amount,
-                    type: "Send",
+                    date: new Date(item.createdAt).toLocaleDateString(),
+                    amount: `${item.currency} ${item.amount}`,
+                    type: "Withdraw",
                     status: item.status,
                   })
               );
@@ -175,7 +175,7 @@ function useAuthorisedLayoutContextProviderProvider() {
 
     Axios.get(`${process.env.REACT_APP_API_URL}/customer/${decodedToken.id}`)
       .then((response: any) => {
-        console.log(response.data);
+        // console.log(response.data);
         const data = response.data;
         setUserDetails((existingUserDetails) => ({
           ...existingUserDetails,
