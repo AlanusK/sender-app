@@ -23,11 +23,12 @@ export default function DepositFormContainer({
 }: IDepositFormProps) {
   const { activeWallet, setactiveWallet, userWallets } = useAuthorisedContext();
   const {
+    resetWalletOperationsData,
     setWalletOperation,
-    walletOperation: { processingStatus , receivingAccount},
+    walletOperation: { processingStatus },
   } = useWalletOperationsContext();
   const [depositReference, setDepositReference] = useState<string>(
-    generateUniqueReferenceId("CDEP")
+    generateUniqueReferenceId("SDEP")
   );
   const balanceAmount = activeWallet.balance;
   const [validationStatus, SetValidationStatus] = useState<
@@ -48,24 +49,12 @@ export default function DepositFormContainer({
       balance: currencyBalance?.amount || 0,
     });
     isCurrencySelected = true;
-    setWalletOperation((existingDetails: IWalletOperationProps) => ({
-      ...existingDetails,
-      amount: 0,
-      processingStatus: "idle",
-      receivingAccount: { channelProvider: "" },
-    }));
+    resetWalletOperationsData();
     SetTransferAmount(0);
   };
 
   const handleAmountChange = (value: string) => {
     validateAmount(Number(value));
-    if (processingStatus === "error") {
-      setWalletOperation((existingDetails: IWalletOperationProps) => ({
-        ...existingDetails,
-        processingStatus: "idle",
-        receivingAccount: { channelProvider: "" },
-      }));
-    }
     const debouncedSetTransferAmount = debounce(SetTransferAmount, 1000);
     debouncedSetTransferAmount(Number(value) ? Number(value) : 0);
     setWalletOperation((existingDetails: IWalletOperationProps) => ({
@@ -77,14 +66,13 @@ export default function DepositFormContainer({
   const validateAmount = (value: number) => {
     if (value <= minmumAmount) {
       SetValidationStatus("error");
-      setHelpMessage(
+      return setHelpMessage(
         `Min: ${
           supportedCurrencies.find(
             (curr) => curr.currency === activeWallet.currency
           )?.symbol || ""
         }${toDecimalMark(minmumAmount + 1)}`
       );
-      return;
     }
     SetValidationStatus("success");
     setHelpMessage("");
@@ -108,7 +96,7 @@ export default function DepositFormContainer({
 
   //generates a new deposit reference
   useEffect(() => {
-    setDepositReference(generateUniqueReferenceId("CDEP"));
+    setDepositReference(generateUniqueReferenceId("SDEP"));
   }, [transferAmount]);
 
   return (

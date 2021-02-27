@@ -1,6 +1,6 @@
 import { Col, Form, Input, Row, Tag } from "antd";
 import React, { useEffect, useState } from "react";
-import { SelectCurrencyContainer, PaymentSummaryContainer } from "..";
+import { SelectCurrencyContainer } from "..";
 import { CustomCurrencyInput } from "../../components";
 import { debounce, toDecimalMark } from "../../utility";
 import { IWalletOperationProps, userWalletsBalanceProps } from "../../types";
@@ -9,7 +9,7 @@ import { useAuthorisedContext } from "../../context/authorised-user-context";
 import { supportedCurrencies } from "../../constants";
 import { useWalletOperationsContext } from "../../context/wallet-operations-context";
 import { PayoutChannelContainer } from "../../containers";
-
+import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 interface IWithdrawalFormProps {
   userBalances: userWalletsBalanceProps[];
 }
@@ -18,7 +18,13 @@ export default function WithdrawalFormContainer({
   userBalances,
 }: IWithdrawalFormProps) {
   const { activeWallet, setactiveWallet, userWallets } = useAuthorisedContext();
-  const { setWalletOperation } = useWalletOperationsContext();
+  const {
+    setWalletOperation,
+    requirePassword,
+    setOperationPassword,
+    operationAuthorized,
+    setOperationAuthorized
+  } = useWalletOperationsContext();
   const [validationStatus, SetValidationStatus] = useState<
     "" | "error" | "success" | "warning" | "validating"
   >("");
@@ -34,24 +40,7 @@ export default function WithdrawalFormContainer({
   const maxmumAmount =
     supportedCurrencies.find((curr) => curr.currency === activeWallet.currency)
       ?.maxTransfer || 0;
-  const withdrawalFee =
-    supportedCurrencies.find((curr) => curr.currency === activeWallet.currency)
-      ?.transferFee || 0;
   const [withdrawalAmount, SetWithdrawalAmount] = useState<number>(0);
-
-  useEffect(() => {
-    setWalletOperation((existingDetails: IWalletOperationProps) => ({
-      ...existingDetails,
-      fee: withdrawalFee,
-      currency: activeWallet?.currency,
-      amount: withdrawalAmount,
-    }));
-  }, [
-    activeWallet?.currency,
-    setWalletOperation,
-    withdrawalAmount,
-    withdrawalFee,
-  ]);
 
   const handleCurrencyChange = (currency: string, options: any) => {
     const currencyBalance = userBalances.find(
@@ -62,6 +51,7 @@ export default function WithdrawalFormContainer({
       balance: currencyBalance?.amount || 0,
     });
     isCurrencySelected = true;
+    SetValidationStatus("error");
   };
 
   const handleAmountChange = (value: string) => {
@@ -80,6 +70,7 @@ export default function WithdrawalFormContainer({
   };
 
   const validateAmount = (value: number) => {
+    if (!value) return SetValidationStatus("error");
     if (value <= minmumAmount) {
       SetValidationStatus("error");
       setHelpMessage(
@@ -106,49 +97,81 @@ export default function WithdrawalFormContainer({
     setHelpMessage("");
   };
 
+  useEffect(() => {
+    setWalletOperation((existingDetails: IWalletOperationProps) => ({
+      ...existingDetails,
+      currency: activeWallet?.currency,
+      amount: withdrawalAmount,
+      kind: "WITHDRAWAL",
+    }));
+  }, [activeWallet?.currency, setWalletOperation, withdrawalAmount]);
+
+  console.log("operationAuthorized :>> ", operationAuthorized);
+
   return (
     <div>
-      <Input.Group size="large">
-        <Row gutter={[12, 12]}>
-          <Col>
-            <SelectCurrencyContainer
-              onCurrencyChange={handleCurrencyChange}
-              currencyOptions={userWallets.map((curr) => {
-                return { currency: curr.currency };
-              })}
-            />
-            <p
-              className={"account-balance-tag"}
-              style={{ marginTop: 5 }}
-              hidden={!isCurrencySelected}
-            >
-              <Tag color={hasSufficientBalance ? "green" : "red"}>
-                {`Balance: ${
-                  supportedCurrencies.filter(
-                    (curr) => curr.currency === activeWallet.currency
-                  )[0]?.symbol
-                }${toDecimalMark(balanceAmount)}`}
-              </Tag>
-            </p>
-          </Col>
-          <Col>
-            <Form.Item validateStatus={validationStatus} help={helpMessage}>
-              <CustomCurrencyInput
-                prefix={
-                  supportedCurrencies.find(
-                    (curr) => curr.currency === activeWallet.currency
-                  )?.symbol || ""
-                }
-                disabled={!isCurrencySelected}
-                onChange={handleAmountChange}
-                height={32}
+      {requirePassword ? (
+        <Form.Item
+          label={<label style={{ color: "gray" }}>Account Password</label>}
+          //style={{ width: screens.xs ? "200px" : "412px" }}
+          name="password-input"
+          validateStatus={operationAuthorized === false? "error" : ""}
+          help={operationAuthorized === false ? "Invalid password" : ""}
+        >
+          <Input.Password
+            onChange={(e) => {
+              setOperationAuthorized(undefined)
+              setOperationPassword(e.target.value)}}
+            iconRender={(visible) =>
+              visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+            }
+          />
+        </Form.Item>
+      ) : (
+        <Input.Group size="large">
+          <Row gutter={[12, 12]}>
+            <Col>
+              <SelectCurrencyContainer
+                onCurrencyChange={handleCurrencyChange}
+                currencyOptions={userWallets.map((curr) => {
+                  return { currency: curr.currency };
+                })}
               />
-            </Form.Item>
-          </Col>
-        </Row>
-      </Input.Group>
+              <p
+                className={"account-balance-tag"}
+                style={{ marginTop: 5 }}
+                hidden={!isCurrencySelected}
+              >
+                <Tag color={hasSufficientBalance ? "green" : "red"}>
+                  {`Balance: ${
+                    supportedCurrencies.filter(
+                      (curr) => curr.currency === activeWallet.currency
+                    )[0]?.symbol
+                  }${toDecimalMark(balanceAmount)}`}
+                </Tag>
+              </p>
+            </Col>
+            <Col>
+              <Form.Item validateStatus={validationStatus} help={helpMessage}>
+                <CustomCurrencyInput
+                  prefix={
+                    supportedCurrencies.find(
+                      (curr) => curr.currency === activeWallet.currency
+                    )?.symbol || ""
+                  }
+                  disabled={!isCurrencySelected}
+                  onChange={handleAmountChange}
+                  height={32}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+        </Input.Group>
+      )}
 
-      <PayoutChannelContainer userBalances={userWallets} />
+      {validationStatus === "success" && hasSufficientBalance && (
+        <PayoutChannelContainer />
+      )}
     </div>
   );
 }

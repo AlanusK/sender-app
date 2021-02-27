@@ -4,8 +4,15 @@ import { IWalletOperationProps } from "../types";
 interface IWalletOperationsContextProps {
   walletOperation: IWalletOperationProps;
   setWalletOperation: any;
-  hasValidData: boolean;
-  setHasValidData: React.Dispatch<React.SetStateAction<boolean>>;
+  hasValidOperationalData: boolean;
+  setHasValidOperationalData: React.Dispatch<React.SetStateAction<boolean>>;
+  resetWalletOperationsData(): void;
+  requirePassword: boolean;
+  setRequirePassword: React.Dispatch<React.SetStateAction<boolean>>;
+  operationPassword: string;
+  setOperationPassword: React.Dispatch<React.SetStateAction<string>>;
+  operationAuthorized: boolean | undefined;
+  setOperationAuthorized: React.Dispatch<React.SetStateAction<boolean | undefined>>;
 }
 
 interface WalletOperationsContextProviderProps {
@@ -57,23 +64,65 @@ function useWalletOperationsContextProviderProvider() {
       },
     }
   );
-  const [hasValidData, setHasValidData] = useState<boolean>(false);
+  const resetWalletOperationsData = () =>
+    setWalletOperation({
+      kind: "",
+      processingStatus: "idle",
+      processingError: "",
+      processingValue: "",
+      amount: 0,
+      fee: 0,
+      currency: "",
+      referenceId: "",
+      receivingAccount: {
+        channel: "",
+        channelProvider: "",
+        accountName: "",
+        accountNumber: "",
+        swiftNumber: "",
+        routingNumber: "",
+      },
+    });
+  const [
+    hasValidOperationalData,
+    setHasValidOperationalData,
+  ] = useState<boolean>(false);
+  const [requirePassword, setRequirePassword] = useState<boolean>(false);
+  const [operationPassword, setOperationPassword] = useState<string>("");
+  const [operationAuthorized, setOperationAuthorized] = useState<boolean | undefined>();
   //verifies operation details
   useEffect(() => {
     if (
-      walletOperation.amount !== 0 &&
-      walletOperation.receivingAccount.channelProvider !== ""
+      walletOperation.receivingAccount.channel === "BANK TRANSFER" &&
+      walletOperation.receivingAccount.swiftNumber === ""
     ) {
-      return setHasValidData(true);
+      return setHasValidOperationalData(false);
     }
-    return setHasValidData(false);
+    if (
+      walletOperation.amount !== 0 &&
+      walletOperation.receivingAccount.channelProvider !== "" &&
+      walletOperation.receivingAccount.accountName !== "" &&
+      walletOperation.receivingAccount.accountNumber !== "" &&
+      walletOperation.receivingAccount.channel !== ""
+    ) {
+      return setHasValidOperationalData(true);
+    }
+
+    return setHasValidOperationalData(false);
   }, [walletOperation]);
 
   // Returns modal context
   return {
     walletOperation,
     setWalletOperation,
-    hasValidData,
-    setHasValidData,
+    hasValidOperationalData,
+    setHasValidOperationalData,
+    resetWalletOperationsData,
+    requirePassword,
+    setRequirePassword,
+    operationPassword,
+    setOperationPassword,
+    operationAuthorized,
+    setOperationAuthorized,
   };
 }

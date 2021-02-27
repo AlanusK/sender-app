@@ -151,7 +151,7 @@ const SendMoneyContainer = ({ userBalances }: ISendMoneyContainerProps) => {
           </Col>
         </Row>
       </Form>
-      <PayoutChannelContainer userBalances={userWallets} />
+      <PayoutChannelContainer />
     </div>
   );
 };

@@ -64,3 +64,8 @@ export type IWalletOperationProps = {
       routingNumber: string;
    };
 }
+
+
+export type IPayoutMethodsProps = {
+   type: string, name: string, value: string, key: string, currency?: string
+}

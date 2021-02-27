@@ -1,4 +1,4 @@
-import { message, Modal } from "antd";
+import { Button, Modal } from "antd";
 import React, { useEffect, useState } from "react";
 import {
   ExtendedWalletBallanceContainer,
@@ -12,6 +12,10 @@ import "./Wallet.css";
 import { useAsync } from "../../hooks/useAsync";
 import { useWalletOperationsContext } from "../../context/wallet-operations-context";
 import { IWalletOperationProps } from "../../types";
+import {
+  maximumMobileWithdrawalAmount,
+  supportedCurrencies,
+} from "../../constants";
 const Axios = require("axios").default;
 
 interface IdepositRequestData {
@@ -32,30 +36,102 @@ interface IdepositRequestData {
     confirmedAt: string;
   };
 }
+interface IWithdrawalRequesttData {
+  amount: string;
+  customer_id: string;
+  currency: string;
+  fee: string;
+  payout_info: {
+    payout_channel: string;
+    payout_channel_provider: string;
+    payout_address: string;
+    payout_address_name: string;
+    swift_number: string;
+    routing_number?: string;
+    amount: string;
+    currency: string;
+  };
+  authorization?: {
+    status: boolean;
+    authorized_at: Date;
+    ledger_hash: string;
+  };
+}
 
 const postDeposit = (depositDetails: IdepositRequestData) => {
   return Promise.resolve(
     Axios.post(`${process.env.REACT_APP_API_URL}/deposit`, depositDetails)
   );
 };
+const postWithdrawal = (withdrawalDetails: IWithdrawalRequesttData) => {
+  return Promise.resolve(
+    Axios.post(`${process.env.REACT_APP_API_URL}/payout`, withdrawalDetails)
+  );
+};
+const postPassword = ({
+  password,
+  userId,
+}: {
+  password: string;
+  userId: string;
+}) => {
+  return Promise.resolve(
+    Axios.post(`${process.env.REACT_APP_API_URL}/verify-password/${userId}`, {
+      password: password,
+    })
+  );
+};
+const postWithdrawalAuthorization = (authToken: string) => {
+  return Promise.resolve(
+    Axios.post(`${process.env.REACT_APP_API_URL}/payout/authorize`, {
+      payout_authorization_token: authToken,
+      access_token: localStorage
+        .getItem("userSessionToken")
+        ?.split("Bearer ")[1],
+    })
+  );
+};
 const Wallet = () => {
-  const {
-    walletOperation,
-    setWalletOperation,
-    hasValidData,
-  } = useWalletOperationsContext();
-  const { execute, status, value, error = "" } = useAsync(postDeposit, false);
   const [showSendMoneyModal, setshowSendMoneyModal] = useState(false);
   const [showDepositMoneyModal, setshowDepositMoneyModal] = useState(false);
   const [showWithdrawalMoneyModal, setshowWithdrawalMoneyModal] = useState(
     false
   );
-  const {
-    userWallets,
-    updateWalletBalances,
-    userDetails,
-  } = useAuthorisedContext();
   const [showCurrencyModal, setShowCurrencyModal] = useState(false);
+  const {
+    walletOperation,
+    setWalletOperation,
+    hasValidOperationalData,
+    resetWalletOperationsData,
+    setRequirePassword,
+    requirePassword,
+    operationPassword,
+    setOperationAuthorized,
+    operationAuthorized,
+  } = useWalletOperationsContext();
+  console.log("walletOperation :>> ", walletOperation);
+  console.log("hasValidOperationalData :>> ", hasValidOperationalData);
+  const { updateWalletBalances, userDetails } = useAuthorisedContext();
+  const { execute, status, value, error = "" } = useAsync(
+    walletOperation.kind === "DEPOSIT" ? postDeposit : postWithdrawal,
+    false
+  );
+  const {
+    execute: executePasswordVerification,
+    status: passwordVerificationStatus,
+    value: passwordVerificationValue,
+  } = useAsync(postPassword, false);
+
+  const {
+    execute: executeWithdrawalAuthorization,
+    status: withdrawalAuthorizationStatus,
+    value: withdrawalAuthorizationValue,
+  } = useAsync(postWithdrawalAuthorization, false);
+
+  const { activeWallet, userWallets } = useAuthorisedContext();
+  const minmumAmount =
+    supportedCurrencies.find((curr) => curr.currency === activeWallet.currency)
+      ?.minTransfer || 0;
 
   // update wallet balance on every page view
   useEffect(() => {
@@ -72,7 +148,33 @@ const Wallet = () => {
     setShowCurrencyModal(false);
   };
 
-  const withdrawalMoney = () => {};
+  const withdrawalMoney = () => {
+    // if amount is above maximum withdrawal via mobile money
+    if (
+      walletOperation.amount >
+      maximumMobileWithdrawalAmount(activeWallet.currency)
+    )
+      return;
+    console.log("say shit :>> ", "say shit");
+    const withdrawalData: IWithdrawalRequesttData = {
+      amount: walletOperation.amount.toString(),
+      customer_id: userDetails.userId,
+      currency: walletOperation.currency,
+      fee: walletOperation.fee.toString(),
+      payout_info: {
+        payout_channel: walletOperation.receivingAccount.channel,
+        payout_channel_provider:
+          walletOperation.receivingAccount.channelProvider,
+        payout_address: walletOperation.receivingAccount.accountNumber,
+        payout_address_name: walletOperation.receivingAccount.accountName,
+        swift_number: walletOperation.receivingAccount.swiftNumber,
+        amount: (walletOperation.amount - walletOperation.fee).toString(),
+        currency: walletOperation.currency,
+      },
+    };
+    console.log("withdrawalData :>> ", withdrawalData);
+    return execute(withdrawalData);
+  };
 
   const addCurrency = () => {
     console.log("add currency");
@@ -84,9 +186,7 @@ const Wallet = () => {
   };
 
   const initiateMoneyDeposit = async () => {
-    if (walletOperation.processingStatus !== "idle")
-      return setshowDepositMoneyModal(false); // close if deposit was submited succesul
-    if (!hasValidData) return; // don't send request if deposit has invalid information
+    if (!hasValidOperationalData) return; // don't send request if deposit has invalid information
     const depositData: IdepositRequestData = {
       customer_id: userDetails.userId,
       expected_amount: walletOperation.amount.toString(),
@@ -118,22 +218,61 @@ const Wallet = () => {
     }));
   }, [error, setWalletOperation, status, value]);
 
+  useEffect(() => {
+    if (status === "success" && value.data.authorization_token) {
+      setRequirePassword(true);
+    }
+  }, [setRequirePassword, status, value?.data.authorization_token]);
+
+  useEffect(() => {
+    if (passwordVerificationStatus === "success") {
+      setOperationAuthorized(passwordVerificationValue.data);
+    }
+  }, [
+    passwordVerificationStatus,
+    passwordVerificationValue?.data,
+    setOperationAuthorized,
+  ]);
+
+  useEffect(() => {
+    if (operationAuthorized && value.data.authorization_token) {
+      console.log("hoohoohoh :>> ", "hoohoohoh");
+      executeWithdrawalAuthorization(value.data.authorization_token);
+    }
+  }, [
+    executeWithdrawalAuthorization,
+    operationAuthorized,
+    value?.data.authorization_token,
+  ]);
+
+  console.log(
+    "object :>> ",
+    withdrawalAuthorizationStatus,
+    withdrawalAuthorizationValue
+  );
+
   return (
     <>
       <h1 className="wallet-title"> Wallet </h1>
       <ExtendedWalletBallanceContainer
-        sendMoney={() => setshowSendMoneyModal(true)}
+        sendMoney={() => {
+          resetWalletOperationsData(); // start with fresh object
+          setRequirePassword(false);
+          setshowSendMoneyModal(true);
+        }}
         depositMoney={() => {
-          setWalletOperation((existingDetails: IWalletOperationProps) => ({
-            ...existingDetails,
-            processingStatus: "idle",
-          }));
+          resetWalletOperationsData(); // start with fresh object
           return setshowDepositMoneyModal(true);
         }}
-        withdrawalMoney={() => setshowWithdrawalMoneyModal(true)}
+        withdrawalMoney={() => {
+          resetWalletOperationsData(); // start with fresh object
+          setRequirePassword(false);
+          return setshowWithdrawalMoneyModal(true);
+        }}
         userBalances={userWallets}
         addCurrency={addCurrency}
       />
+
       {/*  send money modal */}
       <Modal
         title="Send Money"
@@ -151,12 +290,31 @@ const Wallet = () => {
         visible={showDepositMoneyModal}
         onOk={initiateMoneyDeposit}
         onCancel={handleCancel}
-        okText={
-          walletOperation.processingStatus === "pending"
-            ? "Confirming..."
-            : walletOperation.processingStatus === "success"
-            ? "Okay"
-            : "Confirm"
+        footer={
+          walletOperation.processingStatus === "success"
+            ? [
+                <Button key="back" onClick={handleCancel}>
+                  Close
+                </Button>,
+              ]
+            : [
+                <Button key="back" onClick={handleCancel}>
+                  Close
+                </Button>,
+                <Button
+                  key="ok"
+                  onClick={initiateMoneyDeposit}
+                  disabled={
+                    !hasValidOperationalData || status === "pending"
+                      ? true
+                      : false || walletOperation.amount < minmumAmount
+                  }
+                >
+                  {walletOperation.processingStatus === "pending"
+                    ? "Confirming..."
+                    : "Confirm"}
+                </Button>,
+              ]
         }
         wrapClassName="deposit-money-modal"
         destroyOnClose={true}
@@ -168,13 +326,60 @@ const Wallet = () => {
       </Modal>
       {/*  withdrawal money modal */}
       <Modal
-        title="Withdrawal Money"
+        title={requirePassword ? "Authorize Withdrawal" : "Withdrawal Money"}
         visible={showWithdrawalMoneyModal}
-        onOk={withdrawalMoney}
-        onCancel={handleCancel}
         okText="Withdrawal"
         wrapClassName="withdrawal-money-modal"
         destroyOnClose={true}
+        footer={
+          walletOperation.processingStatus === "success" && !requirePassword
+            ? [
+                <Button key="back" onClick={handleCancel}>
+                  Close
+                </Button>,
+              ]
+            : requirePassword
+            ? [
+                <Button key="back" onClick={handleCancel}>
+                  Close
+                </Button>,
+                <Button
+                  key="ok"
+                  onClick={() => {
+                    if (!operationPassword) return;
+                    executePasswordVerification({
+                      password: operationPassword,
+                      userId: userDetails.userId,
+                    });
+                  }}
+                  disabled={
+                    passwordVerificationStatus === "pending" ? true : false
+                  }
+                >
+                  {passwordVerificationStatus === "pending"
+                    ? "Authorizing..."
+                    : "Authorize"}
+                </Button>,
+              ]
+            : [
+                <Button key="back" onClick={handleCancel}>
+                  Close
+                </Button>,
+                <Button
+                  key="ok"
+                  onClick={withdrawalMoney}
+                  disabled={
+                    !hasValidOperationalData || status === "pending"
+                      ? true
+                      : false || walletOperation.amount < minmumAmount
+                  }
+                >
+                  {walletOperation.processingStatus === "pending"
+                    ? "Initiating..."
+                    : "Withdrawal"}
+                </Button>,
+              ]
+        }
       >
         <WithdrawalFormContainer userBalances={userWallets} />
       </Modal>

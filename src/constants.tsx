@@ -1,4 +1,4 @@
-import { bankDetails } from "./types";
+import { bankDetails, IPayoutMethodsProps } from "./types";
 
 /**
  * list of currencies supported by clickpesa
@@ -12,7 +12,7 @@ export const supportedCurrencies = [
     symbol: "TSh",
     minTransfer: 4999,
     maxTransfer: 10000000,
-    transferFee: 2000,
+    transferFee: 4000,
   },
   {
     currency: "USD",
@@ -28,9 +28,9 @@ export const supportedCurrencies = [
     icon:
       "https://upload.wikimedia.org/wikipedia/commons/4/49/Flag_of_Kenya.svg",
     symbol: "KSh",
-    minTransfer: 99,
+    minTransfer: 49,
     maxTransfer: 10000000,
-    transferFee: 200,
+    transferFee: 40,
   },
   {
     currency: "RWF",
@@ -88,7 +88,7 @@ export const clickPesaBankAccountDetails: bankDetails[] = [
  * supported deposit method options
  */
 export const depositMethodOptions = [
- /*  {
+  /*  {
     type: "MNO",
     currency: "TZS",
     optionName: "Airtel Money",
@@ -124,3 +124,53 @@ export const depositMethodOptions = [
     key: "ECOBANK",
   },
 ];
+
+/**
+ * supported payout method options
+ */
+export const payoutMethod: IPayoutMethodsProps[] = [
+  {
+    type: "MNO",
+    name: "M-pesa Kenya",
+    value: "MPESA_KENYA",
+    key: "MPESA_KENYA",
+    currency: "KES",
+  },
+  {
+    type: "MNO",
+    name: "M-pesa Tanzania",
+    value: "MPESA_TANZANIA",
+    key: "MPESA_TANZANIA",
+    currency: "TZS",
+  },
+  {
+    type: "MNO",
+    name: "Tigopesa Tanzania",
+    value: "TIGOPESA",
+    key: "TIGOPESA",
+    currency: "TZS",
+  },
+  {
+    type: "BANK",
+    name: "Bank Transfer",
+    value: "TANZANIAN_BANK",
+    key: "BANK",
+    currency: "TZS",
+  },
+  {
+    type: "BANK",
+    name: "Bank Transfer",
+    value: "KENYAN_BANK",
+    key: "BANK",
+    currency: "KES",
+  },
+  {
+    type: "WALLETADDRESS",
+    name: "ClickPesa Address",
+    value: "WALLETADDRESS",
+    key: "WALLETADDRESS",
+  },
+];
+
+export const maximumMobileWithdrawalAmount = (currency: string) =>
+  currency === "TZS" ? 1000000 : 70000;
