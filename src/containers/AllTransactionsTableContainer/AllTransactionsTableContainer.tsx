@@ -7,6 +7,7 @@ import { TransactionsTable } from '../../components';
 interface IAllTransactionsTableProps {
   columns: any;
   transactions: any;
+  scroll: any;
 }
 
 const AllTransactionsTableContainer = (props: IAllTransactionsTableProps) => {
@@ -49,6 +50,7 @@ const AllTransactionsTableContainer = (props: IAllTransactionsTableProps) => {
         <TransactionsTable
           columns={columns}
           transactions={transactions}
+          scroll={props.scroll}
         />
       </div>
     </>
