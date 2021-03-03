@@ -75,7 +75,9 @@ const Dashboard = () => {
 
   const { userTransaction } = useAuthorisedContext();
 
-  const data = userTransaction;
+  const data = userTransaction.slice(0, 4);
+
+  const scroll = { y: null }
 
   return (
     <div className="dashboard-wrapper">
@@ -85,7 +87,7 @@ const Dashboard = () => {
 
       <Row className="site-wrapper">
         <Col className="transaction-table-column" flex="auto">
-          <TransactionsTableContainer columns={columns} transactions={data} />
+          <TransactionsTableContainer columns={columns} transactions={data} scroll={scroll} />
         </Col>
         <Col className="send-money-column" flex="420px">
           <SendMoneyContainer userBalances={userWallets} />

@@ -44,9 +44,11 @@ const Transactions = () => {
 
   const data = userTransaction;
 
+  const scroll = { y:420 };
+
   return (
     <div>
-      <AllTransactionsTableContainer columns={columns} transactions={data} />
+      <AllTransactionsTableContainer columns={columns} transactions={data} scroll={scroll} />
     </div>
   );
 };

@@ -6,6 +6,7 @@ import "./TransactionsTable.css";
 interface ITransactionsTableProps {
   columns: any;
   transactions: any;
+  scroll: any;
 }
 
 const TransactionsTable = (props: ITransactionsTableProps) => {
@@ -28,6 +29,7 @@ const TransactionsTable = (props: ITransactionsTableProps) => {
         dataSource={props.transactions}
         pagination={false}
         size="small"
+        scroll={props.scroll}
         onRow={(record, rowIndex) => {
           return {
             onClick: () => {

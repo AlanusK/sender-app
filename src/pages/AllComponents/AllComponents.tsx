@@ -95,6 +95,8 @@ const AllComponents = () => {
 
   const data = userTransaction;
 
+  const scroll = {y:280}
+
   return (
     <div className="all-components-wrapper">
       <div className="data-display-section">
@@ -111,13 +113,14 @@ const AllComponents = () => {
         </div>
         <div style={{ marginTop: "40px" }}>
           <h1>Transaction Table</h1>
-          <TransactionsTableContainer columns={columns} transactions={data} />
+          <TransactionsTableContainer columns={columns} transactions={data} scroll={scroll} />
         </div>
         <div style={{ marginTop: "40px" }}>
           <h1>All Transactions Table</h1>
           <AllTransactionsTableContainer
             columns={columns}
             transactions={data}
+            scroll={scroll}
           />
         </div>
         <div style={{ marginTop: "40px" }}>
