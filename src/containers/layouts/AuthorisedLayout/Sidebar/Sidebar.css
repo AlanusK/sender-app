@@ -1,7 +1,9 @@
 .logo {
-   height: 32px;
-   background: rgba(18, 18, 18, 0.3);
-   margin: 16px;
+   height: 64px;
+   background: white;
+   padding-top: 20px;
+   padding-left: 20px;
+   
  }
 
  .ant-menu-item-selected {
@@ -10,4 +12,14 @@
 
 .sider-layout {
   background-color: #fedb00;
+}
+
+.ant-menu-dark .ant-menu-item,
+.ant-menu-dark .ant-menu-item-selected .anticon + span,
+.ant-menu-dark .ant-menu-item-selected .anticon {
+  color: #232323;
+} 
+
+.ant-menu-dark.ant-menu-dark:not(.ant-menu-horizontal) .ant-menu-item-selected {
+  background-color: #fff;
 }
