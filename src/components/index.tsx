@@ -11,6 +11,7 @@ import CustomSpin from "./CustomSpin/CustomSpin";
 import DarkModeToggle from "./DarkModeToggle/DarkModeToggle";
 import ExtendedCurrencyCard from "./ExtendedCurrencyCard/ExtendedCurrencyCard";
 import TransactionsTable from "./TransactionsTable/TransactionsTable";
+import BreadCrumb from "./BreadCrumb/BreadCrumb";
 
 export {
   HeartIcon,
@@ -25,5 +26,6 @@ export {
   LightBulbIcon,
   DarkModeToggle,
   TransactionsTable,
-  CustomCurrencyInput
+  CustomCurrencyInput,
+  BreadCrumb
 };

@@ -14,3 +14,7 @@
    float: right;
    padding: 20px;
  }
+
+ .breadCrumb {
+   padding-left: 24px;
+ }
