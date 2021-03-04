@@ -44,7 +44,7 @@ const Transactions = () => {
 
   const data = userTransaction;
 
-  const scroll = { y:420 };
+  const scroll = { y:415 };
 
   return (
     <div>
