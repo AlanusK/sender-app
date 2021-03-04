@@ -13,7 +13,7 @@ const { Content } = Layout;
 const AuthorisedLayout = ({ children }: any) => {
   const screens = useBreakpoint();
   return (
-    <Layout>
+    <Layout className="layout-wrapper">
       <AuthorisedLayoutContextProvider>
         <Sidebar isSmallScreen={screens.xs === true ? true : false} />
         <Layout className="site-layout">

@@ -29,7 +29,7 @@ const Sidebar = (props: ISidebar) => {
     }
   }, [props.isSmallScreen, siderCollapsed, toggleSider]);
   return (
-    <div>
+    <div className="sider-layout" >
       <Sider trigger={null} collapsible collapsed={siderCollapsed}>
         <div className="logo" />
         <Menu
