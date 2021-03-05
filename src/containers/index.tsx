@@ -17,6 +17,7 @@ import ResetPasswordContainer from "./ResetPasswordContainer/ResetPasswordContai
 import PaymentSummaryContainer from "./PaymentSummaryContainer/PaymentSummaryContainer";
 import PayoutChannelContainer from "./PayoutChannelContainer/PayoutChannelContainer";
 import DepositChannelContainer from "./DepositChannelContainer/DepositChannelContainer";
+import ProfileSettingsContainer from "./ProfileSettingsContainer/ProfileSettingsContainer";
 export {
   WalletBallanceContainer,
   ExtendedWalletBallanceContainer,
@@ -36,5 +37,6 @@ export {
   ResetPasswordContainer,
   PaymentSummaryContainer,
   PayoutChannelContainer,
-  DepositChannelContainer
+  DepositChannelContainer,
+  ProfileSettingsContainer
 };

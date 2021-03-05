@@ -4,6 +4,8 @@ import GeneralSettingsContainer from "../GeneralSettingsContainer/GeneralSetting
 import SecuritySettingsContainer from "../SecuritySettingsContainer/SecuritySettingsContainer";
 import './SettingsContainer.css'
 import PaymentSettingsContainer from "../PaymentSettingsContainer/PaymentSettingsContainer";
+import ProfileSettingsContainer from "../ProfileSettingsContainer/ProfileSettingsContainer";
+
 const { TabPane } = Tabs;
 export default function SettingsContainer() {
   function callback(key: string) {
@@ -23,12 +25,15 @@ export default function SettingsContainer() {
         <TabPane tab="Security" key="2">
           <SecuritySettingsContainer/>
         </TabPane>
-        <TabPane tab="Payments" key="3">
+        <TabPane tab="Profile" key="3">
+          <ProfileSettingsContainer/>
+        </TabPane>
+        <TabPane tab="Payment Settings" key="4">
         <PaymentSettingsContainer/>
         </TabPane>
-   {/*      <TabPane tab="Notifications" key="4">
-          Content of Tab Pane 4
-        </TabPane> */}
+        <TabPane tab="Notifications" key="5">
+          Content of Tab Pane 5
+        </TabPane>
       </Tabs>
     </div>
   );
