@@ -1,4 +1,4 @@
-import { Button, Modal } from "antd";
+import { Button, Modal, Row, Col } from "antd";
 import React, { useEffect, useState } from "react";
 import {
   ExtendedWalletBallanceContainer,
@@ -16,6 +16,8 @@ import {
   maximumMobileWithdrawalAmount,
   supportedCurrencies,
 } from "../../constants";
+import useBreakpoint from "antd/lib/grid/hooks/useBreakpoint";
+
 const Axios = require("axios").default;
 
 interface IdepositRequestData {
@@ -139,7 +141,7 @@ const Wallet = () => {
   }, []);
 
   // initiate Sending Money
-  const sendMoney = () => {};
+  const sendMoney = () => { };
 
   const handleCancel = () => {
     setshowSendMoneyModal(false);
@@ -251,27 +253,70 @@ const Wallet = () => {
     withdrawalAuthorizationValue
   );
 
+  const screens = useBreakpoint();
+  console.log(window.screen.width)
+  const [mobileView, setMobileView] = useState<Boolean>(false);
+  useEffect(() => {
+    if (screens.xs) {
+      setMobileView(true)
+    } else
+      setMobileView(false)
+  }, [screens.xs, setMobileView])
+
   return (
     <>
-      <h1 className="wallet-title"> Wallet </h1>
-      <ExtendedWalletBallanceContainer
-        sendMoney={() => {
-          resetWalletOperationsData(); // start with fresh object
-          setRequirePassword(false);
-          setshowSendMoneyModal(true);
-        }}
-        depositMoney={() => {
-          resetWalletOperationsData(); // start with fresh object
-          return setshowDepositMoneyModal(true);
-        }}
-        withdrawalMoney={() => {
-          resetWalletOperationsData(); // start with fresh object
-          setRequirePassword(false);
-          return setshowWithdrawalMoneyModal(true);
-        }}
-        userBalances={userWallets}
-        addCurrency={addCurrency}
-      />
+      {mobileView ?
+        <>
+          <Row className="wallet-page-wrapper-heading">
+            {`< Dashboard`}
+          </Row>
+          <Row className="wallet-page-wrapper-content">
+            <Col span={24} className="wallet-content">
+              <h1 className="wallet-title"> Wallet </h1>
+              <ExtendedWalletBallanceContainer
+                sendMoney={() => {
+                  resetWalletOperationsData(); // start with fresh object
+                  setRequirePassword(false);
+                  setshowSendMoneyModal(true);
+                }}
+                depositMoney={() => {
+                  resetWalletOperationsData(); // start with fresh object
+                  return setshowDepositMoneyModal(true);
+                }}
+                withdrawalMoney={() => {
+                  resetWalletOperationsData(); // start with fresh object
+                  setRequirePassword(false);
+                  return setshowWithdrawalMoneyModal(true);
+                }}
+                userBalances={userWallets}
+                addCurrency={addCurrency}
+              />
+            </Col>
+          </Row>
+
+        </> :
+        <>
+          <h1 className="wallet-title"> Wallet </h1>
+          <ExtendedWalletBallanceContainer
+            sendMoney={() => {
+              resetWalletOperationsData(); // start with fresh object
+              setRequirePassword(false);
+              setshowSendMoneyModal(true);
+            }}
+            depositMoney={() => {
+              resetWalletOperationsData(); // start with fresh object
+              return setshowDepositMoneyModal(true);
+            }}
+            withdrawalMoney={() => {
+              resetWalletOperationsData(); // start with fresh object
+              setRequirePassword(false);
+              return setshowWithdrawalMoneyModal(true);
+            }}
+            userBalances={userWallets}
+            addCurrency={addCurrency}
+          />
+        </>
+      }
 
       {/*  send money modal */}
       <Modal
@@ -293,28 +338,28 @@ const Wallet = () => {
         footer={
           walletOperation.processingStatus === "success"
             ? [
-                <Button key="back" onClick={handleCancel}>
-                  Close
+              <Button key="back" onClick={handleCancel}>
+                Close
                 </Button>,
-              ]
+            ]
             : [
-                <Button key="back" onClick={handleCancel}>
-                  Close
+              <Button key="back" onClick={handleCancel}>
+                Close
                 </Button>,
-                <Button
-                  key="ok"
-                  onClick={initiateMoneyDeposit}
-                  disabled={
-                    !hasValidOperationalData || status === "pending"
-                      ? true
-                      : false || walletOperation.amount < minmumAmount
-                  }
-                >
-                  {walletOperation.processingStatus === "pending"
-                    ? "Confirming..."
-                    : "Confirm"}
-                </Button>,
-              ]
+              <Button
+                key="ok"
+                onClick={initiateMoneyDeposit}
+                disabled={
+                  !hasValidOperationalData || status === "pending"
+                    ? true
+                    : false || walletOperation.amount < minmumAmount
+                }
+              >
+                {walletOperation.processingStatus === "pending"
+                  ? "Confirming..."
+                  : "Confirm"}
+              </Button>,
+            ]
         }
         wrapClassName="deposit-money-modal"
         destroyOnClose={true}
@@ -334,12 +379,12 @@ const Wallet = () => {
         footer={
           walletOperation.processingStatus === "success" && !requirePassword
             ? [
-                <Button key="back" onClick={handleCancel}>
-                  Close
+              <Button key="back" onClick={handleCancel}>
+                Close
                 </Button>,
-              ]
+            ]
             : requirePassword
-            ? [
+              ? [
                 <Button key="back" onClick={handleCancel}>
                   Close
                 </Button>,
@@ -361,7 +406,7 @@ const Wallet = () => {
                     : "Authorize"}
                 </Button>,
               ]
-            : [
+              : [
                 <Button key="back" onClick={handleCancel}>
                   Close
                 </Button>,

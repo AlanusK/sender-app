@@ -33,7 +33,7 @@ const Sidebar = (props: ISidebar) => {
     <div className="sider-layout" >
       <Sider trigger={null} collapsible collapsed={siderCollapsed}>
         <div className="logo">
-          <FundOutlined /> Sender Dashboard
+           {siderCollapsed ?  <FundOutlined /> : "Sender Dashboard"}
         </div>
         <Menu
           theme="dark"

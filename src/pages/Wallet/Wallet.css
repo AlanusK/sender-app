@@ -10,7 +10,33 @@
 } 
 
 .wallet-title {
-    border-bottom: 1px solid lightgray;
-    padding-bottom: 5px;
-    margin-bottom: 20px;
+  border-bottom: 1px solid lightgray;
+  padding-bottom: 5px;
+  margin-bottom: 20px;
+}
+
+.wallet-page-wrapper-heading {
+  background-color: #ffffff;
+  height: 7vh;
+  margin-top: -25px;
+  margin-left: -15px;
+  padding-left: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.wallet-page-wrapper-content {
+  background-color: #e0e2e6;
+  margin-left: -24px;
+  margin-right: -24px;
+  margin-bottom: -40px;
+  padding: 10px;
+  min-height: 520px;
+  /* min-height: 68vh; */
+}
+
+.wallet-content {
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 20px;
 }
