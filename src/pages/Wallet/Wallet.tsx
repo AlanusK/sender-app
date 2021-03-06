@@ -1,4 +1,4 @@
-import { Button, Modal, Row, Col } from "antd";
+import { Button, Modal } from "antd";
 import React, { useEffect, useState } from "react";
 import {
   ExtendedWalletBallanceContainer,
@@ -16,7 +16,6 @@ import {
   maximumMobileWithdrawalAmount,
   supportedCurrencies,
 } from "../../constants";
-import useBreakpoint from "antd/lib/grid/hooks/useBreakpoint";
 
 const Axios = require("axios").default;
 
@@ -253,70 +252,27 @@ const Wallet = () => {
     withdrawalAuthorizationValue
   );
 
-  const screens = useBreakpoint();
-  console.log(window.screen.width)
-  const [mobileView, setMobileView] = useState<Boolean>(false);
-  useEffect(() => {
-    if (screens.xs) {
-      setMobileView(true)
-    } else
-      setMobileView(false)
-  }, [screens.xs, setMobileView])
-
   return (
     <>
-      {mobileView ?
-        <>
-          <Row className="wallet-page-wrapper-heading">
-            {`< Dashboard`}
-          </Row>
-          <Row className="wallet-page-wrapper-content">
-            <Col span={24} className="wallet-content">
-              <h1 className="wallet-title"> Wallet </h1>
-              <ExtendedWalletBallanceContainer
-                sendMoney={() => {
-                  resetWalletOperationsData(); // start with fresh object
-                  setRequirePassword(false);
-                  setshowSendMoneyModal(true);
-                }}
-                depositMoney={() => {
-                  resetWalletOperationsData(); // start with fresh object
-                  return setshowDepositMoneyModal(true);
-                }}
-                withdrawalMoney={() => {
-                  resetWalletOperationsData(); // start with fresh object
-                  setRequirePassword(false);
-                  return setshowWithdrawalMoneyModal(true);
-                }}
-                userBalances={userWallets}
-                addCurrency={addCurrency}
-              />
-            </Col>
-          </Row>
-
-        </> :
-        <>
-          <h1 className="wallet-title"> Wallet </h1>
-          <ExtendedWalletBallanceContainer
-            sendMoney={() => {
-              resetWalletOperationsData(); // start with fresh object
-              setRequirePassword(false);
-              setshowSendMoneyModal(true);
-            }}
-            depositMoney={() => {
-              resetWalletOperationsData(); // start with fresh object
-              return setshowDepositMoneyModal(true);
-            }}
-            withdrawalMoney={() => {
-              resetWalletOperationsData(); // start with fresh object
-              setRequirePassword(false);
-              return setshowWithdrawalMoneyModal(true);
-            }}
-            userBalances={userWallets}
-            addCurrency={addCurrency}
-          />
-        </>
-      }
+      <h1 className="wallet-title"> Wallet </h1>
+      <ExtendedWalletBallanceContainer
+        sendMoney={() => {
+          resetWalletOperationsData(); // start with fresh object
+          setRequirePassword(false);
+          setshowSendMoneyModal(true);
+        }}
+        depositMoney={() => {
+          resetWalletOperationsData(); // start with fresh object
+          return setshowDepositMoneyModal(true);
+        }}
+        withdrawalMoney={() => {
+          resetWalletOperationsData(); // start with fresh object
+          setRequirePassword(false);
+          return setshowWithdrawalMoneyModal(true);
+        }}
+        userBalances={userWallets}
+        addCurrency={addCurrency}
+      />
 
       {/*  send money modal */}
       <Modal

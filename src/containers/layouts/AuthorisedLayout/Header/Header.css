@@ -14,3 +14,13 @@
    float: right;
    padding: 20px;
  }
+
+ .back-to-dashboard {
+    display: flex;
+    align-items: center;
+    margin-left: 15px;
+ }
+
+ .leftOutlined {
+    margin-right: 5px;
+ }

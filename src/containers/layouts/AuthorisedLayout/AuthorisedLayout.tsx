@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect} from "react";
 import { Layout } from "antd";
 import Sidebar from "./Sidebar/Sidebar";
 import CustomHeader from "./Header/Header";
@@ -12,10 +12,17 @@ import { WalletOperationsContextProvider } from "../../../context/wallet-operati
 const { Content } = Layout;
 const AuthorisedLayout = ({ children }: any) => {
   const screens = useBreakpoint();
+  const [mobileView, setMobileView] = useState<Boolean>(false);
+  useEffect(() => {
+    if (screens.xs) {
+      setMobileView(true)
+    } else
+      setMobileView(false)
+  }, [screens.xs, setMobileView])
   return (
     <Layout className="layout-wrapper">
       <AuthorisedLayoutContextProvider>
-        <Sidebar isSmallScreen={screens.xs === true ? true : false} />
+        {mobileView ?  null : <Sidebar isSmallScreen={screens.xs === true ? true : false} />}
         <Layout className="site-layout">
           <CustomHeader />
           <WalletOperationsContextProvider>
