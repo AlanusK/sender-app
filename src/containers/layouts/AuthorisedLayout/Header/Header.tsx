@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { Layout } from "antd";
 import { useAuthorisedContext } from "../../../../context/authorised-user-context";
 import {
@@ -10,9 +10,8 @@ import {
 import "./Header.css";
 import { useAuth } from "../../../../hooks/useAuth";
 import { useDarkMode } from "../../../../hooks/useDarkMode";
-import { DarkModeToggle } from "../../../../components";
 import useBreakpoint from "../../../../hooks/useBreakpoint";
-
+import { DarkModeToggle, BreadCrumb } from "../../../../components";
 const { Header } = Layout;
 
 const CustomHeader = () => {
@@ -28,26 +27,32 @@ const CustomHeader = () => {
       setMobileView(false)
   }, [screens.xs, setMobileView])
   return (
-    <Header className="site-layout-background" style={{ padding: 0 }}>
-      {mobileView ? <div className="back-to-dashboard"><LeftOutlined className="leftOutlined" />Dashboard</div> :
-        React.createElement(
-          siderCollapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
-          {
-            className: "trigger",
-            onClick: toggleSider,
-          }
-        )
-      }
-      {React.createElement(LogoutOutlined, {
-        className: "logout-button",
-        onClick: signout,
-      })}
-      {React.createElement(DarkModeToggle, {
-        darkMode: darkMode,
-        setDarkMode: setDarkMode,
-      })}
-    </Header>
+    <>
+      <Header className="site-layout-background" style={{ padding: 0 }}>
+        {mobileView ? <div className="back-to-dashboard"><LeftOutlined className="leftOutlined" />Dashboard</div> :
+          React.createElement(
+            siderCollapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
+            {
+              className: "trigger",
+              onClick: toggleSider,
+            }
+          )
+        }
+        {React.createElement(LogoutOutlined, {
+          className: "logout-button",
+          onClick: signout,
+        })}
+        {React.createElement(DarkModeToggle, {
+          darkMode: darkMode,
+          setDarkMode: setDarkMode,
+        })}
+      </Header>
+      <div className="breadCrumb">
+        <BreadCrumb />
+      </div>
+    </>
   );
 };
+
 
 export default CustomHeader;

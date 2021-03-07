@@ -24,3 +24,7 @@
  .leftOutlined {
     margin-right: 5px;
  }
+
+ .breadCrumb {
+   padding-left: 24px;
+ }
