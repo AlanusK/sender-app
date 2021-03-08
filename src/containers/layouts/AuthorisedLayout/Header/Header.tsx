@@ -12,6 +12,8 @@ import { useAuth } from "../../../../hooks/useAuth";
 import { useDarkMode } from "../../../../hooks/useDarkMode";
 import useBreakpoint from "../../../../hooks/useBreakpoint";
 import { DarkModeToggle, BreadCrumb } from "../../../../components";
+import { Link } from "react-router-dom";
+
 const { Header } = Layout;
 
 const CustomHeader = () => {
@@ -29,7 +31,7 @@ const CustomHeader = () => {
   return (
     <>
       <Header className="site-layout-background" style={{ padding: 0 }}>
-        {mobileView ? <div className="back-to-dashboard"><LeftOutlined className="leftOutlined" />Dashboard</div> :
+        {mobileView ? <div className="back-to-dashboard"><Link to="/dashboard"><LeftOutlined className="leftOutlined" />Dashboard</Link></div> :
           React.createElement(
             siderCollapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
             {
@@ -47,9 +49,9 @@ const CustomHeader = () => {
           setDarkMode: setDarkMode,
         })}
       </Header>
-      <div className="breadCrumb">
+      {/* <div className="breadCrumb">
         <BreadCrumb />
-      </div>
+      </div> */}
     </>
   );
 };
