@@ -12,10 +12,9 @@ import { useAuth } from "../../../../hooks/useAuth";
 import { useDarkMode } from "../../../../hooks/useDarkMode";
 import useBreakpoint from "../../../../hooks/useBreakpoint";
 import { DarkModeToggle, BreadCrumb } from "../../../../components";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const { Header } = Layout;
-
 const CustomHeader = () => {
   const { siderCollapsed, toggleSider } = useAuthorisedContext();
   const { signout } = useAuth();
@@ -28,10 +27,13 @@ const CustomHeader = () => {
     } else
       setMobileView(false)
   }, [screens.xs, setMobileView])
+
+  const location = useLocation();
+  const pathnames = location.pathname.split('/').filter((item: any) => item);
   return (
     <>
       <Header className="site-layout-background" style={{ padding: 0 }}>
-        {mobileView ? <div className="back-to-dashboard"><Link to="/dashboard"><LeftOutlined className="leftOutlined" />Dashboard</Link></div> :
+        {mobileView ? <div className="back-to-dashboard"><Link to="/dashboard"><LeftOutlined className="leftOutlined" />{pathnames[0]}</Link></div> :
           React.createElement(
             siderCollapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
             {
