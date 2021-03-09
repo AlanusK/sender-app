@@ -50,7 +50,7 @@ export type IWalletOperationProps = {
    kind: "SEND" | "DEPOSIT" | "WITHDRAWAL" | "";
    processingStatus: "idle" | "pending" | "success" | "error";
    processingError: string,
-   processingValue: string,
+   processingValue: any,
    amount: number;
    fee: number;
    referenceId: string;
