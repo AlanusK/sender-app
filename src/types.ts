@@ -36,7 +36,9 @@ export type ExtendedJwtPayload = {
    nbf?: number;
    iat?: number;
    jti?: string;
-   id: string
+   id: string;
+   verified?: boolean;
+   api_access?: boolean;
 }
 
 export type StellarWalletBalanceProps = {

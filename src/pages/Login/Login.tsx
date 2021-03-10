@@ -26,6 +26,16 @@ const Login = () => {
     if (status === "success") {
       if (value.data.success === true) {
         const decodedToken = jwtDecode<ExtendedJwtPayload>(value.data.token);
+        if (!decodedToken.verified) {
+          return message.warning(
+            "Please verify your email address to proceed."
+          );
+        }
+        if (!decodedToken.api_access) {
+          return message.error(
+            "Access Restricted! Contact ClickPesa support."
+          );
+        }
         if (decodedToken.id) {
           setAuthentication(true);
           localStorage.setItem("userSessionToken", value.data.token);
