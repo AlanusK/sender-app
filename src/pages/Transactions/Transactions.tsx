@@ -1,47 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { AllTransactionsTableContainer } from "../../containers";
 import { ColumnsType } from "antd/lib/table";
+import { toDecimalMark } from "../../utility";
+import { Tag } from "antd";
+import { useTransactionsContext } from "../../context/transactions-context";
 
-const data = [
-  {
-    key: "1",
-    date: "04/11/1990",
-    amount: "USD 10,000/=",
-    type: "Deposit",
-    status: "Completed",
-  },
-  {
-    key: "2",
-    date: "28/05/2020",
-    amount: "USD 1,000/=",
-    type: "Send",
-    status: "Completed",
-  },
-  {
-    key: "3",
-    date: "17/11/2014",
-    amount: "EUR 1,000/=",
-    type: "Withdraw",
-    status: "Completed",
-  },
-  {
-    key: "4",
-    date: "13/09/2007",
-    amount: "EUR 1,000/=",
-    type: "Deposit",
-    status: "Cancelled",
-  },
-];
-
-type transactions = {
+interface IAllTransactionTableProps {
   key: string;
   date: string;
   amount: string;
   type: string;
   status: string;
-};
+}
 
-const columns: ColumnsType<transactions> = [
+const columns: ColumnsType<IAllTransactionTableProps> = [
   {
     title: "Date",
     dataIndex: "date",
@@ -64,15 +36,70 @@ const columns: ColumnsType<transactions> = [
     title: "Status",
     dataIndex: "status",
     key: "status",
-    // align: 'center',
+    render: (status: any) => {
+      let color = "volcano";
+      if (status === "PENDING") {
+        color = "gray";
+      }
+      if (status === "SUCCESS") {
+        color = "green";
+      }
+      return (
+        <span>
+          <Tag color={color} key={status}>
+            {status}
+          </Tag>
+        </span>
+      );
+    },
   },
 ];
 
 const Transactions = () => {
+  const [tableTransactions, setTableTransactions] = useState<any>();
+  const { allTransactions, reloadTransactions } = useTransactionsContext();
+
+  useEffect(() => {
+    reloadTransactions();
+  }, []);
+
+  useEffect(() => {
+    if (allTransactions) {
+      setTableTransactions([
+        ...allTransactions?.deposits.map(
+          (item: any) =>
+            (item = {
+              key: item.id,
+              date: new Date(
+                item.confirmation.confirmedAt
+              ).toLocaleDateString(),
+              amount: `${item.currency} ${toDecimalMark(
+                Number(item.expected_amount)
+              )}`,
+              type: "Deposit",
+              status: item.status,
+            })
+        ),
+        ...allTransactions?.withdrawals.map(
+          (item: any) =>
+            (item = {
+              key: item.id,
+              date: new Date(item.createdAt).toLocaleDateString(),
+              amount: `${item.currency} ${toDecimalMark(Number(item.amount))}`,
+              type: "Withdraw",
+              status: item.status,
+            })
+        ),
+      ]);
+    }
+  }, [allTransactions]);
 
   return (
     <div>
-      <AllTransactionsTableContainer columns={columns} transactions={data} />
+      <AllTransactionsTableContainer
+        columns={columns}
+        transactions={tableTransactions}
+      />
     </div>
   );
 };

@@ -1,113 +1,249 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Input, Select } from "antd";
 import "./PayoutChannelContainer.css";
 import { PaymentSummaryContainer } from "..";
 import useBreakpoint from "antd/lib/grid/hooks/useBreakpoint";
-import { useAuthorisedContext } from "../../context/authorised-layout-context";
-import { userWalletsBalanceProps } from "../../types";
+import { useAuthorisedContext } from "../../context/authorised-user-context";
+import { IPayoutMethodsProps, IWalletOperationProps } from "../../types";
+import { maximumMobileWithdrawalAmount, payoutMethod } from "../../constants";
+import { useWalletOperationsContext } from "../../context/wallet-operations-context";
+import PhoneInput from "react-phone-input-2";
+import { toDecimalMark } from "../../utility";
 
-interface ISendMoneyContainerProps {
-  userBalances: userWalletsBalanceProps[];
-}
-
-const PayoutChannelContainer = ({ userBalances }: ISendMoneyContainerProps) => {
+const PayoutChannelContainer = () => {
+  const { activeWallet } = useAuthorisedContext();
+  const {
+    setWalletOperation,
+    walletOperation: { amount, currency, receivingAccount },
+    requirePassword,
+  } = useWalletOperationsContext();
   const [form] = Form.useForm();
   const screens = useBreakpoint();
-  const { activeWallet } = useAuthorisedContext();
-
-  const payoutMethod = [
-    { type: "MNO", name: "M-pesa Kenya", value: "MPESA_KENYA", key: "MPESA_KENYA" },
-    { type: "MNO", name: "M-pesa Tanzania", value: "MPESA_TANZANIA", key: "MPESA_TANZANIA" },
-    { type: "MNO", name: "Tigopesa", value: "TIGOPESA", key: "TIGOPESA" },
-    { type: "BANK", name: "Crdb", value: "CRDB", key: "CRDB" },
-    { type: "BANK", name: "Nmb", value: "NMB", key: "NMB" },
-    { type: "CLICKPESA", name: "Clickpesa", value: "CLICKPESA", key: "CLICKPESA" },
-  ];
-
   const [selectedPayoutType, setSelectedPayoutType] = useState<string>("");
+  const [
+    isPayoutChannelSelected,
+    setIsPayoutChannelSelected,
+  ] = useState<boolean>(false);
 
-  let isCurrencySelected = activeWallet?.currency ? true : false;
+  const [channelProvider, setChannelProvider] = useState<string>("");
+  const [accountName, setAccountName] = useState<string>("");
+  const [accountNumber, setAccountNumber] = useState<string>("");
+  const [swiftNumber, setSwiftNumber] = useState<string>("");
+  const [withdrawalFee, setWithdrawalFee] = useState<number>(0);
 
+  useEffect(() => {
+    const rangeCheck = (amount: number, min: number, max: number) =>
+      amount >= min && amount <= max;
+    switch (currency) {
+      case "TZS":
+        if (selectedPayoutType === "BANK") {
+          return setWithdrawalFee(amount > 4999999 ? 15000 : 4000);
+        }
+        // TZS mobile money fee
+        setWithdrawalFee(4000);
+        break;
+      case "KES":
+        if (selectedPayoutType === "BANK") {
+          if (rangeCheck(amount, 50, 99999) === true)
+            return setWithdrawalFee(40);
+          if (rangeCheck(amount, 100000, 249999) === true)
+            return setWithdrawalFee(60);
+          if (rangeCheck(amount, 250000, 499999) === true)
+            return setWithdrawalFee(100);
+          if (rangeCheck(amount, 500000, 999999) === true)
+            return setWithdrawalFee(150);
+          if (amount > 999999) return setWithdrawalFee(850);
+        }
+        //KES mobile money fee
+        if (rangeCheck(amount, 1500, 70000) === true)
+          return setWithdrawalFee(80);
+        if (rangeCheck(amount, 1000, 1499) === true)
+          return setWithdrawalFee(60);
+        if (rangeCheck(amount, 50, 999) === true) return setWithdrawalFee(40);
+
+        break;
+      default:
+        break;
+    }
+  }, [selectedPayoutType, amount, currency]);
+
+  useEffect(() => {
+    setWalletOperation((existingDetails: IWalletOperationProps) => ({
+      ...existingDetails,
+      fee: withdrawalFee,
+      receivingAccount: {
+        channel:
+          selectedPayoutType === "BANK"
+            ? "BANK TRANSFER"
+            : selectedPayoutType === "MNO"
+            ? "MOBILE MONEY"
+            : "WALLET TRANSFER",
+        channelProvider: channelProvider,
+        accountName: accountName,
+        accountNumber: accountNumber,
+        swiftNumber: swiftNumber,
+      },
+    }));
+  }, [
+    accountName,
+    accountNumber,
+    channelProvider,
+    selectedPayoutType,
+    setWalletOperation,
+    swiftNumber,
+    withdrawalFee,
+  ]);
   return (
     <div className="payout-channel-container-wrapper">
-      <Form form={form} layout={"vertical"}>
-        <Form.Item
-          label={<label style={{ color: "gray" }}>Payout method</label>}
-          style={{ width: screens.xs ? "200px" : "412px" }}
-          name="payment-channel"
-        >
-          <Select
-            disabled={!isCurrencySelected}
-            onChange={(value, option: any) => {
-              option.type === "MNO" ? setSelectedPayoutType("MNO") : setSelectedPayoutType(option.type === "BANK" ? "BANK" : "CLICKPESA")
-            }}
-          >
-            {payoutMethod.map((payout) =>
-              <Select.Option value={payout.value} key={payout.key} type={payout.type}>{payout.name}</Select.Option>
-            )}
-          </Select>
-        </Form.Item>
-
-        {selectedPayoutType === "MNO" &&
-          <>
-            <Form.Item
-              label={<label style={{ color: "gray" }}>Mobile money number</label>}
-              style={{ width: screens.xs ? "200px" : "412px" }}
-              name="receiving-account-number"
-            >
-              <Input placeholder="0763212347" disabled={!isCurrencySelected} />
-            </Form.Item>
-
-            <Form.Item
-              label={<label style={{ color: "gray" }}>Name receiver</label>}
-              style={{ width: screens.xs ? "200px" : "412px" }}
-              name="receiving-account-name"
-            >
-              <Input placeholder="John Doe" disabled={!isCurrencySelected} />
-            </Form.Item>
-          </>
-        }
-
-        {selectedPayoutType === "BANK" &&
-          <>
-            <Form.Item
-              label={<label style={{ color: "gray" }}>Account Name</label>}
-              style={{ width: screens.xs ? "200px" : "412px" }}
-              name="receiving-account-name"
-            >
-              <Input placeholder="Paul John" disabled={!isCurrencySelected} />
-            </Form.Item>
-
-            <Form.Item
-              label={<label style={{ color: "gray" }}>Account Number</label>}
-              style={{ width: screens.xs ? "200px" : "412px" }}
-              name="receiving-account-number"
-            >
-              <Input placeholder="01523455322" disabled={!isCurrencySelected} />
-            </Form.Item>
-
-            <Form.Item
-              label={<label style={{ color: "gray" }}>Swift code</label>}
-              style={{ width: screens.xs ? "200px" : "412px" }}
-              name="receiving-account-swiftcode"
-            >
-              <Input placeholder="EQBLTZTZ" disabled={!isCurrencySelected} />
-            </Form.Item>
-          </>
-        }
-
-        {selectedPayoutType === "CLICKPESA" &&
+      {!requirePassword && (
+        <Form form={form} layout={"vertical"}>
           <Form.Item
-            label={<label style={{ color: "gray" }}>Clickpesa address</label>}
+            label={<label style={{ color: "gray" }}>Via</label>}
             style={{ width: screens.xs ? "200px" : "412px" }}
-            name="receiving-account-clickpesa-address"
+            name="payment-channel"
+            validateStatus={
+              receivingAccount.channel === "MOBILE MONEY" &&
+              amount > maximumMobileWithdrawalAmount(currency)
+                ? "error"
+                : ""
+            }
+            help={
+              receivingAccount.channel === "MOBILE MONEY" &&
+              amount > maximumMobileWithdrawalAmount(currency)
+                ? `Maximum withdrawal via mobile money is ${currency}  ${toDecimalMark(
+                    maximumMobileWithdrawalAmount(currency)
+                  )}`
+                : ""
+            }
           >
-            <Input placeholder="Clickpesa Limited" disabled={!isCurrencySelected} />
+            <Select
+              onChange={(value, option: any) => {
+                option.type === "MNO"
+                  ? setSelectedPayoutType("MNO")
+                  : setSelectedPayoutType("BANK");
+                setIsPayoutChannelSelected(true);
+                setChannelProvider(option.value);
+                setAccountName("");
+                setAccountNumber("");
+                setSwiftNumber("");
+              }}
+              placeholder="Select Payout Channel"
+            >
+              {payoutMethod
+                .filter(
+                  (method: IPayoutMethodsProps) =>
+                    (method.type === "MNO" || method.type === "BANK") &&
+                    method.currency === activeWallet.currency
+                )
+                .map((payout) => (
+                  <Select.Option
+                    value={payout.value}
+                    key={payout.key}
+                    type={payout.type}
+                  >
+                    {payout.name}
+                  </Select.Option>
+                ))}
+            </Select>
           </Form.Item>
-        }
 
-        {isCurrencySelected && <PaymentSummaryContainer />}
-      </Form>
+          {selectedPayoutType === "MNO" && (
+            <>
+              <Form.Item
+                label={<label style={{ color: "gray" }}>Mobile Number</label>}
+                style={{ width: screens.xs ? "200px" : "412px" }}
+                name="receiving-account-number"
+              >
+                <PhoneInput
+                  country={activeWallet.currency === "TZS" ? "tz" : "ke"}
+                  countryCodeEditable={false}
+                  onChange={(value) => setAccountNumber(value.toString())}
+                  inputStyle={{ height: 32, width: "100%" }}
+                  masks={{ tz: "(...) ... ...", ke: "(...) ... ..." }}
+                  inputClass="ant-input"
+                  specialLabel={""}
+                />
+              </Form.Item>
+
+              <Form.Item
+                label={<label style={{ color: "gray" }}>Receiver Name</label>}
+                style={{ width: screens.xs ? "200px" : "412px" }}
+                name="receiving-account-name"
+              >
+                <Input
+                  onChange={(e: any) =>
+                    setAccountName(e.target.value.toString())
+                  }
+                />
+              </Form.Item>
+            </>
+          )}
+
+          {selectedPayoutType === "BANK" && (
+            <>
+              <Form.Item
+                label={<label style={{ color: "gray" }}>Bank Name</label>}
+                style={{ width: screens.xs ? "200px" : "412px" }}
+                name="bank-name"
+              >
+                <Input
+                  onChange={(e: any) =>
+                    setChannelProvider(e.target.value.toString())
+                  }
+                />
+              </Form.Item>
+
+              <Form.Item
+                label={<label style={{ color: "gray" }}>Account Name</label>}
+                style={{ width: screens.xs ? "200px" : "412px" }}
+                name="account-name"
+              >
+                <Input
+                  onChange={(e: any) =>
+                    setAccountName(e.target.value.toString())
+                  }
+                />
+              </Form.Item>
+
+              <Form.Item
+                label={<label style={{ color: "gray" }}>Account Number</label>}
+                style={{ width: screens.xs ? "200px" : "412px" }}
+                name="account-number"
+              >
+                <Input
+                  onChange={(e: any) =>
+                    setAccountNumber(e.target.value.toString())
+                  }
+                />
+              </Form.Item>
+
+              <Form.Item
+                label={<label style={{ color: "gray" }}>Swift code</label>}
+                style={{ width: screens.xs ? "200px" : "412px" }}
+                name="swiftcode"
+              >
+                <Input
+                  onChange={(e: any) =>
+                    setSwiftNumber(e.target.value.toString())
+                  }
+                />
+              </Form.Item>
+            </>
+          )}
+
+          {selectedPayoutType === "WALLETADDRESS" && (
+            <Form.Item
+              label={<label style={{ color: "gray" }}>Clickpesa address</label>}
+              style={{ width: screens.xs ? "200px" : "412px" }}
+              name="receiving-account-clickpesa-address"
+            >
+              <Input placeholder=" example*clickpesa.com" />
+            </Form.Item>
+          )}
+
+          {isPayoutChannelSelected && <PaymentSummaryContainer />}
+        </Form>
+      )}
     </div>
   );
 };

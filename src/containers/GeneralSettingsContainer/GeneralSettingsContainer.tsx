@@ -2,7 +2,7 @@ import { Button, Form, Input, Row, Select } from "antd";
 import React, { useState } from "react";
 // import Avatar from "antd/lib/avatar/avatar";
 import "./GeneralSettingsContainer.css";
-import { useAuthorisedContext } from "../../context/authorised-layout-context";
+import { useAuthorisedContext } from "../../context/authorised-user-context";
 
 
 export default function GeneralSettingsContainer() {

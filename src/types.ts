@@ -20,14 +20,13 @@ export type IUserData = {
    phone: string,
    language: string,
    stellar_address: string,
-   secret_key: string,
+   secretKey: string,
    address: string,
    currency: string,
    userId: string
-   public_key: string
+   publicKey: string
    userWallets: userWalletsBalanceProps[]
 }
-
 
 export type ExtendedJwtPayload = {
    iss?: string;
@@ -37,12 +36,38 @@ export type ExtendedJwtPayload = {
    nbf?: number;
    iat?: number;
    jti?: string;
-   id: string
+   id: string;
+   verified?: boolean;
+   api_access?: boolean;
 }
 
 export type StellarWalletBalanceProps = {
-   balance: "";
+   balance: number;
    asset_type: string;
    asset_code: string;
    asset_issuer: string
+}
+
+export type IWalletOperationProps = {
+   kind: "SEND" | "DEPOSIT" | "WITHDRAWAL" | "";
+   processingStatus: "idle" | "pending" | "success" | "error";
+   processingError: string,
+   processingValue: any,
+   amount: number;
+   fee: number;
+   referenceId: string;
+   currency: string;
+   receivingAccount: {
+      channel: "BANK DEPOSIT" | "MOBILE TRANSFER" | "WALLET" | "BANK TRANSFER" | "MOBILE MONEY" | "WALLET TRANSFER" | "",
+      channelProvider: string;
+      accountName: string;
+      accountNumber: string;
+      swiftNumber: string;
+      routingNumber: string;
+   };
+}
+
+
+export type IPayoutMethodsProps = {
+   type: string, name: string, value: string, key: string, currency?: string
 }

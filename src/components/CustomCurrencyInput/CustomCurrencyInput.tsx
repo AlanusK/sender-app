@@ -26,6 +26,7 @@ export default function CustomCurrencyInput(props: ICustomCurrencyInputProps) {
         defaultValue={props?.defaultValue}
         allowNegativeValue={props?.allowNegativeValue || false}
         placeholder={"0"}
+        value={props?.defaultValue}
         onChange={props?.onChange}
         turnOffAbbreviations={true}
         spellCheck="false"

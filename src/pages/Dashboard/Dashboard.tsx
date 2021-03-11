@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   TransactionsTableContainer,
   SendMoneyContainer,
@@ -7,50 +7,21 @@ import {
 } from "../../containers";
 import { ColumnsType } from "antd/lib/table";
 import "./Dashboard.css";
-import { Row, Col, Button, Modal } from "antd";
-import { useAuthorisedContext } from "../../context/authorised-layout-context";
-import { usePayoutContext } from "../../context/payout-context";
+import { Row, Col, Button, Modal, Tag } from "antd";
+import { useAuthorisedContext } from "../../context/authorised-user-context";
+import { useWalletOperationsContext } from "../../context/wallet-operations-context";
+import { toDecimalMark } from "../../utility";
+import { useTransactionsContext } from "../../context/transactions-context";
 
-const data = [
-  {
-    key: "1",
-    date: "04/11/1990",
-    amount: "USD 10,000/=",
-    type: "Deposit",
-    status: "Completed",
-  },
-  {
-    key: "2",
-    date: "28/05/2020",
-    amount: "USD 1,000/=",
-    type: "Deposit",
-    status: "Completed",
-  },
-  {
-    key: "3",
-    date: "17/11/2014",
-    amount: "EUR 1,000/=",
-    type: "Deposit",
-    status: "Completed",
-  },
-  {
-    key: "4",
-    date: "13/09/2007",
-    amount: "EUR 1,000/=",
-    type: "Deposit",
-    status: "Cancelled",
-  },
-];
-
-type transactions = {
+interface IPendingTransactionTableProps {
   key: string;
   date: string;
   amount: string;
   type: string;
   status: string;
-};
+}
 
-const columns: ColumnsType<transactions> = [
+const columns: ColumnsType<IPendingTransactionTableProps> = [
   {
     title: "Date",
     dataIndex: "date",
@@ -73,20 +44,70 @@ const columns: ColumnsType<transactions> = [
     title: "Status",
     dataIndex: "status",
     key: "status",
+    render: (status: any) => {
+      let color = "volcano";
+      if (status === "PENDING") {
+        color = "gray";
+      }
+      return (
+        <span>
+          <Tag color={color} key={status}>
+            {status}
+          </Tag>
+        </span>
+      );
+    },
     // align: 'center',
   },
 ];
 const Dashboard = () => {
-  const { userWallets } = useAuthorisedContext();
-  const { payoutAmount } = usePayoutContext();
-
+  const { userWallets, updateWalletBalances } = useAuthorisedContext();
+  const { allTransactions, reloadTransactions } = useTransactionsContext();
+  const { walletOperation } = useWalletOperationsContext();
   const [showCurrencyModal, setShowCurrencyModal] = useState(false);
+  const [pendingTransactions, setPendingTransactions] = useState<any>();
+
+  useEffect(() => {
+    updateWalletBalances();
+    reloadTransactions()
+  }, []);
+
+  useEffect(() => {
+    setPendingTransactions([
+      ...allTransactions?.deposits
+        .filter((deposit: any) => deposit.status === "PENDING")
+        .map(
+          (item: any) =>
+            (item = {
+              key: item.id,
+              date: new Date(
+                item.confirmation.confirmedAt
+              ).toLocaleDateString(),
+              amount: `${item.currency} ${toDecimalMark(
+                Number(item.expected_amount)
+              )}`,
+              type: "Deposit",
+              status: item.status,
+            })
+        ),
+      ...allTransactions?.withdrawals
+        .filter((withdrwal: any) => withdrwal.status === "PROCESSING")
+        .map(
+          (item: any) =>
+            (item = {
+              key: item.id,
+              date: new Date(item.createdAt).toLocaleDateString(),
+              amount: `${item.currency} ${toDecimalMark(Number(item.amount))}`,
+              type: "Withdraw",
+              status: item.status,
+            })
+        ),
+    ]);
+  }, [allTransactions]);
 
   const sendMoney = () => {
-    console.log("eaf :>> ", payoutAmount);
-    if (payoutAmount) {
-      console.log("wew :>> ", payoutAmount);
-    }
+    console.log("amount :>> ", walletOperation.amount);
+    console.log("walletOperation :>> ", walletOperation);
   };
   const addCurrency = () => {
     console.log("add currency");
@@ -109,7 +130,10 @@ const Dashboard = () => {
 
       <Row className="site-wrapper">
         <Col className="transaction-table-column" flex="auto">
-          <TransactionsTableContainer columns={columns} transactions={data} />
+          <TransactionsTableContainer
+            columns={columns}
+            transactions={pendingTransactions}
+          />
         </Col>
         <Col className="send-money-column" flex="420px">
           <SendMoneyContainer userBalances={userWallets} />

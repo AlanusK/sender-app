@@ -7,7 +7,7 @@ import {
   GlobalOutlined,
 } from "@ant-design/icons";
 import "./Sidebar.css";
-import { useAuthorisedContext } from "../../../../context/authorised-layout-context";
+import { useAuthorisedContext } from "../../../../context/authorised-user-context";
 
 const { Sider } = Layout;
 

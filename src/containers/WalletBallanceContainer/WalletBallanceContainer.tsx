@@ -1,7 +1,7 @@
 import { Col, Row } from "antd";
 import React from "react";
 import { AddCurrencyCard, CurrencyCard } from "../../components";
-import { useAuthorisedContext } from "../../context/authorised-layout-context";
+import { useAuthorisedContext } from "../../context/authorised-user-context";
 
 interface IWalletBallanceContainerProps {
   addCurrency: () => void;

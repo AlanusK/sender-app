@@ -1,58 +1,27 @@
-import React, { useState } from "react";
-import { Form, Select } from "antd";
+import React, { useEffect, useState } from "react";
+import { Button, Form, message, Result, Select, Spin } from "antd";
 import "./DepositChannelContainer.css";
 import useBreakpoint from "antd/lib/grid/hooks/useBreakpoint";
-import { bankDetails } from "../../types";
-import { clickPesaBankAccountDetails } from "../../constants";
+import { bankDetails, IWalletOperationProps } from "../../types";
+import {
+  clickPesaBankAccountDetails,
+  depositMethodOptions,
+} from "../../constants";
 import { toDecimalMark } from "../../utility";
+import { useWalletOperationsContext } from "../../context/wallet-operations-context";
+import { LoadingOutlined } from "@ant-design/icons";
 
-interface IDepositChannelContainerProps {
-  depositAmount: number;
-  depositCurrency: string;
-}
-
-const depositMethodOptions = [
-  {
-    type: "MNO",
-    currency: "TZS",
-    name: "Airtel Money",
-    value: "AIRTEL_MONEY",
-    key: "AIRTEL_MONEY",
-  },
-  {
-    type: "MNO",
-    currency: "TZS",
-    name: "Vodacom MPesa",
-    value: "VODACOM_MPESA",
-    key: "VODACOM_MPESA",
-  },
-  {
-    type: "MNO",
-    currency: "TZS",
-    name: "TigoPesa",
-    value: "TIGOPESA",
-    key: "TIGOPESA",
-  },
-  {
-    type: "BANK",
-    currency: "KES",
-    name: "Equity Bank Kenya",
-    value: "EQUITY",
-    key: "EQUITY",
-  },
-  {
-    type: "BANK",
-    currency: "TZS",
-    name: "Ecobank Tanzania",
-    value: "ECOBANK",
-    key: "ECOBANK",
-  },
-];
-
-const DepositChannelContainer = ({
-  depositAmount,
-  depositCurrency,
-}: IDepositChannelContainerProps) => {
+const DepositChannelContainer = () => {
+  const {
+    walletOperation: {
+      amount,
+      referenceId,
+      currency,
+      processingError,
+      processingStatus,
+    },
+    setWalletOperation,
+  } = useWalletOperationsContext();
   const [form] = Form.useForm();
   const screens = useBreakpoint();
   const [selectedDepositType, setSelectedDepositType] = useState<string>("");
@@ -62,9 +31,25 @@ const DepositChannelContainer = ({
     selectedMobileMoneyOption,
     setSelectedMobileMoneyOption,
   ] = useState<string>();
+
+  // set deposit operation receiving account details
+  useEffect(() => {
+    if (bankDepositDetails) {
+      setWalletOperation((existingDetails: IWalletOperationProps) => ({
+        ...existingDetails,
+        receivingAccount: {
+          channel: "BANK DEPOSIT",
+          channelProvider: bankDepositDetails.bankName,
+          accountName: bankDepositDetails.accountName,
+          accountNumber: bankDepositDetails.accountNumber,
+          swiftNumber: bankDepositDetails.swiftNumber,
+        },
+      }));
+    }
+  }, [bankDepositDetails, selectedDepositType, setWalletOperation]);
   return (
     <div className="deposit-channel-container-wrapper">
-      {["TZS", "KES"].includes(depositCurrency) && (
+      {["TZS", "KES"].includes(currency) && processingStatus === "idle" && (
         <Form form={form} layout={"vertical"}>
           <Form.Item
             style={{ width: screens.xs ? "200px" : "412px" }}
@@ -76,7 +61,7 @@ const DepositChannelContainer = ({
                 if (Option.type === "BANK") {
                   setBankDepositDetails(() =>
                     clickPesaBankAccountDetails.find(
-                      (bank) => bank.currency === depositCurrency
+                      (bank) => bank.currency === currency
                     )
                   );
                 } else {
@@ -87,14 +72,14 @@ const DepositChannelContainer = ({
               }}
             >
               {depositMethodOptions
-                .filter((method) => method.currency === depositCurrency)
+                .filter((method) => method.currency === currency)
                 .map((option) => (
                   <Select.Option
                     value={option.value}
                     key={option.key}
                     type={option.type}
                   >
-                    {option.name}
+                    {option.optionName}
                   </Select.Option>
                 ))}
             </Select>
@@ -103,16 +88,10 @@ const DepositChannelContainer = ({
             <>
               {selectedDepositType === "BANK" ? (
                 <Form.Item
-                  /*  label={
-                    <h1 className="label-heading">
-                      <strong>Bank Deposit</strong>
-                    </h1>
-                  } */
                   style={{ width: screens.xs ? "200px" : "412px" }}
                   name="receiving-bank-account-name"
                 >
                   <div className="display-content" style={{ marginTop: "5px" }}>
-                    {/*          <hr className="border-top-line" /> */}
                     <p>
                       Please complete your deposit as soon as possible by
                       transferring the total amount using instructions below:
@@ -137,18 +116,21 @@ const DepositChannelContainer = ({
                       <div className="bank-details-line">
                         <h3>Amount</h3>
                         <h3>
-                          {depositCurrency} {toDecimalMark(depositAmount || 0)}
+                          {currency} {toDecimalMark(amount || 0)}
                         </h3>
                       </div>
                       <div className="deposit-reference">
                         <div className="reference-left">
                           <h3>Deposit Reference</h3>
-                          <span style={{ fontSize: "12px"}} className="important-note">
+                          <span
+                            style={{ fontSize: "12px" }}
+                            className="important-note"
+                          >
                             * must be included on your transfer
                           </span>
                         </div>
 
-                        <h3>DEP83409L5</h3>
+                        <h3>{referenceId}</h3>
                       </div>
                     </div>
                     <h3 className="important-note">
@@ -186,7 +168,7 @@ const DepositChannelContainer = ({
                         Enter Business Number (Namba ya kampuni) --- 888999
                       </li>
                       <li>Enter Reference Number (Kumbu kumbu ya malipo)</li>
-                      <li>Enter Amount ({depositAmount})</li>
+                      <li>Enter Amount ({amount})</li>
                     </ul>
                   )}
                   {selectedMobileMoneyOption === "VODACOM_MPESA" && (
@@ -233,6 +215,26 @@ const DepositChannelContainer = ({
             </>
           )}
         </Form>
+      )}
+      {processingStatus === "pending" && (
+        <h3 style={{ margin: "10px auto" }}>
+          <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
+          {" Please wait..."}
+        </h3>
+      )}
+      {processingStatus === "error" && (
+        <Result
+          status="error"
+          title="Submission Failed"
+          subTitle={processingError.toString()}
+        ></Result>
+      )}
+      {processingStatus === "success" && (
+        <Result
+          status="success"
+          title="Deposit Submitted Successfully!"
+          subTitle="Please proceed with a bank deposit within 24hr."
+        ></Result>
       )}
     </div>
   );

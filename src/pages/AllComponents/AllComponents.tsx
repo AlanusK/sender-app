@@ -18,39 +18,8 @@ import {
   DepositChannelContainer,
 } from "../../containers";
 import { ColumnsType } from "antd/lib/table";
-import { useAuthorisedContext } from "../../context/authorised-layout-context";
+import { useAuthorisedContext } from "../../context/authorised-user-context";
 import { Modal } from "antd";
-
-const data = [
-  {
-    key: "1",
-    date: "04/11/1990",
-    amount: "USD 10,000/=",
-    type: "Deposit",
-    status: "Completed",
-  },
-  {
-    key: "2",
-    date: "28/05/2020",
-    amount: "USD 1,000/=",
-    type: "Deposit",
-    status: "Completed",
-  },
-  {
-    key: "3",
-    date: "17/11/2014",
-    amount: "EUR 1,000/=",
-    type: "Deposit",
-    status: "Completed",
-  },
-  {
-    key: "4",
-    date: "13/09/2007",
-    amount: "EUR 1,000/=",
-    type: "Deposit",
-    status: "Cancelled",
-  },
-];
 
 type transactions = {
   key: string;
@@ -122,6 +91,10 @@ const AllComponents = () => {
   };
   const withdrawalMoney = () => {};
 
+  const { userTransaction } = useAuthorisedContext();
+
+  const data = userTransaction;
+
   return (
     <div className="all-components-wrapper">
       <div className="data-display-section">
@@ -183,7 +156,6 @@ const AllComponents = () => {
             wrapClassName="deposit-money-modal"
           >
             <DepositFormContainer
-              setDepositMoneyFuncRef={setDepositMoneyFuncRef}
               userBalances={userWallets}
             />
           </Modal>
@@ -233,7 +205,6 @@ const AllComponents = () => {
           <h1>Deposit Form Container</h1>
           <DepositFormContainer
             userBalances={userWallets}
-            setDepositMoneyFuncRef={() => { }}
           />
         </div>
         <div style={{ marginTop: "20px" }}>
@@ -248,11 +219,11 @@ const AllComponents = () => {
         </div>
         <div style={{ marginTop: "50px" }}>
           <h1>Payout channel Container</h1>
-          <PayoutChannelContainer userBalances={userWallets} />
+          <PayoutChannelContainer  />
         </div>
         <div style={{ marginTop: "50px" }}>
           <h1>Deposit channel Container</h1>
-          <DepositChannelContainer depositAmount={0} depositCurrency="TZS" />
+          <DepositChannelContainer/>
         </div>
       </div>
     </div>
