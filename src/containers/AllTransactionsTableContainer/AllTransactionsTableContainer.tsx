@@ -3,17 +3,20 @@ import { Button, Input } from "antd";
 import "./AllTransactionsTableContainer.css";
 import useBreakpoint from "antd/lib/grid/hooks/useBreakpoint";
 import { TransactionsTable } from "../../components";
+import { IndividualTransactionsProps } from "../../types";
 
 interface IAllTransactionsTableProps {
   columns: any;
-  transactions: any;
+  transactions: IndividualTransactionsProps[];
 }
 
 const AllTransactionsTableContainer = (props: IAllTransactionsTableProps) => {
   const screens = useBreakpoint();
 
   var columns = props.columns;
-  const [transactions, setTransactions] = useState();
+  const [transactions, setTransactions] = useState<
+    IndividualTransactionsProps[]
+  >([{ date: "", amount: "", status: "", meta: {}, type: "", key: "" }]);
 
   if (screens.xs) {
     columns = props.columns.filter(

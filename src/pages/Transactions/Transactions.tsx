@@ -66,30 +66,35 @@ const Transactions = () => {
   useEffect(() => {
     if (allTransactions) {
       setTableTransactions([
-        ...allTransactions?.deposits.map(
-          (item: any) =>
-            (item = {
-              key: item.id,
-              date: new Date(
-                item.confirmation.confirmedAt
-              ).toLocaleDateString(),
-              amount: `${item.currency} ${toDecimalMark(
-                Number(item.expected_amount)
-              )}`,
-              type: "Deposit",
-              status: item.status,
-            })
-        ),
-        ...allTransactions?.withdrawals.map(
-          (item: any) =>
-            (item = {
-              key: item.id,
-              date: new Date(item.createdAt).toLocaleDateString(),
-              amount: `${item.currency} ${toDecimalMark(Number(item.amount))}`,
-              type: "Withdraw",
-              status: item.status,
-            })
-        ),
+        ...allTransactions?.deposits.map((item: any) => {
+          const {
+            id,
+            updatedAt,
+            expected_amount,
+            currency,
+            status,
+            ...rest
+          } = item;
+          return (item = {
+            key: id,
+            date: new Date(updatedAt).toLocaleDateString(),
+            amount: `${currency} ${toDecimalMark(Number(expected_amount))}`,
+            type: "Deposit",
+            status: status,
+            meta: rest,
+          });
+        }),
+        ...allTransactions?.withdrawals.map((item: any) => {
+          const { id, updatedAt, amount, currency, status, ...rest } = item;
+          return (item = {
+            key: id,
+            date: new Date(updatedAt).toLocaleDateString(),
+            amount: `${currency} ${toDecimalMark(Number(amount))}`,
+            type: "Withdraw",
+            status: status,
+            meta: rest,
+          });
+        }),
       ]);
     }
   }, [allTransactions]);

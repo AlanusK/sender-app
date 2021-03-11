@@ -71,3 +71,13 @@ export type IWalletOperationProps = {
 export type IPayoutMethodsProps = {
    type: string, name: string, value: string, key: string, currency?: string
 }
+
+
+export type IndividualTransactionsProps = {
+   date: string;
+   amount: string;
+   status: string;
+   meta: any,
+   type: string
+   key: string
+}

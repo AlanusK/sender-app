@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { Table, Modal, Button } from "antd";
 import { IndividualTransactionsContainer } from "../../containers";
 import "./TransactionsTable.css";
+import { IndividualTransactionsProps } from "../../types";
 
 interface ITransactionsTableProps {
   columns: any;
-  transactions: any;
+  transactions: IndividualTransactionsProps[];
 }
 
 const TransactionsTable = (props: ITransactionsTableProps) => {
@@ -19,8 +20,7 @@ const TransactionsTable = (props: ITransactionsTableProps) => {
     singleTransactionReferenceId,
     setsingleTransactionReferenceId,
   ] = useState({});
-  const [singleTransactionData, setsingleTransactionData] = useState({});
-
+  const [singleTransactionData, setsingleTransactionData] = useState<any>();
   return (
     <>
       <Table
@@ -31,7 +31,7 @@ const TransactionsTable = (props: ITransactionsTableProps) => {
         onRow={(record, rowIndex) => {
           return {
             onClick: () => {
-              setsingleTransactionReferenceId(record.key);
+              setsingleTransactionReferenceId(record.meta.reference_id);
               setsingleTransactionData(record);
               setShowSingleTransactionModal(true);
             }, // click row
@@ -39,7 +39,9 @@ const TransactionsTable = (props: ITransactionsTableProps) => {
         }}
       />
       <Modal
-        title={`Transaction - ${singleTransactionReferenceId}`}
+        title={`${
+          singleTransactionData?.type === "Deposit" ? "Deposit" : "Withdrawal"
+        }`}
         visible={showSingleTransactionModal}
         onCancel={handleCancel}
         wrapClassName="single-transaction-modal"
@@ -48,6 +50,8 @@ const TransactionsTable = (props: ITransactionsTableProps) => {
             Close
           </Button>,
         ]}
+        closeIcon={" "}
+        destroyOnClose={true}
       >
         <IndividualTransactionsContainer data={singleTransactionData} />
       </Modal>
