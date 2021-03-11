@@ -41,6 +41,12 @@ const columns: ColumnsType<IAllTransactionTableProps> = [
       if (status === "PENDING") {
         color = "gray";
       }
+      if (status === "FAILED") {
+        color = "red";
+      }
+      if (status === "UNAUTHORIZED") {
+        color = "red";
+      }
       if (status === "SUCCESS") {
         color = "green";
       }

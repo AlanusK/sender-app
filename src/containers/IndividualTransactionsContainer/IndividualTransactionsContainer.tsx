@@ -1,6 +1,7 @@
 import { Descriptions, Badge } from "antd";
 import React, { useEffect, useState } from "react";
 import { IndividualTransactionsProps } from "../../types";
+import { toDecimalMark } from "../../utility";
 import "./IndividualTransactionsContainer.css";
 
 interface TransactionDataProps {
@@ -33,7 +34,9 @@ const IndividualTransactionsContainer = ({ data }: TransactionDataProps) => {
                 {payout_info.payout_address}
                 <br />
                 <span className="desc-inline-label">Amount: </span>
-                {amount}
+                {payout_info.currency +
+                  " " +
+                  toDecimalMark(Number(payout_info.amount))}
                 <br />
                 <span className="desc-inline-label">ETA: </span>
                 {"24hr"}
@@ -62,7 +65,9 @@ const IndividualTransactionsContainer = ({ data }: TransactionDataProps) => {
                 {payout_info.payout_address}
                 <br />
                 <span className="desc-inline-label">Amount: </span>
-                {amount}
+                {payout_info.currency +
+                  " " +
+                  toDecimalMark(Number(payout_info.amount))}
                 <br />
                 <span className="desc-inline-label">ETA: </span>
                 {"24hr"}
@@ -203,6 +208,14 @@ const IndividualTransactionsContainer = ({ data }: TransactionDataProps) => {
           />
         </Descriptions.Item>
         <Descriptions.Item label="Ref.ID">{reference_id}</Descriptions.Item>
+        {type === "Withdraw" && (
+          <>
+            <Descriptions.Item label="Fee">
+              {payout_info.currency + " " + toDecimalMark(Number(fee))}
+            </Descriptions.Item>
+            <Descriptions.Item>{}</Descriptions.Item>
+          </>
+        )}
         <Descriptions.Item label="More Info">
           <span className="desc-inline-label">{moreInfoDetails} </span>
         </Descriptions.Item>
