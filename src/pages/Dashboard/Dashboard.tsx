@@ -7,19 +7,21 @@ import {
 } from "../../containers";
 import { ColumnsType } from "antd/lib/table";
 import "./Dashboard.css";
-import { Row, Col, Button, Modal } from "antd";
+import { Row, Col, Button, Modal, Tag } from "antd";
 import { useAuthorisedContext } from "../../context/authorised-user-context";
 import { useWalletOperationsContext } from "../../context/wallet-operations-context";
+import { toDecimalMark } from "../../utility";
+import { useTransactionsContext } from "../../context/transactions-context";
 
-type transactions = {
+interface IPendingTransactionTableProps {
   key: string;
   date: string;
   amount: string;
   type: string;
   status: string;
-};
+}
 
-const columns: ColumnsType<transactions> = [
+const columns: ColumnsType<IPendingTransactionTableProps> = [
   {
     title: "Date",
     dataIndex: "date",
@@ -42,23 +44,70 @@ const columns: ColumnsType<transactions> = [
     title: "Status",
     dataIndex: "status",
     key: "status",
+    render: (status: any) => {
+      let color = "volcano";
+      if (status === "PENDING") {
+        color = "gray";
+      }
+      return (
+        <span>
+          <Tag color={color} key={status}>
+            {status}
+          </Tag>
+        </span>
+      );
+    },
     // align: 'center',
   },
 ];
 const Dashboard = () => {
   const { userWallets, updateWalletBalances } = useAuthorisedContext();
-  const {
-    walletOperation,
-  } = useWalletOperationsContext();
+  const { allTransactions, reloadTransactions } = useTransactionsContext();
+  const { walletOperation } = useWalletOperationsContext();
   const [showCurrencyModal, setShowCurrencyModal] = useState(false);
+  const [pendingTransactions, setPendingTransactions] = useState<any>();
 
   useEffect(() => {
     updateWalletBalances();
+    reloadTransactions()
   }, []);
+
+  useEffect(() => {
+    setPendingTransactions([
+      ...allTransactions?.deposits
+        .filter((deposit: any) => deposit.status === "PENDING")
+        .map(
+          (item: any) =>
+            (item = {
+              key: item.id,
+              date: new Date(
+                item.confirmation.confirmedAt
+              ).toLocaleDateString(),
+              amount: `${item.currency} ${toDecimalMark(
+                Number(item.expected_amount)
+              )}`,
+              type: "Deposit",
+              status: item.status,
+            })
+        ),
+      ...allTransactions?.withdrawals
+        .filter((withdrwal: any) => withdrwal.status === "PROCESSING")
+        .map(
+          (item: any) =>
+            (item = {
+              key: item.id,
+              date: new Date(item.createdAt).toLocaleDateString(),
+              amount: `${item.currency} ${toDecimalMark(Number(item.amount))}`,
+              type: "Withdraw",
+              status: item.status,
+            })
+        ),
+    ]);
+  }, [allTransactions]);
 
   const sendMoney = () => {
     console.log("amount :>> ", walletOperation.amount);
-    console.log('walletOperation :>> ', walletOperation);
+    console.log("walletOperation :>> ", walletOperation);
   };
   const addCurrency = () => {
     console.log("add currency");
@@ -73,10 +122,6 @@ const Dashboard = () => {
     setShowCurrencyModal(false);
   };
 
-  const { userTransaction } = useAuthorisedContext();
-
-  const data = userTransaction;
-
   return (
     <div className="dashboard-wrapper">
       <div className="wallet-balance-wrapper">
@@ -85,7 +130,10 @@ const Dashboard = () => {
 
       <Row className="site-wrapper">
         <Col className="transaction-table-column" flex="auto">
-          <TransactionsTableContainer columns={columns} transactions={data} />
+          <TransactionsTableContainer
+            columns={columns}
+            transactions={pendingTransactions}
+          />
         </Col>
         <Col className="send-money-column" flex="420px">
           <SendMoneyContainer userBalances={userWallets} />

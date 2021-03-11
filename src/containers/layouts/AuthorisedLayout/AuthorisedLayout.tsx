@@ -7,7 +7,7 @@ import { AuthorisedLayoutContextProvider } from "../../../context/authorised-use
 import SiteFooter from "./Footer/Footer";
 import useBreakpoint from "../../../hooks/useBreakpoint";
 import { WalletOperationsContextProvider } from "../../../context/wallet-operations-context";
-//import { ModalContextProvider } from "../../../context/payout-context";
+import { TransactionsContextProvider } from "../../../context/transactions-context";
 
 const { Content } = Layout;
 const AuthorisedLayout = ({ children }: any) => {
@@ -19,6 +19,7 @@ const AuthorisedLayout = ({ children }: any) => {
         <Layout className="site-layout">
           <CustomHeader />
           <WalletOperationsContextProvider>
+            <TransactionsContextProvider>
             <Content
               className="site-layout-background"
               style={{
@@ -29,6 +30,7 @@ const AuthorisedLayout = ({ children }: any) => {
             >
               {children}
             </Content>
+            </TransactionsContextProvider>
           </WalletOperationsContextProvider>
           <SiteFooter />
         </Layout>
