@@ -36,7 +36,9 @@ export type ExtendedJwtPayload = {
    nbf?: number;
    iat?: number;
    jti?: string;
-   id: string
+   id: string;
+   verified?: boolean;
+   api_access?: boolean;
 }
 
 export type StellarWalletBalanceProps = {
@@ -50,7 +52,7 @@ export type IWalletOperationProps = {
    kind: "SEND" | "DEPOSIT" | "WITHDRAWAL" | "";
    processingStatus: "idle" | "pending" | "success" | "error";
    processingError: string,
-   processingValue: string,
+   processingValue: any,
    amount: number;
    fee: number;
    referenceId: string;
@@ -68,4 +70,14 @@ export type IWalletOperationProps = {
 
 export type IPayoutMethodsProps = {
    type: string, name: string, value: string, key: string, currency?: string
+}
+
+
+export type IndividualTransactionsProps = {
+   date: string;
+   amount: string;
+   status: string;
+   meta: any,
+   type: string
+   key: string
 }
