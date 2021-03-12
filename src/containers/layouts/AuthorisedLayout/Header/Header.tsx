@@ -29,15 +29,6 @@ const CustomHeader = () => {
   }, [screens.xs, setMobileView])
   return (
     <Header className="site-layout-background" style={{ padding: 0 }}>
-      {mobileView ? <div className="back-to-dashboard"><LeftOutlined className="leftOutlined" />Dashboard</div> :
-        React.createElement(
-          siderCollapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
-          {
-            className: "trigger",
-            onClick: toggleSider,
-          }
-        )
-      }
       {React.createElement(LogoutOutlined, {
         className: "logout-button",
         onClick: signout,
