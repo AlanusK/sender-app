@@ -1,16 +1,25 @@
 import React, { useState, useEffect } from "react";
 import "./UserLiteKycContainer.css";
 import { Form, Input, Button, Checkbox, notification } from "antd";
-import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import {
+  UserOutlined,
+  LockOutlined,
+  MailOutlined,
+  KeyOutlined,
+  EyeInvisibleOutlined,
+  EyeTwoTone,
+} from "@ant-design/icons";
 import { useAsync } from "../../hooks/useAsync";
 import { useRouter } from "../../hooks/useRouter";
+import { StellarUtils } from "../../stellarUtility";
+import { StellarWalletBalanceProps } from "../../types";
 
 interface ICustomerRegistrationDetails {
   anchor_id: string;
   full_name: string;
   email: string;
   has_authentication: boolean;
-  attach_wallet: boolean;
+  attach_wallet?: boolean;
 }
 
 interface IUserRegistrationFormValues {
@@ -26,6 +35,7 @@ interface IUserAuthDetails {
   email_address: string;
   password: string;
 }
+
 const Axios = require("axios").default;
 
 const registerCustomer = (customerDetails: ICustomerRegistrationDetails) => {
@@ -52,28 +62,127 @@ const UserLiteKycContainer = () => {
     false
   );
   const { replace } = useRouter();
-  const [showWallet, setShowWallet] = useState(false);
+  const [showWalletInput, setShowWalletInput] = useState(false);
   const [userDetails, setSetDetails] = useState<ICustomerRegistrationDetails>();
-
+  const [isValidStellarWallet, setIsValidStellarWallet] = useState<boolean>(
+    true
+  );
+  const [invalidWalletMessage, setInvalidWalletMessage] = useState<
+    string | null
+  >(null);
+  const [isSettingNonCustodial, setIsSettingNonCustodial] = useState<boolean>(
+    false
+  );
   const onCheckboxChange = (e: any) => {
-    setShowWallet(e.target.checked);
+    setShowWalletInput(e.target.checked);
+  };
+
+  const validateStellarWalletSecretKey = (secretKey: string) => {
+    if (!secretKey.startsWith("S")) {
+      return Promise.resolve(false);
+    }
+    if (secretKey.length !== 56) {
+      return Promise.resolve(false);
+    }
+    return Promise.resolve(true);
+  };
+
+  const checkWalletTrustlines = async (publicKey: string) => {
+    const walletDetails = await StellarUtils.WalletDetails(publicKey);
+    const walletCurrencies = walletDetails.balances.map((asset: any) => [
+      asset.asset_code,
+    ]);
+    return Promise.resolve(
+      walletCurrencies.flat().includes("TZS" && "KES") ? true : false
+    );
+  };
+
+  const createTrustlines = async (secretKey: string) => {
+    const publicKey = await StellarUtils.getStellarPublicKey(secretKey);
+    const walletDetails = await StellarUtils.WalletDetails(publicKey);
+    const XLM = walletDetails.balances.find(
+      (asset: StellarWalletBalanceProps) => asset.asset_type === "native"
+    );
+    if (+XLM.balance < 2.1) {
+      setIsValidStellarWallet(false);
+      return setInvalidWalletMessage(
+        "Wallet has insufficient balance to establish default trustlines"
+      );
+    }
+    return StellarUtils.establishDefaultTrustlines(secretKey);
+  };
+
+  const handleNonCustodialRegistration = async (
+    formValues: IUserRegistrationFormValues
+  ) => {
+    setIsSettingNonCustodial(true);
+    let userWalletPublicKey;
+    setIsValidStellarWallet(true);
+    const validKey = await validateStellarWalletSecretKey(
+      formValues.walletSecretKey
+    );
+    if (!validKey) {
+      setInvalidWalletMessage("Invalid wallet address");
+      setIsSettingNonCustodial(false);
+      return setIsValidStellarWallet(false);
+    }
+    try {
+      userWalletPublicKey = await StellarUtils.getStellarPublicKey(
+        formValues.walletSecretKey
+      );
+      const hasTrustline = await checkWalletTrustlines(userWalletPublicKey);
+      if (!hasTrustline) {
+        const createTrustLineTransaction = await createTrustlines(
+          formValues.walletSecretKey
+        );
+        if (!createTrustLineTransaction?.hash)
+          return setIsSettingNonCustodial(false);
+      }
+      setIsSettingNonCustodial(false);
+      registerCustomerAuth(formValues);
+      setCustomerRegistrationDetails(formValues, userWalletPublicKey);
+    } catch (error) {
+      console.log("error :>> ", error);
+      setIsSettingNonCustodial(false);
+      setInvalidWalletMessage(error);
+      return setIsValidStellarWallet(false);
+    }
+  };
+
+  const registerCustomerAuth = (formValues: IUserRegistrationFormValues) => {
+    executeAuthRegistration({
+      email_address: formValues.email,
+      password: formValues.password,
+    });
+  };
+  const setCustomerRegistrationDetails = (
+    formValues: IUserRegistrationFormValues,
+    userPublicKey?: string
+  ) => {
+    const customerDetails: ICustomerRegistrationDetails = {
+      anchor_id: "cpsep24anchor",
+      full_name: `${formValues.firstName}  ${formValues.lastName}`,
+      email: formValues.email,
+      has_authentication: true,
+      ...(!showWalletInput && { attach_wallet: true }),
+      ...(showWalletInput && userPublicKey && { sep24_account: userPublicKey }),
+    };
+    setSetDetails(customerDetails);
+  };
+
+  const handleCustodialRegistration = (
+    formValues: IUserRegistrationFormValues
+  ) => {
+    registerCustomerAuth(formValues);
+    setCustomerRegistrationDetails(formValues);
   };
 
   const onFinish = async (values: IUserRegistrationFormValues) => {
-    console.log("Received values of form: ", values);
     if (values) {
-      executeAuthRegistration({
-        email_address: values.email,
-        password: values.password,
-      });
-      const customerDetails: ICustomerRegistrationDetails = {
-        anchor_id: "cpsep24anchor",
-        full_name: `${values.firstName}  ${values.lastName}`,
-        email: values.email,
-        has_authentication: true,
-        attach_wallet: true,
-      };
-      setSetDetails(customerDetails);
+      if (values?.walletSecretKey) {
+        return handleNonCustodialRegistration(values);
+      }
+      return handleCustodialRegistration(values);
     }
   };
 
@@ -82,7 +191,6 @@ const UserLiteKycContainer = () => {
       authRegistrationStatus === "success" &&
       authRegistrationValue?.data.id
     ) {
-      console.log("userDetails :>> ", userDetails);
       execute(userDetails);
     }
   }, [
@@ -103,15 +211,6 @@ const UserLiteKycContainer = () => {
       replace("/login");
     }
   }, [replace, status, value?.data.id]);
-
-  console.log(" status, value, erro :>> ", status, value, error);
-
-  console.log(
-    "  status: authRegistrationStatus ",
-    authRegistrationStatus,
-    authRegistrationValue,
-    authRegistrationError
-  );
 
   return (
     <div className="user-lite-KYC-container-wrapper">
@@ -175,10 +274,12 @@ const UserLiteKycContainer = () => {
             }
           >
             <Input
-              prefix={<UserOutlined className="site-form-item-icon" />}
+              prefix={<MailOutlined className="site-form-item-icon" />}
               placeholder="Email"
               disabled={
-                authRegistrationStatus === "pending" || status === "pending"
+                authRegistrationStatus === "pending" ||
+                status === "pending" ||
+                isSettingNonCustodial
                   ? true
                   : false
               }
@@ -193,7 +294,9 @@ const UserLiteKycContainer = () => {
               type="password"
               placeholder="Password"
               disabled={
-                authRegistrationStatus === "pending" || status === "pending"
+                authRegistrationStatus === "pending" ||
+                status === "pending" ||
+                isSettingNonCustodial
                   ? true
                   : false
               }
@@ -210,7 +313,9 @@ const UserLiteKycContainer = () => {
               type="password"
               placeholder="Repeat Password"
               disabled={
-                authRegistrationStatus === "pending" || status === "pending"
+                authRegistrationStatus === "pending" ||
+                status === "pending" ||
+                isSettingNonCustodial
                   ? true
                   : false
               }
@@ -218,10 +323,12 @@ const UserLiteKycContainer = () => {
           </Form.Item>
           <Form.Item>
             <Checkbox
-              checked={showWallet}
+              checked={showWalletInput}
               onChange={onCheckboxChange}
               disabled={
-                authRegistrationStatus === "pending" || status === "pending"
+                authRegistrationStatus === "pending" ||
+                status === "pending" ||
+                isSettingNonCustodial
                   ? true
                   : false
               }
@@ -233,20 +340,28 @@ const UserLiteKycContainer = () => {
             name="walletSecretKey"
             rules={[
               {
-                required: showWallet ? true : false,
+                required: showWalletInput ? true : false,
                 message: "Please enter wallet secret key!",
               },
             ]}
-            hidden={!showWallet}
+            hidden={!showWalletInput}
+            validateStatus={!isValidStellarWallet ? "error" : ""}
+            help={!isValidStellarWallet ? invalidWalletMessage : null}
           >
-            <Input
-              prefix={<LockOutlined className="site-form-item-icon" />}
+            <Input.Password
+              prefix={<KeyOutlined className="site-form-item-icon" />}
               type="password"
               placeholder="Wallet Secret Key"
               disabled={
-                authRegistrationStatus === "pending" || status === "pending"
+                authRegistrationStatus === "pending" ||
+                status === "pending" ||
+                isSettingNonCustodial
                   ? true
                   : false
+              }
+              onChange={() => setIsValidStellarWallet(true)}
+              iconRender={(visible) =>
+                visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
               }
             />
           </Form.Item>
@@ -256,12 +371,16 @@ const UserLiteKycContainer = () => {
               htmlType="submit"
               className="login-form-button"
               disabled={
-                authRegistrationStatus === "pending" || status === "pending"
+                authRegistrationStatus === "pending" ||
+                status === "pending" ||
+                isSettingNonCustodial
                   ? true
                   : false
               }
               loading={
-                authRegistrationStatus === "pending" || status === "pending"
+                authRegistrationStatus === "pending" ||
+                status === "pending" ||
+                isSettingNonCustodial
                   ? true
                   : false
               }
@@ -274,7 +393,8 @@ const UserLiteKycContainer = () => {
             </Button>
           </Form.Item>
           {authRegistrationStatus === "pending" ||
-          status === "pending" ? null : (
+          status === "pending" ||
+          isSettingNonCustodial ? null : (
             <Form.Item>
               Already have an account? <a href="/login">Login now!</a>
             </Form.Item>
