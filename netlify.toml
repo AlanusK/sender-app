@@ -1,0 +1,6 @@
+# Branch deploy context:
+# All deploys that are not from a pull/merge request
+# or from the production branch will inherit these settings.
+[context.branch-deploy.environment]
+REACT_APP_API_URL = "https://sandbox.clickpesa.com"
+REACT_APP_ISSUING_ACCOUNT_PUBLIC_KEY = "GAH572DYUPXZDOKBI76H54WRKMIHDXZFLOFVFBDPKL3WIUTPGGHCQ5K7"
