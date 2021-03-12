@@ -16,6 +16,8 @@ import {
   maximumMobileWithdrawalAmount,
   supportedCurrencies,
 } from "../../constants";
+import useBreakpoint from "../../hooks/useBreakpoint";
+
 const Axios = require("axios").default;
 
 interface IdepositRequestData {
@@ -138,7 +140,7 @@ const Wallet = () => {
   }, []);
 
   // initiate Sending Money
-  const sendMoney = () => {};
+  const sendMoney = () => { };
 
   const handleCancel = () => {
     updateWalletBalances();
@@ -174,9 +176,14 @@ const Wallet = () => {
     return execute(withdrawalData);
   };
 
-  const addCurrency = () => {
-    console.log("add currency");
+  const addCurrencyModal = () => {
+    console.log("add currency modal");
     setShowCurrencyModal(true);
+  };
+
+  const addCurrencyComponent = () => {
+    console.log("add currency component");
+    setShowCurrencyComponent(true);
   };
 
   const currencyAdd = () => {
@@ -268,6 +275,26 @@ const Wallet = () => {
     withdrawalAuthorizationValue,
   ]);
 
+  const screens = useBreakpoint();
+  const [mobileView, setMobileView] = useState<Boolean>(false);
+  const [showSendMoneyComponent, setshowSendMoneyComponent] = useState(false);
+  const [showDepositMoneyComponent, setshowDepositMoneyComponent] = useState(false);
+  const [showWithdrawalMoneyComponent, setshowWithdrawalMoneyComponent] = useState(
+    false
+  );
+  const [showCurrencyComponent, setShowCurrencyComponent] = useState(false);
+  useEffect(() => {
+    if (screens.xs) {
+      setMobileView(true)
+    } else {
+      setMobileView(false);
+      setshowSendMoneyComponent(false);
+      setshowDepositMoneyComponent(false);
+      setshowWithdrawalMoneyComponent(false);
+      setShowCurrencyComponent(false)
+    }
+  }, [screens.xs, setMobileView])
+
   return (
     <>
       <h1 className="wallet-title"> Wallet </h1>
@@ -288,7 +315,7 @@ const Wallet = () => {
           return setshowWithdrawalMoneyModal(true);
         }}
         userBalances={userWallets}
-        addCurrency={addCurrency}
+        addCurrency={addCurrencyComponent}
       />
 
       {/*  send money modal */}
@@ -419,7 +446,7 @@ const Wallet = () => {
         />
       </Modal>
     </>
-  );
+  )
 };
 
 export default Wallet;

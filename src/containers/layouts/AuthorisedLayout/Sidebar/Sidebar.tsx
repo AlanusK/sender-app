@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
 import { Menu, Layout } from "antd";
 import {
-  UserOutlined,
-  VideoCameraOutlined,
-  UploadOutlined,
+  FundOutlined,
+  WalletOutlined,
+  SettingOutlined,
   GlobalOutlined,
+  UnorderedListOutlined,
 } from "@ant-design/icons";
 import "./Sidebar.css";
 import { useAuthorisedContext } from "../../../../context/authorised-user-context";
@@ -29,25 +30,28 @@ const Sidebar = (props: ISidebar) => {
     }
   }, [props.isSmallScreen, siderCollapsed, toggleSider]);
   return (
-    <div>
+    <div className="sider-layout" >
       <Sider trigger={null} collapsible collapsed={siderCollapsed}>
-        <div className="logo" />
+        <div className="logo">
+           {siderCollapsed ?  <FundOutlined /> : "Sender Dashboard"}
+        </div>
         <Menu
           theme="dark"
           mode="inline"
           defaultSelectedKeys={[selectedMenuItem]}
           onClick={setMenuItem}
+          style={{marginTop: "30px"}}
         >
-          <Menu.Item key="dashboard" icon={<UserOutlined />}>
+          <Menu.Item key="dashboard" icon={<FundOutlined />}>
             Dashboard
           </Menu.Item>
-          <Menu.Item key="wallet" icon={<VideoCameraOutlined />}>
+          <Menu.Item key="wallet" icon={<WalletOutlined />}>
             Wallet
           </Menu.Item>
-          <Menu.Item key="transactions" icon={<VideoCameraOutlined />}>
+          <Menu.Item key="transactions" icon={<UnorderedListOutlined />}>
             Transactions
           </Menu.Item>
-          <Menu.Item key="settings" icon={<UploadOutlined />}>
+          <Menu.Item key="settings" icon={<SettingOutlined />}>
             Settings
           </Menu.Item>
           <Menu.Item key="all-components" icon={<GlobalOutlined />}>

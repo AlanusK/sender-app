@@ -14,3 +14,23 @@
    float: right;
    padding: 20px;
  }
+
+ .back-to-dashboard {
+    display: flex;
+    align-items: center;
+    margin-left: 15px;
+    text-transform: capitalize;
+ }
+
+ .leftOutlined {
+    margin-right: 5px;
+ }
+
+ .breadCrumb {
+   display: flex;
+   align-items: center;
+   padding-left: 26px;
+   padding-top: 15px;
+   text-transform: capitalize;
+   /* height: 50px; */
+ }

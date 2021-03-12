@@ -132,6 +132,12 @@ const Dashboard = () => {
     setShowCurrencyModal(false);
   };
 
+  const { userTransaction } = useAuthorisedContext();
+
+  const data = userTransaction.slice(0, 4);
+
+  const scroll = { y: null }
+
   return (
     <div className="dashboard-wrapper">
       <div className="wallet-balance-wrapper">
@@ -140,10 +146,7 @@ const Dashboard = () => {
 
       <Row className="site-wrapper">
         <Col className="transaction-table-column" flex="auto">
-          <TransactionsTableContainer
-            columns={columns}
-            transactions={pendingTransactions}
-          />
+          <TransactionsTableContainer columns={columns} transactions={pendingTransactions} scroll={scroll} />
         </Col>
         <Col className="send-money-column" flex="420px">
           <SendMoneyContainer userBalances={userWallets} />

@@ -105,12 +105,11 @@ const Transactions = () => {
     }
   }, [allTransactions]);
 
+  const scroll = { y:415 };
+
   return (
     <div>
-      <AllTransactionsTableContainer
-        columns={columns}
-        transactions={tableTransactions}
-      />
+      <AllTransactionsTableContainer columns={columns} transactions={tableTransactions} scroll={scroll} />
     </div>
   );
 };

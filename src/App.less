@@ -37,7 +37,9 @@ body.dark-mode,
 .dark-mode .ant-layout-sider,
 .dark-mode .transaction-table-column,
 .dark-mode .send-money-column,
-.dark-mode .wallet-balance-wrapper {
+.dark-mode .wallet-balance-wrapper,
+.dark-mode .sider-layout,
+.dark-mode .logo {
   background-color: hsl(0, 0%, 26%);
   color: silver;
 }
@@ -65,11 +67,15 @@ body.dark-mode,
   color: silver;
 }
 
-.dark-mode li.ant-menu-item.ant-menu-item-selected>span svg {
-  fill: silver;
+.dark-mode li.ant-menu-item.ant-menu-item-selected > span svg {
+  fill: black;
 }
 
-
+.dark-mode .ant-breadcrumb a,
+.dark-mode .ant-breadcrumb-separator,
+.dark-mode .ant-breadcrumb > span:last-child {
+  color: silver;
+}
 
 
 //components
@@ -106,8 +112,12 @@ body.dark-mode,
   border: 0;
 }
 
-.dark-mode .anticon svg {
-  fill: silver;
+// .dark-mode .anticon svg {
+//   fill: black;
+// }
+
+.dark-mode .ant-menu-dark .ant-menu-item {
+  color: silver;
 }
 
 .dark-mode .ant-card-actions li {
