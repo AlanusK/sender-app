@@ -16,6 +16,7 @@ import {
   maximumMobileWithdrawalAmount,
   supportedCurrencies,
 } from "../../constants";
+import useBreakpoint from "../../hooks/useBreakpoint";
 
 const Axios = require("axios").default;
 
@@ -175,9 +176,14 @@ const Wallet = () => {
     return execute(withdrawalData);
   };
 
-  const addCurrency = () => {
-    console.log("add currency");
+  const addCurrencyModal = () => {
+    console.log("add currency modal");
     setShowCurrencyModal(true);
+  };
+
+  const addCurrencyComponent = () => {
+    console.log("add currency component");
+    setShowCurrencyComponent(true);
   };
 
   const currencyAdd = () => {
@@ -269,6 +275,26 @@ const Wallet = () => {
     withdrawalAuthorizationValue,
   ]);
 
+  const screens = useBreakpoint();
+  const [mobileView, setMobileView] = useState<Boolean>(false);
+  const [showSendMoneyComponent, setshowSendMoneyComponent] = useState(false);
+  const [showDepositMoneyComponent, setshowDepositMoneyComponent] = useState(false);
+  const [showWithdrawalMoneyComponent, setshowWithdrawalMoneyComponent] = useState(
+    false
+  );
+  const [showCurrencyComponent, setShowCurrencyComponent] = useState(false);
+  useEffect(() => {
+    if (screens.xs) {
+      setMobileView(true)
+    } else {
+      setMobileView(false);
+      setshowSendMoneyComponent(false);
+      setshowDepositMoneyComponent(false);
+      setshowWithdrawalMoneyComponent(false);
+      setShowCurrencyComponent(false)
+    }
+  }, [screens.xs, setMobileView])
+
   return (
     <>
       <h1 className="wallet-title"> Wallet </h1>
@@ -289,7 +315,7 @@ const Wallet = () => {
           return setshowWithdrawalMoneyModal(true);
         }}
         userBalances={userWallets}
-        addCurrency={addCurrency}
+        addCurrency={addCurrencyComponent}
       />
 
       {/*  send money modal */}
@@ -312,28 +338,28 @@ const Wallet = () => {
         footer={
           walletOperation.processingStatus === "success"
             ? [
-              <Button key="back" onClick={handleCancel}>
-                Close
+                <Button key="back" onClick={handleCancel}>
+                  Close
                 </Button>,
-            ]
+              ]
             : [
-              <Button key="back" onClick={handleCancel}>
-                Close
+                <Button key="back" onClick={handleCancel}>
+                  Close
                 </Button>,
-              <Button
-                key="ok"
-                onClick={initiateMoneyDeposit}
-                disabled={
-                  !hasValidOperationalData || status === "pending"
-                    ? true
-                    : false || walletOperation.amount < minmumAmount
-                }
-              >
-                {walletOperation.processingStatus === "pending"
-                  ? "Confirming..."
-                  : "Confirm"}
-              </Button>,
-            ]
+                <Button
+                  key="ok"
+                  onClick={initiateMoneyDeposit}
+                  disabled={
+                    !hasValidOperationalData || status === "pending"
+                      ? true
+                      : false || walletOperation.amount < minmumAmount
+                  }
+                >
+                  {walletOperation.processingStatus === "pending"
+                    ? "Confirming..."
+                    : "Confirm"}
+                </Button>,
+              ]
         }
         wrapClassName="deposit-money-modal"
         destroyOnClose={true}
@@ -353,12 +379,12 @@ const Wallet = () => {
         footer={
           walletOperation.processingStatus === "success" && !requirePassword
             ? [
-              <Button key="back" onClick={handleCancel}>
-                Close
+                <Button key="back" onClick={handleCancel}>
+                  Close
                 </Button>,
-            ]
+              ]
             : requirePassword
-              ? [
+            ? [
                 <Button key="back" onClick={handleCancel}>
                   Close
                 </Button>,
@@ -420,7 +446,7 @@ const Wallet = () => {
         />
       </Modal>
     </>
-  );
+  )
 };
 
 export default Wallet;
