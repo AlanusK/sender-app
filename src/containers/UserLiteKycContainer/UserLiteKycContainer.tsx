@@ -231,7 +231,9 @@ const UserLiteKycContainer = () => {
               prefix={<UserOutlined className="site-form-item-icon" />}
               placeholder="First name"
               disabled={
-                authRegistrationStatus === "pending" || status === "pending"
+                authRegistrationStatus === "pending" ||
+                status === "pending" ||
+                isSettingNonCustodial
                   ? true
                   : false
               }
@@ -253,7 +255,9 @@ const UserLiteKycContainer = () => {
               prefix={<UserOutlined className="site-form-item-icon" />}
               placeholder="Last name"
               disabled={
-                authRegistrationStatus === "pending" || status === "pending"
+                authRegistrationStatus === "pending" ||
+                status === "pending" ||
+                isSettingNonCustodial
                   ? true
                   : false
               }
