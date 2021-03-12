@@ -12,12 +12,12 @@ interface StellarUtilsProps {
 }
 
 const horizonUrl =
-  process.env.REACT_APP_API_NODE_ENV !== "production"
+  process.env.REACT_APP_API_NODE_ENV === "production"
     ? "https://horizon.stellar.org"
     : "https://horizon-testnet.stellar.org";
 
 const network_passphrase =
-  process.env.REACT_APP_API_NODE_ENV !== "production" ? Networks.PUBLIC : Networks.TESTNET;
+  process.env.REACT_APP_API_NODE_ENV === "production" ? Networks.PUBLIC : Networks.TESTNET;
 
 const createStellarHorizonServer = () => {
   return new StellarSdk.Server(horizonUrl);
