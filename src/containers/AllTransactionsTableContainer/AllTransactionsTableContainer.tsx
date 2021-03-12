@@ -24,10 +24,10 @@ const AllTransactionsTableContainer = (props: IAllTransactionsTableProps) => {
   return (
     <>
       <div className="title-all-transactions">
-        <Button className="transaction-type" type="text" onClick={() => setTransactions(props.transactions)}>All Payments</Button>
-        <Button className="transaction-type" type="text" onClick={() => setTransactions(props.transactions.filter((obj: any) => obj.type === 'Send'))}>Send</Button>
-        <Button className="transaction-type" type="text" onClick={() => setTransactions(props.transactions.filter((obj: any) => obj.type === 'Withdraw'))}>Withdraw</Button>
-        <Button className="transaction-type" type="text" onClick={() => setTransactions(props.transactions.filter((obj: any) => obj.type === 'Deposit'))}>Deposit</Button>
+        <Button className="button transaction-type" type="default" onClick={() => setTransactions(props.transactions)}>All Payments</Button>
+        <Button className="button transaction-type" type="default" onClick={() => setTransactions(props.transactions.filter((obj: any) => obj.type === 'Send'))}>Send</Button>
+        <Button className="button transaction-type" type="default" onClick={() => setTransactions(props.transactions.filter((obj: any) => obj.type === 'Withdraw'))}>Withdraw</Button>
+        <Button className="button transaction-type" type="default" onClick={() => setTransactions(props.transactions.filter((obj: any) => obj.type === 'Deposit'))}>Deposit</Button>
       </div>
       <div className="search-input">
         <Input
