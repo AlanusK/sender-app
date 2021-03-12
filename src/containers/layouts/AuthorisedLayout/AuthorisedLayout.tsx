@@ -9,6 +9,7 @@ import useBreakpoint from "../../../hooks/useBreakpoint";
 import { WalletOperationsContextProvider } from "../../../context/wallet-operations-context";
 import { useLocation } from "react-router-dom";
 //import { ModalContextProvider } from "../../../context/payout-context";
+import { TransactionsContextProvider } from "../../../context/transactions-context";
 
 const { Content } = Layout;
 const AuthorisedLayout = ({ children }: any) => {
@@ -38,6 +39,7 @@ const AuthorisedLayout = ({ children }: any) => {
         <Layout className="site-layout">
           <CustomHeader />
           <WalletOperationsContextProvider>
+          <TransactionsContextProvider>
             {transactionContentLayout ?
               <Content
                 className="site-layout-background"
@@ -60,6 +62,7 @@ const AuthorisedLayout = ({ children }: any) => {
                 {children}
               </Content>
             }
+            </TransactionsContextProvider>
           </WalletOperationsContextProvider>
           <SiteFooter />
         </Layout>

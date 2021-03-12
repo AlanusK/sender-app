@@ -111,8 +111,6 @@ const Wallet = () => {
     setOperationAuthorized,
     operationAuthorized,
   } = useWalletOperationsContext();
-  console.log("walletOperation :>> ", walletOperation);
-  console.log("hasValidOperationalData :>> ", hasValidOperationalData);
   const { updateWalletBalances, userDetails } = useAuthorisedContext();
   const { execute, status, value, error = "" } = useAsync(
     walletOperation.kind === "DEPOSIT" ? postDeposit : postWithdrawal,
@@ -128,6 +126,7 @@ const Wallet = () => {
     execute: executeWithdrawalAuthorization,
     status: withdrawalAuthorizationStatus,
     value: withdrawalAuthorizationValue,
+    error: withdrawalAuthorizationError,
   } = useAsync(postWithdrawalAuthorization, false);
 
   const { activeWallet, userWallets } = useAuthorisedContext();
@@ -144,6 +143,7 @@ const Wallet = () => {
   const sendMoney = () => { };
 
   const handleCancel = () => {
+    updateWalletBalances();
     setshowSendMoneyModal(false);
     setshowDepositMoneyModal(false);
     setshowWithdrawalMoneyModal(false);
@@ -157,7 +157,6 @@ const Wallet = () => {
       maximumMobileWithdrawalAmount(activeWallet.currency)
     )
       return;
-    console.log("say shit :>> ", "say shit");
     const withdrawalData: IWithdrawalRequesttData = {
       amount: walletOperation.amount.toString(),
       customer_id: userDetails.userId,
@@ -174,7 +173,6 @@ const Wallet = () => {
         currency: walletOperation.currency,
       },
     };
-    console.log("withdrawalData :>> ", withdrawalData);
     return execute(withdrawalData);
   };
 
@@ -234,16 +232,22 @@ const Wallet = () => {
   useEffect(() => {
     if (passwordVerificationStatus === "success") {
       setOperationAuthorized(passwordVerificationValue.data);
+      setWalletOperation((existingDetails: IWalletOperationProps) => ({
+        ...existingDetails,
+        processingStatus: "idle",
+        processingValue: null,
+        processingError: "",
+      }));
     }
   }, [
     passwordVerificationStatus,
     passwordVerificationValue?.data,
     setOperationAuthorized,
+    setWalletOperation,
   ]);
 
   useEffect(() => {
-    if (operationAuthorized && value.data.authorization_token) {
-      console.log("hoohoohoh :>> ", "hoohoohoh");
+    if (operationAuthorized && value?.data.authorization_token) {
       executeWithdrawalAuthorization(value.data.authorization_token);
     }
   }, [
@@ -252,11 +256,24 @@ const Wallet = () => {
     value?.data.authorization_token,
   ]);
 
-  console.log(
-    "object :>> ",
+  useEffect(() => {
+    if (operationAuthorized) {
+      setWalletOperation((existingDetails: IWalletOperationProps) => ({
+        ...existingDetails,
+        processingStatus: withdrawalAuthorizationStatus,
+        processingValue: withdrawalAuthorizationValue,
+        processingError: withdrawalAuthorizationError,
+      }));
+      setRequirePassword(false);
+    }
+  }, [
+    operationAuthorized,
+    setRequirePassword,
+    setWalletOperation,
+    withdrawalAuthorizationError,
     withdrawalAuthorizationStatus,
-    withdrawalAuthorizationValue
-  );
+    withdrawalAuthorizationValue,
+  ]);
 
   const screens = useBreakpoint();
   const [mobileView, setMobileView] = useState<Boolean>(false);
@@ -280,184 +297,154 @@ const Wallet = () => {
 
   return (
     <>
-      {mobileView ?
-        (showSendMoneyComponent ?
-          <SendMoneyContainer userBalances={userWallets} /> : showDepositMoneyComponent ?
-            <DepositFormContainer userBalances={userWallets} /> : showWithdrawalMoneyComponent ?
-              <WithdrawalFormContainer userBalances={userWallets} /> : showCurrencyComponent ?
-                <SelectCurrencyContainer currencyOptions={[{ currency: "TZS" }]} /> :
-                <>
-                  <h1 className="wallet-title"> Wallet </h1>
-                  <ExtendedWalletBallanceContainer
-                    sendMoney={() => {
-                      resetWalletOperationsData(); // start with fresh object
-                      setRequirePassword(false);
-                      setshowSendMoneyComponent(true);
-                    }}
-                    depositMoney={() => {
-                      resetWalletOperationsData(); // start with fresh object
-                      return setshowDepositMoneyComponent(true);
-                    }}
-                    withdrawalMoney={() => {
-                      resetWalletOperationsData(); // start with fresh object
-                      setRequirePassword(false);
-                      return setshowWithdrawalMoneyComponent(true);
-                    }}
-                    userBalances={userWallets}
-                    addCurrency={addCurrencyComponent}
-                  />
-                </>
-        ) :
-        (
-          <>
-            <h1 className="wallet-title"> Wallet </h1>
-            <ExtendedWalletBallanceContainer
-              sendMoney={() => {
-                resetWalletOperationsData(); // start with fresh object
-                setRequirePassword(false);
-                setshowSendMoneyModal(true);
-              }}
-              depositMoney={() => {
-                resetWalletOperationsData(); // start with fresh object
-                return setshowDepositMoneyModal(true);
-              }}
-              withdrawalMoney={() => {
-                resetWalletOperationsData(); // start with fresh object
-                setRequirePassword(false);
-                return setshowWithdrawalMoneyModal(true);
-              }}
-              userBalances={userWallets}
-              addCurrency={addCurrencyModal}
-            />
+      <h1 className="wallet-title"> Wallet </h1>
+      <ExtendedWalletBallanceContainer
+        sendMoney={() => {
+          resetWalletOperationsData(); // start with fresh object
+          setRequirePassword(false);
+          setshowSendMoneyModal(true);
+        }}
+        depositMoney={() => {
+          resetWalletOperationsData(); // start with fresh object
+          return setshowDepositMoneyModal(true);
+        }}
+        withdrawalMoney={() => {
+          resetWalletOperationsData(); // start with fresh object
+          setOperationAuthorized(undefined);
+          setRequirePassword(false);
+          return setshowWithdrawalMoneyModal(true);
+        }}
+        userBalances={userWallets}
+        addCurrency={addCurrencyComponent}
+      />
 
-            {/*  send money modal */}
-            <Modal
-              title="Send Money"
-              visible={showSendMoneyModal}
-              onOk={sendMoney}
-              onCancel={handleCancel}
-              okText="Send"
-              wrapClassName="send-money-modal"
-            >
-              <SendMoneyContainer userBalances={userWallets} />
-            </Modal>
-            {/*  deposit money modal */}
-            <Modal
-              title="Deposit Money"
-              visible={showDepositMoneyModal}
-              onOk={initiateMoneyDeposit}
-              onCancel={handleCancel}
-              footer={
-                walletOperation.processingStatus === "success"
-                  ? [
-                    <Button key="back" onClick={handleCancel}>
-                      Close
-                  </Button>,
-                  ]
-                  : [
-                    <Button key="back" onClick={handleCancel}>
-                      Close
-                  </Button>,
-                    <Button
-                      key="ok"
-                      onClick={initiateMoneyDeposit}
-                      disabled={
-                        !hasValidOperationalData || status === "pending"
-                          ? true
-                          : false || walletOperation.amount < minmumAmount
-                      }
-                    >
-                      {walletOperation.processingStatus === "pending"
-                        ? "Confirming..."
-                        : "Confirm"}
-                    </Button>,
-                  ]
-              }
-              wrapClassName="deposit-money-modal"
-              destroyOnClose={true}
-              okButtonProps={{
-                disabled: status === "pending" ? true : false,
-              }}
-            >
-              <DepositFormContainer userBalances={userWallets} />
-            </Modal>
-            {/*  withdrawal money modal */}
-            <Modal
-              title={requirePassword ? "Authorize Withdrawal" : "Withdrawal Money"}
-              visible={showWithdrawalMoneyModal}
-              okText="Withdrawal"
-              wrapClassName="withdrawal-money-modal"
-              destroyOnClose={true}
-              footer={
-                walletOperation.processingStatus === "success" && !requirePassword
-                  ? [
-                    <Button key="back" onClick={handleCancel}>
-                      Close
-                  </Button>,
-                  ]
-                  : requirePassword
-                    ? [
-                      <Button key="back" onClick={handleCancel}>
-                        Close
-                  </Button>,
-                      <Button
-                        key="ok"
-                        onClick={() => {
-                          if (!operationPassword) return;
-                          executePasswordVerification({
-                            password: operationPassword,
-                            userId: userDetails.userId,
-                          });
-                        }}
-                        disabled={
-                          passwordVerificationStatus === "pending" ? true : false
-                        }
-                      >
-                        {passwordVerificationStatus === "pending"
-                          ? "Authorizing..."
-                          : "Authorize"}
-                      </Button>,
-                    ]
-                    : [
-                      <Button key="back" onClick={handleCancel}>
-                        Close
-                  </Button>,
-                      <Button
-                        key="ok"
-                        onClick={withdrawalMoney}
-                        disabled={
-                          !hasValidOperationalData || status === "pending"
-                            ? true
-                            : false || walletOperation.amount < minmumAmount
-                        }
-                      >
-                        {walletOperation.processingStatus === "pending"
-                          ? "Initiating..."
-                          : "Withdrawal"}
-                      </Button>,
-                    ]
-              }
-            >
-              <WithdrawalFormContainer userBalances={userWallets} />
-            </Modal>
-            {/*  add new currency modal */}
-            <Modal
-              title="Add Currency"
-              visible={showCurrencyModal}
-              onOk={currencyAdd}
-              onCancel={handleCancel}
-              okText="Add"
-              wrapClassName="add-currency-modal"
-              destroyOnClose={true}
-            >
-              <SelectCurrencyContainer
-                currencyOptions={[{ currency: "TZS" }]}
-                width={412}
-              />
-            </Modal>
-          </>
-        )
-      }
+      {/*  send money modal */}
+      <Modal
+        title="Send Money"
+        visible={showSendMoneyModal}
+        onOk={sendMoney}
+        onCancel={handleCancel}
+        okText="Send"
+        wrapClassName="send-money-modal"
+      >
+        <SendMoneyContainer userBalances={userWallets} />
+      </Modal>
+      {/*  deposit money modal */}
+      <Modal
+        title="Deposit Money"
+        visible={showDepositMoneyModal}
+        onOk={initiateMoneyDeposit}
+        onCancel={handleCancel}
+        footer={
+          walletOperation.processingStatus === "success"
+            ? [
+                <Button key="back" onClick={handleCancel}>
+                  Close
+                </Button>,
+              ]
+            : [
+                <Button key="back" onClick={handleCancel}>
+                  Close
+                </Button>,
+                <Button
+                  key="ok"
+                  onClick={initiateMoneyDeposit}
+                  disabled={
+                    !hasValidOperationalData || status === "pending"
+                      ? true
+                      : false || walletOperation.amount < minmumAmount
+                  }
+                >
+                  {walletOperation.processingStatus === "pending"
+                    ? "Confirming..."
+                    : "Confirm"}
+                </Button>,
+              ]
+        }
+        wrapClassName="deposit-money-modal"
+        destroyOnClose={true}
+        okButtonProps={{
+          disabled: status === "pending" ? true : false,
+        }}
+      >
+        <DepositFormContainer userBalances={userWallets} />
+      </Modal>
+      {/*  withdrawal money modal */}
+      <Modal
+        title={requirePassword ? "Authorize Withdrawal" : "Withdrawal Money"}
+        visible={showWithdrawalMoneyModal}
+        okText="Withdrawal"
+        wrapClassName="withdrawal-money-modal"
+        destroyOnClose={true}
+        footer={
+          walletOperation.processingStatus === "success" && !requirePassword
+            ? [
+                <Button key="back" onClick={handleCancel}>
+                  Close
+                </Button>,
+              ]
+            : requirePassword
+            ? [
+                <Button key="back" onClick={handleCancel}>
+                  Close
+                </Button>,
+                <Button
+                  key="ok"
+                  onClick={() => {
+                    if (!operationPassword) return;
+                    executePasswordVerification({
+                      password: operationPassword,
+                      userId: userDetails.userId,
+                    });
+                  }}
+                  disabled={
+                    passwordVerificationStatus === "pending" ? true : false
+                  }
+                >
+                  {passwordVerificationStatus === "pending"
+                    ? "Authorizing..."
+                    : "Authorize"}
+                </Button>,
+              ]
+            : withdrawalAuthorizationStatus === "pending"
+            ? [<Button disabled={true}>Processing...</Button>]
+            : [
+                <Button key="back" onClick={handleCancel}>
+                  Close
+                </Button>,
+                <Button
+                  key="ok"
+                  onClick={withdrawalMoney}
+                  disabled={
+                    !hasValidOperationalData || status === "pending"
+                      ? true
+                      : false || walletOperation.amount < minmumAmount
+                  }
+                >
+                  {walletOperation.processingStatus === "pending"
+                    ? "Initiating..."
+                    : "Withdrawal"}
+                </Button>,
+              ]
+        }
+      >
+        <WithdrawalFormContainer userBalances={userWallets} />
+      </Modal>
+      {/*  add new currency modal */}
+      <Modal
+        title="Add Currency"
+        visible={showCurrencyModal}
+        onOk={currencyAdd}
+        onCancel={handleCancel}
+        okText="Add"
+        wrapClassName="add-currency-modal"
+        destroyOnClose={true}
+      >
+        <SelectCurrencyContainer
+          currencyOptions={[{ currency: "TZS" }]}
+          width={412}
+        />
+      </Modal>
     </>
   )
 };
