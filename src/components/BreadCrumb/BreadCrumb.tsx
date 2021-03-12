@@ -1,6 +1,7 @@
 import React from "react";
 import { useLocation, Link } from "react-router-dom";
 import { Breadcrumb } from "antd";
+import "./BreadCrumb.css"
 
 
 const BreadCrumb = () => {
@@ -8,7 +9,7 @@ const BreadCrumb = () => {
     const pathnames = location.pathname.split('/').filter((item: any) => item);
     return (
         <div>
-            <Breadcrumb>
+            <Breadcrumb >
                 {pathnames.length > 0 ? (
                     <Breadcrumb.Item>
                         <Link to="/">Dashboard</Link>
@@ -24,7 +25,7 @@ const BreadCrumb = () => {
                     return isLast ? (
                         <Breadcrumb.Item>{name}</Breadcrumb.Item>
                     ) : (
-                            <Breadcrumb.Item>
+                            <Breadcrumb.Item >
                                 <Link to={`${routeTo}`}>{name}</Link>
                             </Breadcrumb.Item>
                         );
