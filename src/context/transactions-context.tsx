@@ -3,7 +3,6 @@ import { GetUserDepositsTransactions } from "../services/DepositService";
 import { GetUserWithdrawalTransactions } from "../services/WithdrawalService";
 import { useAuthorisedContext } from "./authorised-user-context";
 
-
 interface ITransactionsContextProps {
   allTransactions: any;
   depositTransactions: any;
@@ -48,7 +47,10 @@ function useTransactionsContextProviderProvider() {
     const deposits = await GetUserDepositsTransactions(userDetails.userId);
     const withdrawals = await GetUserWithdrawalTransactions(userDetails.userId);
     if (deposits && withdrawals) {
-      setAllTransactions({ deposits: deposits, withdrawals: withdrawals });
+      setAllTransactions({
+        deposits: new Array(...deposits),
+        withdrawals: new Array(...withdrawals),
+      });
     }
   };
   const reloadTransactions = () => getUserTransactions();

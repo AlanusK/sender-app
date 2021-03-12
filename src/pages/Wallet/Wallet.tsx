@@ -156,7 +156,7 @@ const Wallet = () => {
     )
       return;
     const withdrawalData: IWithdrawalRequesttData = {
-      amount: (walletOperation.amount - walletOperation.fee).toString(), // custodial wallet payout fee are deducted separately
+      amount: walletOperation.amount.toString(),
       customer_id: userDetails.userId,
       currency: walletOperation.currency,
       fee: walletOperation.fee.toString(),
