@@ -29,7 +29,7 @@ const AuthorisedLayout = ({ children }: any) => {
         <Layout className="site-layout">
           <CustomHeader />
           <WalletOperationsContextProvider>
-            {pathnames[0] === "dashboard" ?
+            {pathnames[0] === "dashboard" || pathnames[0] === "wallet" ?
               <Content
                 className="site-layout-background"
                 style={{

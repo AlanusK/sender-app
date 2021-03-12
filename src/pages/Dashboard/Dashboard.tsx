@@ -84,8 +84,14 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-wrapper">
-      <div className="wallet-balance-wrapper">
-        <WalletBallanceContainer addCurrency={addCurrency} />
+
+      <div className="wallet-container">
+        <div className="wallet-title">
+          Wallet
+        </div>
+        <div className="wallet-cards-container">
+          <WalletBallanceContainer addCurrency={addCurrency} /> 
+        </div>
       </div>
 
       <div className="transaction-send-row">

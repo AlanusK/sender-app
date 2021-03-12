@@ -1,22 +1,14 @@
 .dashboard-wrapper {
     background-color: #f0f2f5;
-    /* margin: -25px -25px; */
-}
-
-
-.wallet-balance-wrapper {
-    background-color: #fff;
-    padding: 20px 10px;
-    margin-bottom: 15px;
 }
 
 .transaction-send-row {
     display: flex;
-
 }
 
 .send-container,
-.transactions-container {
+.transactions-container,
+.wallet-container {
     background-color: white;
     margin-bottom: 15px
 }
@@ -31,15 +23,13 @@
 }
 
 .send-title, 
-.transaction-table-title{
+.transaction-table-title,
+.wallet-title {
     height: 50px;
     display: flex;
     align-items: center;
     border-bottom: 1px solid lightgray;
     padding: 10px;   
-}
-
-.send-title {
     font-size: larger;
     font-weight: 200;
 }
@@ -49,7 +39,8 @@
 }
 
 .send-money-container,
-.transactions-table-container {
+.transactions-table-container,
+.wallet-cards-container {
     padding: 10px;
     padding-top: 15px;
 }
@@ -65,6 +56,4 @@
         display: flex;
         flex-direction: column;
     }
-
-
 }
