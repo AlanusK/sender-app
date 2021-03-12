@@ -1,17 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { AllTransactionsTableContainer } from "../../containers";
 import { ColumnsType } from "antd/lib/table";
-import { useAuthorisedContext } from "../../context/authorised-user-context";
+import { toDecimalMark } from "../../utility";
+import { Tag } from "antd";
+import { useTransactionsContext } from "../../context/transactions-context";
 
-type transactions = {
+interface IAllTransactionTableProps {
   key: string;
   date: string;
   amount: string;
   type: string;
   status: string;
-};
+}
 
-const columns: ColumnsType<transactions> = [
+const columns: ColumnsType<IAllTransactionTableProps> = [
   {
     title: "Date",
     dataIndex: "date",
@@ -34,21 +36,80 @@ const columns: ColumnsType<transactions> = [
     title: "Status",
     dataIndex: "status",
     key: "status",
-    // align: 'center',
+    render: (status: any) => {
+      let color = "volcano";
+      if (status === "PENDING") {
+        color = "gray";
+      }
+      if (status === "FAILED") {
+        color = "red";
+      }
+      if (status === "UNAUTHORIZED") {
+        color = "red";
+      }
+      if (status === "SUCCESS") {
+        color = "green";
+      }
+      return (
+        <span>
+          <Tag color={color} key={status}>
+            {status}
+          </Tag>
+        </span>
+      );
+    },
   },
 ];
 
 const Transactions = () => {
+  const [tableTransactions, setTableTransactions] = useState<any>();
+  const { allTransactions, reloadTransactions } = useTransactionsContext();
 
-  const { userTransaction } = useAuthorisedContext();
+  useEffect(() => {
+    reloadTransactions();
+  }, []);
 
-  const data = userTransaction;
+  useEffect(() => {
+    if (allTransactions) {
+      setTableTransactions([
+        ...allTransactions?.deposits.map((item: any) => {
+          const {
+            id,
+            updatedAt,
+            expected_amount,
+            currency,
+            status,
+            ...rest
+          } = item;
+          return (item = {
+            key: id,
+            date: new Date(updatedAt).toLocaleDateString(),
+            amount: `${currency} ${toDecimalMark(Number(expected_amount))}`,
+            type: "Deposit",
+            status: status,
+            meta: rest,
+          });
+        }),
+        ...allTransactions?.withdrawals.map((item: any) => {
+          const { id, updatedAt, amount, currency, status, ...rest } = item;
+          return (item = {
+            key: id,
+            date: new Date(updatedAt).toLocaleDateString(),
+            amount: `${currency} ${toDecimalMark(Number(amount))}`,
+            type: "Withdraw",
+            status: status,
+            meta: rest,
+          });
+        }),
+      ]);
+    }
+  }, [allTransactions]);
 
   const scroll = { y:415 };
 
   return (
     <div>
-      <AllTransactionsTableContainer columns={columns} transactions={data} scroll={scroll} />
+      <AllTransactionsTableContainer columns={columns} transactions={tableTransactions} scroll={scroll} />
     </div>
   );
 };

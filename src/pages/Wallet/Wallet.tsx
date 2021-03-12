@@ -110,8 +110,6 @@ const Wallet = () => {
     setOperationAuthorized,
     operationAuthorized,
   } = useWalletOperationsContext();
-  console.log("walletOperation :>> ", walletOperation);
-  console.log("hasValidOperationalData :>> ", hasValidOperationalData);
   const { updateWalletBalances, userDetails } = useAuthorisedContext();
   const { execute, status, value, error = "" } = useAsync(
     walletOperation.kind === "DEPOSIT" ? postDeposit : postWithdrawal,
@@ -127,6 +125,7 @@ const Wallet = () => {
     execute: executeWithdrawalAuthorization,
     status: withdrawalAuthorizationStatus,
     value: withdrawalAuthorizationValue,
+    error: withdrawalAuthorizationError,
   } = useAsync(postWithdrawalAuthorization, false);
 
   const { activeWallet, userWallets } = useAuthorisedContext();
@@ -143,6 +142,7 @@ const Wallet = () => {
   const sendMoney = () => { };
 
   const handleCancel = () => {
+    updateWalletBalances();
     setshowSendMoneyModal(false);
     setshowDepositMoneyModal(false);
     setshowWithdrawalMoneyModal(false);
@@ -156,7 +156,6 @@ const Wallet = () => {
       maximumMobileWithdrawalAmount(activeWallet.currency)
     )
       return;
-    console.log("say shit :>> ", "say shit");
     const withdrawalData: IWithdrawalRequesttData = {
       amount: walletOperation.amount.toString(),
       customer_id: userDetails.userId,
@@ -173,7 +172,6 @@ const Wallet = () => {
         currency: walletOperation.currency,
       },
     };
-    console.log("withdrawalData :>> ", withdrawalData);
     return execute(withdrawalData);
   };
 
@@ -228,16 +226,22 @@ const Wallet = () => {
   useEffect(() => {
     if (passwordVerificationStatus === "success") {
       setOperationAuthorized(passwordVerificationValue.data);
+      setWalletOperation((existingDetails: IWalletOperationProps) => ({
+        ...existingDetails,
+        processingStatus: "idle",
+        processingValue: null,
+        processingError: "",
+      }));
     }
   }, [
     passwordVerificationStatus,
     passwordVerificationValue?.data,
     setOperationAuthorized,
+    setWalletOperation,
   ]);
 
   useEffect(() => {
-    if (operationAuthorized && value.data.authorization_token) {
-      console.log("hoohoohoh :>> ", "hoohoohoh");
+    if (operationAuthorized && value?.data.authorization_token) {
       executeWithdrawalAuthorization(value.data.authorization_token);
     }
   }, [
@@ -246,11 +250,24 @@ const Wallet = () => {
     value?.data.authorization_token,
   ]);
 
-  console.log(
-    "object :>> ",
+  useEffect(() => {
+    if (operationAuthorized) {
+      setWalletOperation((existingDetails: IWalletOperationProps) => ({
+        ...existingDetails,
+        processingStatus: withdrawalAuthorizationStatus,
+        processingValue: withdrawalAuthorizationValue,
+        processingError: withdrawalAuthorizationError,
+      }));
+      setRequirePassword(false);
+    }
+  }, [
+    operationAuthorized,
+    setRequirePassword,
+    setWalletOperation,
+    withdrawalAuthorizationError,
     withdrawalAuthorizationStatus,
-    withdrawalAuthorizationValue
-  );
+    withdrawalAuthorizationValue,
+  ]);
 
   return (
     <>
@@ -267,6 +284,7 @@ const Wallet = () => {
         }}
         withdrawalMoney={() => {
           resetWalletOperationsData(); // start with fresh object
+          setOperationAuthorized(undefined);
           setRequirePassword(false);
           return setshowWithdrawalMoneyModal(true);
         }}
@@ -362,7 +380,9 @@ const Wallet = () => {
                     : "Authorize"}
                 </Button>,
               ]
-              : [
+            : withdrawalAuthorizationStatus === "pending"
+            ? [<Button disabled={true}>Processing...</Button>]
+            : [
                 <Button key="back" onClick={handleCancel}>
                   Close
                 </Button>,
