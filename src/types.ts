@@ -50,8 +50,8 @@ export type StellarWalletBalanceProps = {
 
 export type IWalletOperationProps = {
    kind: "SEND" | "DEPOSIT" | "WITHDRAWAL" | "";
-   processingStatus: "idle" | "pending" | "success" | "error";
-   processingError: string,
+   processingStatus: "idle" | "pending" | "success" | "error" | string;
+   processingError: any,
    processingValue: any,
    amount: number;
    fee: number;
@@ -59,12 +59,13 @@ export type IWalletOperationProps = {
    currency: string;
    receivingAccount: {
       channel: "BANK DEPOSIT" | "MOBILE TRANSFER" | "WALLET" | "BANK TRANSFER" | "MOBILE MONEY" | "WALLET TRANSFER" | "",
-      channelProvider: string;
-      accountName: string;
-      accountNumber: string;
-      swiftNumber: string;
-      routingNumber: string;
+      channelProvider: any;
+      accountName: any;
+      accountNumber: any;
+      swiftNumber: any;
+      routingNumber?: string;
    };
+   requireSecretKey: boolean
 }
 
 

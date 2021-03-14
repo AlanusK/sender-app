@@ -17,6 +17,8 @@ import {
   supportedCurrencies,
 } from "../../constants";
 import useBreakpoint from "../../hooks/useBreakpoint";
+import localForage from "localforage";
+import { StellarUtils } from "../../stellarUtility";
 
 const Axios = require("axios").default;
 
@@ -111,7 +113,12 @@ const Wallet = () => {
     setOperationAuthorized,
     operationAuthorized,
   } = useWalletOperationsContext();
-  const { updateWalletBalances, userDetails } = useAuthorisedContext();
+  const {
+    updateWalletBalances,
+    userDetails,
+    activeWallet,
+    userWallets,
+  } = useAuthorisedContext();
   const { execute, status, value, error = "" } = useAsync(
     walletOperation.kind === "DEPOSIT" ? postDeposit : postWithdrawal,
     false
@@ -129,10 +136,14 @@ const Wallet = () => {
     error: withdrawalAuthorizationError,
   } = useAsync(postWithdrawalAuthorization, false);
 
-  const { activeWallet, userWallets } = useAuthorisedContext();
   const minmumAmount =
     supportedCurrencies.find((curr) => curr.currency === activeWallet.currency)
       ?.minTransfer || 0;
+
+  const [
+    isProcessingNonCustodialWalletOperation,
+    setIsProcessingNonCustodialWalletOperation,
+  ] = useState<boolean | undefined>();
 
   // update wallet balance on every page view
   useEffect(() => {
@@ -140,7 +151,7 @@ const Wallet = () => {
   }, []);
 
   // initiate Sending Money
-  const sendMoney = () => { };
+  const sendMoney = () => {};
 
   const handleCancel = () => {
     updateWalletBalances();
@@ -190,6 +201,54 @@ const Wallet = () => {
     console.log("currency add on wallet page");
   };
 
+  const handleNoncustodialDeposits = async () => {
+    if (!hasValidOperationalData) return; // don't send request if deposit has invalid information
+    if (!(await localForage.getItem("user_key"))) {
+      return setWalletOperation((existingDetails: IWalletOperationProps) => ({
+        ...existingDetails,
+        requireSecretKey: true,
+      }));
+    }
+    setIsProcessingNonCustodialWalletOperation(true);
+    let userSecret: any = await localForage.getItem("user_key");
+    userSecret = userSecret?.split(":")[0];
+    const userKeyPair = await StellarUtils.getKeypair(userSecret);
+    const authToken = await StellarUtils.getSEP10AuthToken(userKeyPair);
+    if (!authToken) return;
+    const userPublicKey = await StellarUtils.getStellarPublicKey(userSecret);
+    const stellarTransaction = await StellarUtils.createStellarDepositTransaction(
+      authToken,
+      userPublicKey,
+      walletOperation.currency
+    );
+    if (!stellarTransaction) return;
+    setIsProcessingNonCustodialWalletOperation(false);
+    execute({
+      customer_id: userDetails.userId,
+      expected_amount: walletOperation.amount.toString(),
+      currency: walletOperation.currency,
+      reference_id: walletOperation.referenceId,
+      confirmation: {
+        confirmedAt: new Date().toUTCString(),
+        confirmed_by: userDetails.userId,
+        transaction_reference: walletOperation.referenceId,
+      },
+      deposit: {
+        channel: walletOperation.receivingAccount.channel,
+        channel_provider: walletOperation.receivingAccount.channelProvider,
+        account_address: walletOperation.receivingAccount.accountNumber.toString(),
+        account_currency: walletOperation.currency,
+        account_name: walletOperation.receivingAccount.accountName,
+      },
+      hooks: {
+        confirm_sep24_deposit: {
+          amount: walletOperation.amount.toString(),
+          transaction_id: stellarTransaction,
+        },
+      },
+    });
+  };
+
   const initiateMoneyDeposit = async () => {
     if (!hasValidOperationalData) return; // don't send request if deposit has invalid information
     const depositData: IdepositRequestData = {
@@ -210,6 +269,9 @@ const Wallet = () => {
         account_name: walletOperation.receivingAccount.accountName,
       },
     };
+    if (!userDetails.secretKey) {
+      return handleNoncustodialDeposits();
+    }
     execute(depositData);
   };
 
@@ -278,22 +340,25 @@ const Wallet = () => {
   const screens = useBreakpoint();
   const [mobileView, setMobileView] = useState<Boolean>(false);
   const [showSendMoneyComponent, setshowSendMoneyComponent] = useState(false);
-  const [showDepositMoneyComponent, setshowDepositMoneyComponent] = useState(false);
-  const [showWithdrawalMoneyComponent, setshowWithdrawalMoneyComponent] = useState(
+  const [showDepositMoneyComponent, setshowDepositMoneyComponent] = useState(
     false
   );
+  const [
+    showWithdrawalMoneyComponent,
+    setshowWithdrawalMoneyComponent,
+  ] = useState(false);
   const [showCurrencyComponent, setShowCurrencyComponent] = useState(false);
   useEffect(() => {
     if (screens.xs) {
-      setMobileView(true)
+      setMobileView(true);
     } else {
       setMobileView(false);
       setshowSendMoneyComponent(false);
       setshowDepositMoneyComponent(false);
       setshowWithdrawalMoneyComponent(false);
-      setShowCurrencyComponent(false)
+      setShowCurrencyComponent(false);
     }
-  }, [screens.xs, setMobileView])
+  }, [screens.xs, setMobileView]);
 
   return (
     <>
@@ -336,7 +401,30 @@ const Wallet = () => {
         onOk={initiateMoneyDeposit}
         onCancel={handleCancel}
         footer={
-          walletOperation.processingStatus === "success"
+          walletOperation.requireSecretKey
+            ? [
+                <Button
+                  key="ok"
+                  onClick={() => {
+                    localForage.getItem("user_key").then((value: any) => {
+                      if (!value) return;
+                      setWalletOperation(
+                        (existingDetails: IWalletOperationProps) => ({
+                          ...existingDetails,
+                          requireSecretKey: false,
+                          processingStatus: "pending",
+                        })
+                      );
+                      if (!userDetails.secretKey) {
+                        return handleNoncustodialDeposits();
+                      }
+                    });
+                  }}
+                >
+                  Add Secret Key
+                </Button>,
+              ]
+            : walletOperation.processingStatus === "success"
             ? [
                 <Button key="back" onClick={handleCancel}>
                   Close
@@ -348,11 +436,20 @@ const Wallet = () => {
                 </Button>,
                 <Button
                   key="ok"
+                  loading={
+                    status === "pending" ||
+                    isProcessingNonCustodialWalletOperation
+                      ? true
+                      : false
+                  }
                   onClick={initiateMoneyDeposit}
                   disabled={
-                    !hasValidOperationalData || status === "pending"
+                    !hasValidOperationalData ||
+                    status === "pending" ||
+                    walletOperation.amount < minmumAmount ||
+                    isProcessingNonCustodialWalletOperation
                       ? true
-                      : false || walletOperation.amount < minmumAmount
+                      : false
                   }
                 >
                   {walletOperation.processingStatus === "pending"
@@ -446,7 +543,7 @@ const Wallet = () => {
         />
       </Modal>
     </>
-  )
+  );
 };
 
 export default Wallet;
