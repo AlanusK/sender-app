@@ -1,6 +1,12 @@
 import axios from "axios";
 import StellarSdk, {
+  Account,
+  Asset,
   BASE_FEE,
+  Memo,
+  MemoHash,
+  MemoID,
+  MemoText,
   Networks,
   Operation,
   Transaction,
@@ -14,10 +20,21 @@ interface StellarUtilsProps {
   establishDefaultTrustlines(secretKey: string): Promise<any>;
   validateStellarWalletSecretKey(secretKey: string): Promise<boolean>;
   getSEP10AuthToken(keyPair: string): Promise<any>;
-  createStellarDepositTransaction(
+  createSEP24Transaction(
     authToken: any,
     receivingAddress: any,
-    asset: any
+    asset: any,
+    transactionType: "deposit" | "withdraw"
+  ): Promise<any>;
+  retrieveSEP24Transaction(
+    authToken: string,
+    transactionId: string
+  ): Promise<any>;
+  initiateAssetTransfer(
+    userKeyPair: any,
+    userAuth: string,
+    pendingSEP24Transaction: any,
+    asset: string
   ): Promise<any>;
 }
 
@@ -31,10 +48,26 @@ const network_passphrase =
     ? Networks.PUBLIC
     : Networks.TESTNET;
 
-const createStellarHorizonServer = () => {
+const horizonServer = () => {
   return new StellarSdk.Server(horizonUrl);
 };
 
+const getMemo = (memoString: string, memoType: string): any => {
+  let memo;
+  if (memoType === "hash") {
+    memo = new Memo(
+      MemoHash,
+      Buffer.from(memoString, "base64").toString("hex")
+    );
+  } else if (memoType === "id") {
+    memo = new Memo(MemoID, memoString);
+  } else if (memoType === "text") {
+    memo = new Memo(MemoText, memoString);
+  } else {
+    Promise.reject(`Invalid memo_type: ${memoString} (${memoType})`);
+  }
+  return Promise.resolve(memo);
+};
 export const StellarUtils: StellarUtilsProps = {
   WalletDetails: (publicKey) => {
     return new Promise(async (resolve) => {
@@ -66,9 +99,7 @@ export const StellarUtils: StellarUtilsProps = {
       "KES",
       process.env.REACT_APP_ISSUING_ACCOUNT_PUBLIC_KEY
     );
-    const account = await createStellarHorizonServer().loadAccount(
-      customerWalletPublicKey
-    );
+    const account = await horizonServer().loadAccount(customerWalletPublicKey);
     const transaction = new TransactionBuilder(account, {
       fee: BASE_FEE,
       networkPassphrase: network_passphrase,
@@ -87,9 +118,7 @@ export const StellarUtils: StellarUtilsProps = {
       .build();
     try {
       transaction.sign(customerWalletKeyPair);
-      const result = await createStellarHorizonServer().submitTransaction(
-        transaction
-      );
+      const result = await horizonServer().submitTransaction(transaction);
       return Promise.resolve(result);
     } catch (error) {
       return Promise.reject(error);
@@ -125,10 +154,11 @@ export const StellarUtils: StellarUtilsProps = {
       console.log("error :>> ", error);
     }
   },
-  createStellarDepositTransaction: async (
+  createSEP24Transaction: async (
     authToken,
     receivingAddress,
-    asset
+    asset,
+    transactionType
   ) => {
     const formData = new FormData();
     const postDepositParams: any = {
@@ -141,7 +171,7 @@ export const StellarUtils: StellarUtilsProps = {
       formData.append(key, postDepositParams[key]);
     });
     const interactiveResponse = await axios.post(
-      `${process.env.REACT_APP_STELLAR_SERVER_URL}/transactions/deposit/interactive`,
+      `${process.env.REACT_APP_STELLAR_SERVER_URL}/transactions/${transactionType}/interactive`,
       formData,
       {
         headers: {
@@ -150,5 +180,53 @@ export const StellarUtils: StellarUtilsProps = {
       }
     );
     return interactiveResponse.data.id;
+  },
+  retrieveSEP24Transaction: async (authToken, transactionId) => {
+    const transactionResponse = await axios.get(
+      `${process.env.REACT_APP_STELLAR_SERVER_URL}/transaction?id=${transactionId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      }
+    );
+    return transactionResponse.data;
+  },
+  initiateAssetTransfer: async (
+    userKeyPair,
+    userAuth,
+    pendingSEP24Transaction,
+    asset
+  ) => {
+    let memo = await getMemo(
+      pendingSEP24Transaction.withdraw_memo,
+      pendingSEP24Transaction.withdraw_memo_type
+    );
+
+    const { sequence } = await horizonServer()
+      .accounts()
+      .accountId(userKeyPair.publicKey())
+      .call();
+    const account = new Account(userKeyPair.publicKey(), sequence);
+    const txn = new TransactionBuilder(account, {
+      fee: BASE_FEE,
+      networkPassphrase: network_passphrase,
+    })
+      .addOperation(
+        Operation.payment({
+          destination: pendingSEP24Transaction.withdraw_anchor_account,
+          asset: new Asset(
+            asset,
+            process.env.REACT_APP_ISSUING_ACCOUNT_PUBLIC_KEY
+          ),
+          amount: pendingSEP24Transaction.amount_in,
+        })
+      )
+      .addMemo(memo)
+      .setTimeout(0)
+      .build();
+
+    txn.sign(userKeyPair);
+    return await horizonServer().submitTransaction(txn);
   },
 };

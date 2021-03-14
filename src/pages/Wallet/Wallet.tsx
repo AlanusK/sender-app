@@ -60,6 +60,10 @@ interface IWithdrawalRequesttData {
     authorized_at: Date;
     ledger_hash: string;
   };
+  sep24_payout?: {
+    transaction_id: string;
+    amount: string;
+  };
 }
 
 const postDeposit = (depositDetails: IdepositRequestData) => {
@@ -125,7 +129,7 @@ const Wallet = () => {
   );
   const {
     execute: executePasswordVerification,
-    status: passwordVerificationStatus,
+    status: passwordVerificationStatus = "idle",
     value: passwordVerificationValue,
   } = useAsync(postPassword, false);
 
@@ -145,6 +149,13 @@ const Wallet = () => {
     setIsProcessingNonCustodialWalletOperation,
   ] = useState<boolean | undefined>();
 
+  const [SEP10AuthToken, setSEP10AuthToken] = useState<string>("");
+
+  const [
+    SEP24pendingWithdrawalTransaction,
+    setPendingTransaction,
+  ] = useState<string>("");
+
   // update wallet balance on every page view
   useEffect(() => {
     updateWalletBalances();
@@ -161,6 +172,79 @@ const Wallet = () => {
     setShowCurrencyModal(false);
   };
 
+  const addCurrencyModal = () => {
+    console.log("add currency modal");
+    setShowCurrencyModal(true);
+  };
+
+  const addCurrencyComponent = () => {
+    console.log("add currency component");
+    setShowCurrencyComponent(true);
+  };
+
+  const currencyAdd = () => {
+    console.log("currency add on wallet page");
+  };
+
+  const getUserKeypair = async () => {
+    let userSecret: any = await localForage.getItem("user_key");
+    userSecret = userSecret?.split(":")[0];
+    return await StellarUtils.getKeypair(userSecret);
+  };
+
+  // retrive SEP24 authToken
+  const setupSEP24TransactionOperations = async () => {
+    if (!hasValidOperationalData) return; // don't send request if deposit has invalid information
+    if (!(await localForage.getItem("user_key"))) {
+      return setWalletOperation((existingDetails: IWalletOperationProps) => ({
+        ...existingDetails,
+        requireSecretKey: true,
+      }));
+    }
+    setIsProcessingNonCustodialWalletOperation(true);
+    const userKeyPair = await getUserKeypair();
+    const authToken = await StellarUtils.getSEP10AuthToken(userKeyPair);
+    if (!authToken) return;
+    const userPublicKey = userKeyPair.publicKey();
+    setSEP10AuthToken(authToken);
+    return { authToken, userPublicKey };
+  };
+
+  const handleNoncustodialWithdrawal = async () => {
+    const result: any = await setupSEP24TransactionOperations();
+    if (!result?.authToken) {
+      return;
+    }
+    const stellarTransaction = await StellarUtils.createSEP24Transaction(
+      result?.authToken,
+      result?.userPublicKey,
+      walletOperation.currency,
+      "withdraw"
+    );
+    if (!stellarTransaction) return;
+    const withdrawalData: IWithdrawalRequesttData = {
+      amount: walletOperation.amount.toString(),
+      customer_id: userDetails.userId,
+      currency: walletOperation.currency,
+      fee: walletOperation.fee.toString(),
+      payout_info: {
+        payout_channel: walletOperation.receivingAccount.channel,
+        payout_channel_provider:
+          walletOperation.receivingAccount.channelProvider,
+        payout_address: walletOperation.receivingAccount.accountNumber,
+        payout_address_name: walletOperation.receivingAccount.accountName,
+        swift_number: walletOperation.receivingAccount.swiftNumber,
+        amount: (walletOperation.amount - walletOperation.fee).toString(),
+        currency: walletOperation.currency,
+      },
+      sep24_payout: {
+        transaction_id: stellarTransaction,
+        amount: walletOperation.amount.toString(),
+      },
+    };
+    return execute(withdrawalData);
+  };
+
   const withdrawalMoney = () => {
     // if amount is above maximum withdrawal via mobile money
     if (
@@ -168,6 +252,9 @@ const Wallet = () => {
       maximumMobileWithdrawalAmount(activeWallet.currency)
     )
       return;
+    if (!userDetails.secretKey) {
+      return handleNoncustodialWithdrawal();
+    }
     const withdrawalData: IWithdrawalRequesttData = {
       amount: walletOperation.amount.toString(),
       customer_id: userDetails.userId,
@@ -187,39 +274,16 @@ const Wallet = () => {
     return execute(withdrawalData);
   };
 
-  const addCurrencyModal = () => {
-    console.log("add currency modal");
-    setShowCurrencyModal(true);
-  };
-
-  const addCurrencyComponent = () => {
-    console.log("add currency component");
-    setShowCurrencyComponent(true);
-  };
-
-  const currencyAdd = () => {
-    console.log("currency add on wallet page");
-  };
-
   const handleNoncustodialDeposits = async () => {
-    if (!hasValidOperationalData) return; // don't send request if deposit has invalid information
-    if (!(await localForage.getItem("user_key"))) {
-      return setWalletOperation((existingDetails: IWalletOperationProps) => ({
-        ...existingDetails,
-        requireSecretKey: true,
-      }));
-    }
-    setIsProcessingNonCustodialWalletOperation(true);
-    let userSecret: any = await localForage.getItem("user_key");
-    userSecret = userSecret?.split(":")[0];
-    const userKeyPair = await StellarUtils.getKeypair(userSecret);
-    const authToken = await StellarUtils.getSEP10AuthToken(userKeyPair);
-    if (!authToken) return;
-    const userPublicKey = await StellarUtils.getStellarPublicKey(userSecret);
-    const stellarTransaction = await StellarUtils.createStellarDepositTransaction(
+    const {
+      userPublicKey,
+      authToken,
+    }: any = await setupSEP24TransactionOperations();
+    const stellarTransaction = await StellarUtils.createSEP24Transaction(
       authToken,
       userPublicKey,
-      walletOperation.currency
+      walletOperation.currency,
+      "deposit"
     );
     if (!stellarTransaction) return;
     setIsProcessingNonCustodialWalletOperation(false);
@@ -286,12 +350,75 @@ const Wallet = () => {
   }, [error, setWalletOperation, status, value]);
 
   useEffect(() => {
-    if (status === "success" && value.data.authorization_token) {
+    if (status === "success" && value.data?.authorization_token) {
       setRequirePassword(true);
     }
-  }, [setRequirePassword, status, value?.data.authorization_token]);
+    if (status === "success" && value.data?.sep24_payout?.transaction_id) {
+      setPendingTransaction(value.data?.sep24_payout?.transaction_id);
+      setRequirePassword(true);
+    }
+  }, [
+    setRequirePassword,
+    status,
+    value?.data.authorization_token,
+    value?.data.sep24_payout?.transaction_id,
+  ]);
+  useEffect(() => {
+    if (
+      passwordVerificationStatus === "success" &&
+      passwordVerificationValue?.data === true &&
+      SEP24pendingWithdrawalTransaction
+    ) {
+      StellarUtils.retrieveSEP24Transaction(
+        SEP10AuthToken,
+        SEP24pendingWithdrawalTransaction
+      )
+        .then((result) => {
+          if (result.transaction.status !== "pending_user_transfer_start") {
+            return;
+          }
+          setWalletOperation((existingDetails: IWalletOperationProps) => ({
+            ...existingDetails,
+            processingValue: result.transaction,
+            processingStatus: "pending",
+          }));
+          getUserKeypair().then((keypair: any) => {
+            StellarUtils.initiateAssetTransfer(
+              keypair,
+              SEP10AuthToken,
+              result.transaction,
+              walletOperation.currency
+            ).then((result: any) => {
+              setIsProcessingNonCustodialWalletOperation(false);
+              if (result.hash) {
+                return setWalletOperation(
+                  (existingDetails: IWalletOperationProps) => ({
+                    ...existingDetails,
+                    processingStatus: "success",
+                  })
+                );
+              }
+              setWalletOperation((existingDetails: IWalletOperationProps) => ({
+                ...existingDetails,
+                processingStatus: "error",
+              }));
+            });
+          });
+        })
+        .catch((err) => {
+          console.log("err :>> ", err);
+        });
+    }
+  }, [
+    SEP10AuthToken,
+    passwordVerificationStatus,
+    SEP24pendingWithdrawalTransaction,
+    walletOperation.currency,
+    setWalletOperation,
+  ]);
 
   useEffect(() => {
+    // initiate custodial withdrawal authorization
     if (passwordVerificationStatus === "success") {
       setOperationAuthorized(passwordVerificationValue.data);
       setWalletOperation((existingDetails: IWalletOperationProps) => ({
@@ -474,7 +601,31 @@ const Wallet = () => {
         wrapClassName="withdrawal-money-modal"
         destroyOnClose={true}
         footer={
-          walletOperation.processingStatus === "success" && !requirePassword
+          walletOperation.requireSecretKey
+            ? [
+                <Button
+                  key="ok"
+                  onClick={() => {
+                    localForage.getItem("user_key").then((value: any) => {
+                      if (!value) return;
+                      setWalletOperation(
+                        (existingDetails: IWalletOperationProps) => ({
+                          ...existingDetails,
+                          requireSecretKey: false,
+                          processingStatus: "pending",
+                        })
+                      );
+                      if (!userDetails.secretKey) {
+                        handleNoncustodialWithdrawal();
+                        return setRequirePassword(true);
+                      }
+                    });
+                  }}
+                >
+                  Add Secret Key
+                </Button>,
+              ]
+            : walletOperation.processingStatus === "success" && !requirePassword
             ? [
                 <Button key="back" onClick={handleCancel}>
                   Close
@@ -513,9 +664,18 @@ const Wallet = () => {
                   key="ok"
                   onClick={withdrawalMoney}
                   disabled={
-                    !hasValidOperationalData || status === "pending"
+                    !hasValidOperationalData ||
+                    status === "pending" ||
+                    walletOperation.amount < minmumAmount ||
+                    isProcessingNonCustodialWalletOperation
                       ? true
-                      : false || walletOperation.amount < minmumAmount
+                      : false
+                  }
+                  loading={
+                    status === "pending" ||
+                    isProcessingNonCustodialWalletOperation
+                      ? true
+                      : false
                   }
                 >
                   {walletOperation.processingStatus === "pending"
