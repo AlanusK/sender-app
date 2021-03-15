@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Layout, Drawer } from "antd";
+import { Layout, Drawer, Button } from "antd";
 import { useAuthorisedContext } from "../../../../context/authorised-user-context";
 import {
   MenuUnfoldOutlined,
@@ -55,10 +55,6 @@ const CustomHeader = () => {
   
             } */}
 
-        {React.createElement(BellOutlined, {
-          className: "notification-button",
-          onClick: openNotification,
-        })}
         {React.createElement(LogoutOutlined, {
           className: "logout-button",
           onClick: signout,
@@ -67,6 +63,12 @@ const CustomHeader = () => {
           darkMode: darkMode,
           setDarkMode: setDarkMode,
         })}
+
+        <Button onClick={openNotification} className="notification-button">
+          <BellOutlined />
+          <div className="button-notification-number">1</div>
+        </Button>
+
       </Header>
       {showBreadcrumb ?
         <div className="breadCrumb">
@@ -75,15 +77,30 @@ const CustomHeader = () => {
       }
 
       <Drawer
-        title="Notification"
+        title={
+          <div className="drawer-title">
+            <div>Notifications</div>
+            <div className="title-notification-number">1</div>
+          </div>
+        }
         placement="right"
         closable={false}
         onClose={onClose}
         visible={visible}
+        width={350}
       >
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
+        <div className="notification-message">
+          <p className="notification-type"><strong style={{color: "black"}}>Payment request - outstanding</strong></p>
+          <p className="notification-day">Today</p>
+        </div>
+        <div className="notification-message">
+          <p className="notification-type">Payment request - outstanding</p>
+          <p className="notification-day">Yesterday</p>
+        </div>
+        <div className="notification-message">
+          <p className="notification-type">Payment request - Paid</p>
+          <p className="notification-day">Sept 12</p>
+        </div>
       </Drawer>
 
     </>
