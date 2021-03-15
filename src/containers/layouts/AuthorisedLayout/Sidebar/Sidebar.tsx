@@ -26,7 +26,7 @@ const Sidebar = (props: ISidebar) => {
 
   useEffect(() => {
     if (props.isSmallScreen && !siderCollapsed) {
-      toggleSider();
+      // toggleSider();
     }
   }, [props.isSmallScreen, siderCollapsed, toggleSider]);
   return (
