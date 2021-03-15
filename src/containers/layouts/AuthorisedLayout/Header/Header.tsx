@@ -6,6 +6,7 @@ import {
   MenuFoldOutlined,
   LogoutOutlined,
   LeftOutlined,
+  BellOutlined,
 } from "@ant-design/icons";
 import "./Header.css";
 import { useAuth } from "../../../../hooks/useAuth";
@@ -44,6 +45,11 @@ const CustomHeader = () => {
         {/* {mobileView ? <div className="back-to-dashboard"><Link to="/dashboard"><LeftOutlined className="leftOutlined" />{pathnames[0]}</Link></div> :
   
             } */}
+
+        {React.createElement(BellOutlined, {
+          className: "notification-button",
+          // onClick: openNotification,
+        })}
         {React.createElement(LogoutOutlined, {
           className: "logout-button",
           onClick: signout,

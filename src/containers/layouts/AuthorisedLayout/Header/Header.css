@@ -34,3 +34,9 @@
    text-transform: capitalize;
    /* height: 50px; */
  }
+
+ .notification-button {
+  padding: 18px 20px 0 0; 
+  font-size: 18px;
+  float: right;
+}
