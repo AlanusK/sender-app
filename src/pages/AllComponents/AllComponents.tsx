@@ -109,7 +109,16 @@ const AllComponents = () => {
         </div>
         <div style={{ marginTop: "40px" }}>
           <h1>Individual Transactions Container</h1>
-          <IndividualTransactionsContainer data="" />
+          <IndividualTransactionsContainer
+            data={{
+              date: "DATE",
+              amount: "",
+              meta: {},
+              key: "",
+              status: "status",
+              type: "Deposit",
+            }}
+          />
         </div>
         <div style={{ marginTop: "40px" }}>
           <h1>Transaction Table</h1>
@@ -158,9 +167,7 @@ const AllComponents = () => {
             okText="Deposit"
             wrapClassName="deposit-money-modal"
           >
-            <DepositFormContainer
-              userBalances={userWallets}
-            />
+            <DepositFormContainer userBalances={userWallets} />
           </Modal>
           <Modal
             title="Withdrawal Money"
@@ -206,15 +213,11 @@ const AllComponents = () => {
         </div>
         <div style={{ marginTop: "80px" }}>
           <h1>Deposit Form Container</h1>
-          <DepositFormContainer
-            userBalances={userWallets}
-          />
+          <DepositFormContainer userBalances={userWallets} />
         </div>
         <div style={{ marginTop: "20px" }}>
           <h1>Withdrawal Form Container</h1>
-          <WithdrawalFormContainer
-            userBalances={userWallets}
-          />
+          <WithdrawalFormContainer userBalances={userWallets} />
         </div>
         <div style={{ marginTop: "80px" }}>
           <h1>Send Money Form Container</h1>
@@ -222,11 +225,11 @@ const AllComponents = () => {
         </div>
         <div style={{ marginTop: "50px" }}>
           <h1>Payout channel Container</h1>
-          <PayoutChannelContainer  />
+          <PayoutChannelContainer />
         </div>
         <div style={{ marginTop: "50px" }}>
           <h1>Deposit channel Container</h1>
-          <DepositChannelContainer/>
+          <DepositChannelContainer />
         </div>
       </div>
     </div>

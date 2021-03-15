@@ -27,7 +27,7 @@ interface AuthorisedLayoutContextProps {
     }>
   >;
   userWallets: userWalletsBalanceProps[];
-  userDetails: any;
+  userDetails: IUserData;
   setUserDetails: React.Dispatch<React.SetStateAction<IUserData>>;
   updateWalletBalances(): void;
   userTransaction: any;

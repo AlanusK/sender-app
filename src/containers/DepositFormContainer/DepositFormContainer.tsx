@@ -12,7 +12,9 @@ import { IWalletOperationProps, userWalletsBalanceProps } from "../../types";
 import { useAuthorisedContext } from "../../context/authorised-user-context";
 import { useWalletOperationsContext } from "../../context/wallet-operations-context";
 import { supportedCurrencies } from "../../constants";
-
+import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
+import { StellarUtils } from "../../stellarUtility";
+import localForage from "localforage";
 interface IDepositFormProps {
   onValueChange?(): void;
   userBalances: userWalletsBalanceProps[];
@@ -21,11 +23,16 @@ interface IDepositFormProps {
 export default function DepositFormContainer({
   userBalances,
 }: IDepositFormProps) {
-  const { activeWallet, setactiveWallet, userWallets } = useAuthorisedContext();
+  const {
+    activeWallet,
+    setactiveWallet,
+    userWallets,
+    userDetails,
+  } = useAuthorisedContext();
   const {
     resetWalletOperationsData,
     setWalletOperation,
-    walletOperation: { processingStatus },
+    walletOperation: { processingStatus, requireSecretKey, processingError },
   } = useWalletOperationsContext();
   const [depositReference, setDepositReference] = useState<string>(
     generateUniqueReferenceId("SDEP")
@@ -99,52 +106,86 @@ export default function DepositFormContainer({
     setDepositReference(generateUniqueReferenceId("SDEP"));
   }, [transferAmount]);
 
+  const setUserSecretKey = async (secret: string) => {
+    const isValidKey = await StellarUtils.validateStellarWalletSecretKey(
+      secret
+    );
+    if (!isValidKey) {
+      return setWalletOperation((existingDetails: IWalletOperationProps) => ({
+        ...existingDetails,
+        processingError: "invalid_secret",
+      }));
+    }
+    setWalletOperation((existingDetails: IWalletOperationProps) => ({
+      ...existingDetails,
+      processingError: "",
+    }));
+    localForage.setItem("user_key", secret + ":" + userDetails.userId);
+  };
+
   return (
     <div>
-      <Input.Group size="large">
-        {processingStatus !== "success" && (
-          <Row gutter={[12, 0]}>
-            <Col>
-              <SelectCurrencyContainer
-                onCurrencyChange={handleCurrencyChange}
-                currencyOptions={userWallets.map((curr) => {
-                  return { currency: curr.currency };
-                })}
-              />
-              <p
-                className={"account-balance-tag"}
-                style={{ marginTop: 5 }}
-                hidden={!isCurrencySelected}
-              >
-                <Tag color="default">
-                  {`Balance: ${
-                    supportedCurrencies.filter(
-                      (curr) => curr.currency === activeWallet.currency
-                    )[0]?.symbol
-                  } ${toDecimalMark(balanceAmount)}`}
-                </Tag>
-              </p>
-            </Col>
-            <Col>
-              <Form.Item validateStatus={validationStatus} help={helpMessage}>
-                <CustomCurrencyInput
-                  prefix={
-                    supportedCurrencies.find(
-                      (curr) => curr.currency === activeWallet.currency
-                    )?.symbol || ""
-                  }
-                  disabled={!isCurrencySelected}
-                  onChange={handleAmountChange}
-                  height={32}
+      {requireSecretKey ? (
+        <Form.Item
+          label={<label style={{ color: "gray" }}>Wallet Secret Key:</label>}
+          name="secret-key-input"
+          validateStatus={processingError === "invalid_secret" ? "error" : ""}
+          help={processingError === "invalid_secret" ? "Invalid key" : ""}
+          style={{marginBottom:"-30px"}}
+        >
+          <Input.Password
+            onChange={(e) => setUserSecretKey(e.target.value)}
+            iconRender={(visible) =>
+              visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+            }
+          />
+        </Form.Item>
+      ) : (
+        <Input.Group size="large">
+          {processingStatus === "idle" && (
+            <Row gutter={[12, 0]}>
+              <Col>
+                <SelectCurrencyContainer
+                  onCurrencyChange={handleCurrencyChange}
+                  currencyOptions={userWallets.map((curr) => {
+                    return { currency: curr.currency };
+                  })}
                 />
-              </Form.Item>
-            </Col>
-          </Row>
-        )}
-        {transferAmount !== 0 && validationStatus !== "error" && (
-          <DepositChannelContainer />
-        )}
-      </Input.Group>
+                <p
+                  className={"account-balance-tag"}
+                  style={{ marginTop: 5 }}
+                  hidden={!isCurrencySelected}
+                >
+                  <Tag color="default">
+                    {`Balance: ${
+                      supportedCurrencies.filter(
+                        (curr) => curr.currency === activeWallet.currency
+                      )[0]?.symbol
+                    } ${toDecimalMark(balanceAmount)}`}
+                  </Tag>
+                </p>
+              </Col>
+              <Col>
+                <Form.Item validateStatus={validationStatus} help={helpMessage}>
+                  <CustomCurrencyInput
+                    prefix={
+                      supportedCurrencies.find(
+                        (curr) => curr.currency === activeWallet.currency
+                      )?.symbol || ""
+                    }
+                    disabled={!isCurrencySelected}
+                    onChange={handleAmountChange}
+                    height={32}
+                  />
+                </Form.Item>
+              </Col>
+            </Row>
+          )}
+          {transferAmount !== 0 && validationStatus !== "error" && (
+            <DepositChannelContainer />
+          )}
+        </Input.Group>
+      )}
     </div>
   );
 }

@@ -7,6 +7,7 @@ import { useAuth } from "../../hooks/useAuth";
 import { useRouter } from "../../hooks/useRouter";
 import { useAsync } from "../../hooks/useAsync";
 import { ExtendedJwtPayload } from "../../types";
+import localForage from "localforage";
 
 const Login = () => {
   const { signin, setAuthentication } = useAuth();
@@ -15,6 +16,14 @@ const Login = () => {
 
   const onFinish = (values: { username: string; password: string }) => {
     return execute(values);
+  };
+
+  const verifyNonCustodialUserSecretKey = (userId: string) => {
+    localForage.getItem("user_key").then((value: any) => {
+      if(userId !== value?.split(":")[1]) {
+        localForage.removeItem("user_key")
+      }
+    });
   };
 
   // if exist remove stored token on mount
@@ -26,7 +35,16 @@ const Login = () => {
     if (status === "success") {
       if (value.data.success === true) {
         const decodedToken = jwtDecode<ExtendedJwtPayload>(value.data.token);
+        if (!decodedToken.verified) {
+          return message.warning(
+            "Please verify your email address to proceed."
+          );
+        }
+        if (!decodedToken.api_access) {
+          return message.error("Access Restricted! Contact ClickPesa support.");
+        }
         if (decodedToken.id) {
+          verifyNonCustodialUserSecretKey(decodedToken.id)
           setAuthentication(true);
           localStorage.setItem("userSessionToken", value.data.token);
           return replace(query.redirect ? query.redirect : "/");
