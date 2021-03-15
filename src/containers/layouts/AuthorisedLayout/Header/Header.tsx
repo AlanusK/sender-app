@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Layout } from "antd";
+import { Layout, Drawer } from "antd";
 import { useAuthorisedContext } from "../../../../context/authorised-user-context";
 import {
   MenuUnfoldOutlined,
@@ -23,6 +23,7 @@ const CustomHeader = () => {
   const screens = useBreakpoint();
   const [mobileView, setMobileView] = useState<Boolean>(false);
   const [showBreadcrumb, setShowBreadcrumb] = useState<Boolean>(false);
+  const [visible, setVisible] = useState(false);
   useEffect(() => {
     if (screens.xs) {
       setMobileView(true)
@@ -39,6 +40,14 @@ const CustomHeader = () => {
       setShowBreadcrumb(false)
   }, [pathnames])
 
+  const openNotification = () => {
+    setVisible(true);
+  }
+
+  const onClose = () => {
+    setVisible(false);
+  };
+
   return (
     <>
       <Header className="site-layout-background" style={{ padding: 0 }}>
@@ -48,7 +57,7 @@ const CustomHeader = () => {
 
         {React.createElement(BellOutlined, {
           className: "notification-button",
-          // onClick: openNotification,
+          onClick: openNotification,
         })}
         {React.createElement(LogoutOutlined, {
           className: "logout-button",
@@ -59,11 +68,24 @@ const CustomHeader = () => {
           setDarkMode: setDarkMode,
         })}
       </Header>
-      {showBreadcrumb ? 
+      {showBreadcrumb ?
         <div className="breadCrumb">
           <BreadCrumb />
         </div> : null
       }
+
+      <Drawer
+        title="Notification"
+        placement="right"
+        closable={false}
+        onClose={onClose}
+        visible={visible}
+      >
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+      </Drawer>
+
     </>
   );
 };
