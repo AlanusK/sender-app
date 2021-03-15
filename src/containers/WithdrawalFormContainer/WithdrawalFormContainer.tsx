@@ -14,6 +14,9 @@ import {
   EyeTwoTone,
   LoadingOutlined,
 } from "@ant-design/icons";
+import { StellarUtils } from "../../stellarUtility";
+
+import localForage from "localforage";
 interface IWithdrawalFormProps {
   userBalances: userWalletsBalanceProps[];
 }
@@ -21,7 +24,12 @@ interface IWithdrawalFormProps {
 export default function WithdrawalFormContainer({
   userBalances,
 }: IWithdrawalFormProps) {
-  const { activeWallet, setactiveWallet, userWallets } = useAuthorisedContext();
+  const {
+    activeWallet,
+    setactiveWallet,
+    userWallets,
+    userDetails,
+  } = useAuthorisedContext();
   const {
     setWalletOperation,
     requirePassword,
@@ -110,9 +118,47 @@ export default function WithdrawalFormContainer({
       kind: "WITHDRAWAL",
     }));
   }, [activeWallet?.currency, setWalletOperation, withdrawalAmount]);
+
+  const setUserSecretKey = async (secret: string) => {
+    const isValidKey = await StellarUtils.validateStellarWalletSecretKey(
+      secret
+    );
+    if (!isValidKey) {
+      return setWalletOperation((existingDetails: IWalletOperationProps) => ({
+        ...existingDetails,
+        processingError: "invalid_secret",
+      }));
+    }
+    setWalletOperation((existingDetails: IWalletOperationProps) => ({
+      ...existingDetails,
+      processingError: "",
+    }));
+    localForage.setItem("user_key", secret + ":" + userDetails.userId);
+  };
   return (
     <>
-      {!operationAuthorized ? (
+      {walletOperation.requireSecretKey ? (
+        <Form.Item
+          label={<label style={{ color: "gray" }}>Wallet Secret Key:</label>}
+          name="secret-key-input"
+          validateStatus={
+            walletOperation.processingError === "invalid_secret" ? "error" : ""
+          }
+          help={
+            walletOperation.processingError === "invalid_secret"
+              ? "Invalid key"
+              : ""
+          }
+          style={{ marginBottom: "-30px" }}
+        >
+          <Input.Password
+            onChange={(e) => setUserSecretKey(e.target.value)}
+            iconRender={(visible) =>
+              visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+            }
+          />
+        </Form.Item>
+      ) : !operationAuthorized ? (
         <div>
           {requirePassword ? (
             <Form.Item
@@ -197,8 +243,16 @@ export default function WithdrawalFormContainer({
               subTitle={walletOperation.processingError.toString()}
             ></Result>
           )}
-          {walletOperation.processingStatus !== "pending" &&
-            walletOperation.processingValue?.data.status === "PROCESSING" && (
+          {walletOperation.processingStatus === "success" &&
+            walletOperation.processingValue?.data?.status === "PROCESSING" && (
+              <Result
+                status="success"
+                title="Withdrawal Succesful!"
+                subTitle="Total amount will be settled into your account within 24hr."
+              ></Result>
+            )}
+          {walletOperation.processingStatus === "success" &&
+            walletOperation.processingValue?.withdraw_memo && (
               <Result
                 status="success"
                 title="Withdrawal Succesful!"

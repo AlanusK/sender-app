@@ -7,6 +7,8 @@ import { IndividualTransactionsProps } from "../../types";
 
 interface IAllTransactionsTableProps {
   columns: any;
+  // transactions: any;
+  scroll: any;
   transactions: IndividualTransactionsProps[];
 }
 
@@ -32,15 +34,15 @@ const AllTransactionsTableContainer = (props: IAllTransactionsTableProps) => {
     <>
       <div className="title-all-transactions">
         <Button
-          className="transaction-type"
-          type="text"
+          className="button transaction-type" 
+          type="default"
           onClick={() => setTransactions(props.transactions)}
         >
           All Payments
         </Button>
         <Button
-          className="transaction-type"
-          type="text"
+          className="button transaction-type" 
+          type="default"
           onClick={() =>
             setTransactions(
               props.transactions.filter((obj: any) => obj.type === "Send")
@@ -50,8 +52,8 @@ const AllTransactionsTableContainer = (props: IAllTransactionsTableProps) => {
           Transfers
         </Button>
         <Button
-          className="transaction-type"
-          type="text"
+          className="button transaction-type" 
+          type="default"
           onClick={() =>
             setTransactions(
               props.transactions.filter((obj: any) => obj.type === "Withdraw")
@@ -61,8 +63,8 @@ const AllTransactionsTableContainer = (props: IAllTransactionsTableProps) => {
           Withdrawals
         </Button>
         <Button
-          className="transaction-type"
-          type="text"
+          className="button transaction-type" 
+          type="default"
           onClick={() =>
             setTransactions(
               props.transactions.filter((obj: any) => obj.type === "Deposit")
@@ -92,7 +94,11 @@ const AllTransactionsTableContainer = (props: IAllTransactionsTableProps) => {
         />
       </div>
       <div className="transactions-table">
-        <TransactionsTable columns={columns} transactions={transactions} />
+        <TransactionsTable
+          columns={columns}
+          transactions={transactions}
+          scroll={props.scroll}
+        />
       </div>
     </>
   );

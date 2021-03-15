@@ -3,7 +3,7 @@ import { IWalletOperationProps } from "../types";
 
 interface IWalletOperationsContextProps {
   walletOperation: IWalletOperationProps;
-  setWalletOperation: any;
+  setWalletOperation: React.Dispatch<React.SetStateAction<IWalletOperationProps>>;
   hasValidOperationalData: boolean;
   setHasValidOperationalData: React.Dispatch<React.SetStateAction<boolean>>;
   resetWalletOperationsData(): void;
@@ -62,6 +62,7 @@ function useWalletOperationsContextProviderProvider() {
         swiftNumber: "",
         routingNumber: "",
       },
+      requireSecretKey: false
     }
   );
   const resetWalletOperationsData = () =>
@@ -82,6 +83,7 @@ function useWalletOperationsContextProviderProvider() {
         swiftNumber: "",
         routingNumber: "",
       },
+      requireSecretKey: false
     });
   const [
     hasValidOperationalData,
