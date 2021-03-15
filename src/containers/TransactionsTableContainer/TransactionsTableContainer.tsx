@@ -1,5 +1,4 @@
 import React from 'react';
-import { Button } from 'antd';
 import "./TransactionsTableContainer.css";
 import useBreakpoint from "antd/lib/grid/hooks/useBreakpoint";
 import { TransactionsTable }  from '../../components';
@@ -21,17 +20,11 @@ const TransactionsTableContainer = (props:ITransactionsTableProps) => {
   }
 
   return (
-    <>
-      <div className="title">
-        <h3 >Transactions</h3>
-        {screens.xs ? <Button className="button">More</Button> : null}
-      </div>
       <TransactionsTable 
         columns={columns}
         transactions={props.transactions}
         scroll={props.scroll}
       />
-    </>
   );
 };
 
