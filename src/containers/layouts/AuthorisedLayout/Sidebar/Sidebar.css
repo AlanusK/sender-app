@@ -1,11 +1,10 @@
 .logo {
    height: 64px;
    background: white;
-   padding-top: 20px;
+   /* padding-top: 20px; */
    display: flex;
    justify-content: center;
    align-items: center;
-   
  }
 
  .ant-menu-item-selected {

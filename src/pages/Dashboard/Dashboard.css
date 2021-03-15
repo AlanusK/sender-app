@@ -1,28 +1,59 @@
 .dashboard-wrapper {
     background-color: #f0f2f5;
-    margin: -25px -25px;
 }
 
-.site-wrapper {
-    margin-top: -25px;
+.transaction-send-row {
+    display: flex;
 }
 
-.transaction-table-column,
-.send-money-column,
-.wallet-balance-wrapper {
-    background-color: #fff;
-    padding: 20px 10px;
+.send-container,
+.transactions-container,
+.wallet-container {
+    background-color: white;
+    margin-bottom: 15px
 }
 
-.transaction-table-column {
+.send-container {
+    flex: 1;
+}
+
+.transactions-container {
+    flex: 2;
     margin-right: 10px;
-    margin-bottom: 15px;
 }
 
-.send-money-column {
-    margin-bottom: 15px;
+.send-title, 
+.transaction-table-title,
+.wallet-title {
+    height: 50px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid lightgray;
+    padding: 10px;   
+    font-size: larger;
+    font-weight: 200;
 }
 
-.wallet-balance-wrapper {
-    margin-bottom: 40px;
+.transaction-table-title{
+    justify-content: space-between;
+}
+
+.send-money-container,
+.transactions-table-container,
+.wallet-cards-container {
+    padding: 10px;
+    padding-top: 15px;
+}
+
+
+.more-button {
+    /* margin-bottom: 10px; */
+    width: 100px;
+}
+
+@media  (max-width: 1050px) {
+    .transaction-send-row {
+        display: flex;
+        flex-direction: column;
+    }
 }
