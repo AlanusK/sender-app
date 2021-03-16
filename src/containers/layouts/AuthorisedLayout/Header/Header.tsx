@@ -79,7 +79,7 @@ const CustomHeader = () => {
       <Drawer
         title={
           <div className="drawer-title">
-            <div>Notifications</div>
+            <div className="title-notification-heading">Notifications</div>
             <div className="title-notification-number">1</div>
           </div>
         }
@@ -90,7 +90,7 @@ const CustomHeader = () => {
         width={350}
       >
         <div className="notification-message">
-          <p className="notification-type"><strong style={{color: "black"}}>Payment request - outstanding</strong></p>
+          <p className="notification-type"><strong className="notification-type-selected">Payment request - outstanding</strong></p>
           <p className="notification-day">Today</p>
         </div>
         <div className="notification-message">

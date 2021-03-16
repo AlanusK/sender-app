@@ -84,3 +84,7 @@
 .ant-drawer-body {
   padding: 0;
 }
+
+.notification-type-selected {
+  color: black
+}
