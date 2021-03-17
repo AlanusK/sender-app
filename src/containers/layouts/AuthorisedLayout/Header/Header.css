@@ -88,3 +88,11 @@
 .notification-type-selected {
   color: black
 }
+
+.notification-message:hover {
+  cursor: pointer;
+}
+
+.title-notification-back-button {
+
+}

@@ -24,6 +24,7 @@ const CustomHeader = () => {
   const [mobileView, setMobileView] = useState<Boolean>(false);
   const [showBreadcrumb, setShowBreadcrumb] = useState<Boolean>(false);
   const [visible, setVisible] = useState(false);
+  const [showIndividualNotification, setShowIndividualNotification] = useState(false);
   useEffect(() => {
     if (screens.xs) {
       setMobileView(true)
@@ -46,6 +47,14 @@ const CustomHeader = () => {
 
   const onClose = () => {
     setVisible(false);
+  };
+
+  const openIndividualNotification = () => {
+    setShowIndividualNotification(true);
+  }
+
+  const closeIndividualNotification = () => {
+    setShowIndividualNotification(false);
   };
 
   return (
@@ -87,6 +96,32 @@ const CustomHeader = () => {
         closable={false}
         onClose={onClose}
         visible={visible}
+        width={350}
+      >
+        <div className="notification-message" onClick={openIndividualNotification}>
+          <p className="notification-type"><strong className="notification-type-selected">Payment request - outstanding</strong></p>
+          <p className="notification-day">Today</p>
+        </div>
+        <div className="notification-message" onClick={openIndividualNotification}>
+          <p className="notification-type">Payment request - outstanding</p>
+          <p className="notification-day">Yesterday</p>
+        </div>
+        <div className="notification-message" onClick={openIndividualNotification}>
+          <p className="notification-type">Payment request - Paid</p>
+          <p className="notification-day">Sept 12</p>
+        </div>
+      </Drawer>
+      <Drawer
+        title={
+          <div className="drawer-title">
+            <div className="title-notification-heading">Notification</div>
+            <div className="title-notification-back-button"><Button><LeftOutlined /></Button></div>
+          </div>
+        }
+        placement="right"
+        closable={false}
+        onClose={closeIndividualNotification}
+        visible={showIndividualNotification}
         width={350}
       >
         <div className="notification-message">
