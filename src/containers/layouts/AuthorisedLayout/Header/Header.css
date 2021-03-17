@@ -64,7 +64,6 @@
   color: white;
   padding: 0px 10px;
   border-radius: 10px;
-  
 }
 
 .notification-message {
@@ -118,4 +117,13 @@
 .individual-notification p {
   margin-top: 0;
   margin-bottom: 2px;
+}
+
+.content-notification-button {
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
+  color: white;
+  background-color: rgb(126, 123, 123);
+  border-radius: 6px;
 }
