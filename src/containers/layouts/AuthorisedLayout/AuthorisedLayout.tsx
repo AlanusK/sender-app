@@ -16,22 +16,15 @@ const AuthorisedLayout = ({ children }: any) => {
   const location = useLocation();
   const screens = useBreakpoint();
   const [mobileView, setMobileView] = useState<Boolean>(false);
-  const [transactionContentLayout, setTransactionContentLayout] = useState<Boolean>(false);
   const pathnames = location.pathname.split('/').filter((item: any) => item);
-  useEffect(() => {
-    if (pathnames[0] === "transactions") {
-      setTransactionContentLayout(true)
-    } else
-      setTransactionContentLayout(false)
-  }, [pathnames])
-  
+
   useEffect(() => {
     if (screens.xs) {
       setMobileView(true)
     } else
       setMobileView(false)
   }, [screens.xs, setMobileView])
-  
+
   return (
     <Layout className="layout-wrapper">
       <AuthorisedLayoutContextProvider>
@@ -39,29 +32,29 @@ const AuthorisedLayout = ({ children }: any) => {
         <Layout className="site-layout">
           <CustomHeader />
           <WalletOperationsContextProvider>
-          <TransactionsContextProvider>
-            {transactionContentLayout ?
-              <Content
-                className="site-layout-background"
-                style={{
-                  margin: "14px 14px",
-                  padding: 0,
-                  minHeight: 280,
-                }}
-              >
-                {children}
-              </Content> :
-              <Content
-                className="site-layout-background"
-                style={{
-                  margin: "14px 14px",
-                  padding: 24,
-                  minHeight: 280,
-                }}
-              >
-                {children}
-              </Content>
-            }
+            <TransactionsContextProvider>
+              {pathnames[0] === "dashboard" || pathnames[0] === "wallet" || pathnames[0] === "transactions" ?
+                <Content
+                  className="site-layout-background"
+                  style={{
+                    margin: "14px 14px",
+                    padding: 0,
+                    minHeight: 280,
+                  }}
+                >
+                  {children}
+                </Content> :
+                <Content
+                  className="site-layout-background"
+                  style={{
+                    margin: "14px 14px",
+                    padding: 24,
+                    minHeight: 280,
+                  }}
+                >
+                  {children}
+                </Content>
+              }
             </TransactionsContextProvider>
           </WalletOperationsContextProvider>
           <SiteFooter />

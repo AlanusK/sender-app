@@ -10,6 +10,7 @@ import "./Dashboard.css";
 import { Row, Col, Button, Modal, Tag } from "antd";
 import { useAuthorisedContext } from "../../context/authorised-user-context";
 import { useWalletOperationsContext } from "../../context/wallet-operations-context";
+import useBreakpoint from "../../hooks/useBreakpoint";
 import { toDecimalMark } from "../../utility";
 import { useTransactionsContext } from "../../context/transactions-context";
 
@@ -138,23 +139,47 @@ const Dashboard = () => {
 
   const scroll = { y: null }
 
+  const screens = useBreakpoint();
+
   return (
     <div className="dashboard-wrapper">
-      <div className="wallet-balance-wrapper">
-        <WalletBallanceContainer addCurrency={addCurrency} />
+
+      <div className="wallet-container">
+        <div className="wallet-title">
+          Wallet
+        </div>
+        <div className="wallet-cards-container">
+          <WalletBallanceContainer addCurrency={addCurrency} /> 
+        </div>
       </div>
 
-      <Row className="site-wrapper">
-        <Col className="transaction-table-column" flex="auto">
-          <TransactionsTableContainer columns={columns} transactions={pendingTransactions} scroll={scroll} />
-        </Col>
-        <Col className="send-money-column" flex="420px">
-          <SendMoneyContainer userBalances={userWallets} />
-          <Button type="primary" htmlType="submit" onClick={sendMoney}>
+      <div className="transaction-send-row">
+        <div className="transactions-container">
+          <div className="transaction-table-title">
+            <div>
+              Transactions
+            </div>
+            <div>
+              {screens.xs ? <Button className="more-button">More</Button> : null}
+            </div>
+          </div>
+          <div className="transactions-table-container">
+            <TransactionsTableContainer columns={columns} transactions={pendingTransactions} scroll={scroll} />
+          </div>
+        </div>
+
+        <div className="send-container" style={{ width: screens.xs ? "220px" : "435px" }} >
+          <div className="send-title">
             Send
-          </Button>
-        </Col>
-      </Row>
+          </div>
+          <div className="send-money-container">
+            <SendMoneyContainer userBalances={userWallets} />
+            <Button type="primary" htmlType="submit" onClick={sendMoney}>
+              Send
+            </Button>
+          </div>
+        </div>
+      </div>
 
       <Modal
         title="Add Currency"

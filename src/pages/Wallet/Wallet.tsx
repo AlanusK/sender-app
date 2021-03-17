@@ -489,26 +489,33 @@ const Wallet = () => {
 
   return (
     <>
-      <h1 className="wallet-title"> Wallet </h1>
-      <ExtendedWalletBallanceContainer
-        sendMoney={() => {
-          resetWalletOperationsData(); // start with fresh object
-          setRequirePassword(false);
-          setshowSendMoneyModal(true);
-        }}
-        depositMoney={() => {
-          resetWalletOperationsData(); // start with fresh object
-          return setshowDepositMoneyModal(true);
-        }}
-        withdrawalMoney={() => {
-          resetWalletOperationsData(); // start with fresh object
-          setOperationAuthorized(undefined);
-          setRequirePassword(false);
-          return setshowWithdrawalMoneyModal(true);
-        }}
-        userBalances={userWallets}
-        addCurrency={addCurrencyComponent}
-      />
+
+      <div className="wallet-container">
+        <div className="wallet-title">
+          Wallet
+        </div>
+        <div className="wallet-cards-container">
+          <ExtendedWalletBallanceContainer
+            sendMoney={() => {
+              resetWalletOperationsData(); // start with fresh object
+              setRequirePassword(false);
+              setshowSendMoneyModal(true);
+            }}
+            depositMoney={() => {
+              resetWalletOperationsData(); // start with fresh object
+              return setshowDepositMoneyModal(true);
+            }}
+            withdrawalMoney={() => {
+              resetWalletOperationsData(); // start with fresh object
+              setRequirePassword(false);
+              return setshowWithdrawalMoneyModal(true);
+            }}
+            userBalances={userWallets}
+            addCurrency={addCurrencyComponent}
+          />
+        </div>
+      </div>
+
 
       {/*  send money modal */}
       <Modal
