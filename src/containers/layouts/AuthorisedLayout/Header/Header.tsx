@@ -99,7 +99,11 @@ const CustomHeader = () => {
         width={350}
       >
         <div className="notification-message" onClick={openIndividualNotification}>
-          <p className="notification-type"><strong className="notification-type-selected">Payment request - outstanding</strong></p>
+          <p className="notification-type">
+            <strong className="notification-type-selected">
+              Payment request - outstanding
+            </strong>
+          </p>
           <p className="notification-day">Today</p>
         </div>
         <div className="notification-message" onClick={openIndividualNotification}>
@@ -115,7 +119,14 @@ const CustomHeader = () => {
         title={
           <div className="drawer-title">
             <div className="title-notification-heading">Notification</div>
-            <div className="title-notification-back-button"><Button><LeftOutlined /></Button></div>
+            <div className="title-notification-button-wrapper">
+              <Button 
+                className="title-notification-button"
+                onClick={closeIndividualNotification}
+              >
+                <LeftOutlined className="title-notification-leftOutlined" />
+              </Button>
+            </div>
           </div>
         }
         placement="right"
@@ -124,17 +135,25 @@ const CustomHeader = () => {
         visible={showIndividualNotification}
         width={350}
       >
-        <div className="notification-message">
-          <p className="notification-type"><strong className="notification-type-selected">Payment request - outstanding</strong></p>
-          <p className="notification-day">Today</p>
+        <div className="individual-notification">
+          <p className="individual-notification-type">Amount</p>
+          <p className="individual-notification-description">100.00 USD</p>
         </div>
-        <div className="notification-message">
-          <p className="notification-type">Payment request - outstanding</p>
-          <p className="notification-day">Yesterday</p>
+        <div className="individual-notification">
+          <p className="individual-notification-type">Sender</p>
+          <p className="individual-notification-description">Victor Lastname</p>
         </div>
-        <div className="notification-message">
-          <p className="notification-type">Payment request - Paid</p>
-          <p className="notification-day">Sept 12</p>
+        <div className="individual-notification">
+          <p className="individual-notification-type">Wallet address</p>
+          <p className="individual-notification-description">victor*clickpesa.com</p>
+        </div>
+        <div className="individual-notification">
+          <p className="individual-notification-type">Status</p>
+          <p className="individual-notification-description">Outstanding</p>
+        </div>
+        <div className="individual-notification">
+          <p className="individual-notification-type">Description</p>
+          <p className="individual-notification-description">Social media help with posting several things</p>
         </div>
       </Drawer>
 

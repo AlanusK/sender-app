@@ -93,6 +93,29 @@
   cursor: pointer;
 }
 
-.title-notification-back-button {
+.title-notification-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  width: 10px;
+  color: gray;
+  font-size: larger;
+  padding-top: 7px;
+}
 
+.individual-notification {
+  display: flex;
+  flex-direction: column;
+  color: gray;
+  padding: 24px 24px 0 24px;
+}
+
+.individual-notification-description {
+  color: rgb(53, 52, 52);
+}
+
+.individual-notification p {
+  margin-top: 0;
+  margin-bottom: 2px;
 }
