@@ -58,12 +58,18 @@ const CustomHeader = () => {
     setShowIndividualNotification(false);
   };
 
+  const {
+    setMenuItem,
+  } = useAuthorisedContext();
+
   const menu = (
     <Menu>
-      <Menu.Item key="0">
-        <a href="./settings">Settings</a>
+      <Menu.Item key="settings" onClick={setMenuItem}>
+        Settings
       </Menu.Item>
-      <Menu.Item key="1"><a href="./login?redirect=settings">Log out</a></Menu.Item>
+      <Menu.Item key="logout" onClick={signout}>
+        Log out
+      </Menu.Item>
     </Menu>
   );
   return (
@@ -78,10 +84,10 @@ const CustomHeader = () => {
         >
           <MenuOutlined />
         </Dropdown>
-        {React.createElement(LogoutOutlined, {
+        {/* {React.createElement(LogoutOutlined, {
           className: "logout-button",
           onClick: signout,
-        })}
+        })} */}
         {React.createElement(DarkModeToggle, {
           darkMode: darkMode,
           setDarkMode: setDarkMode,

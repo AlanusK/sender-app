@@ -51,9 +51,6 @@ const Sidebar = (props: ISidebar) => {
           <Menu.Item key="transactions" icon={<UnorderedListOutlined />}>
             Transactions
           </Menu.Item>
-          <Menu.Item key="settings" icon={<SettingOutlined />}>
-            Settings
-          </Menu.Item>
           <Menu.Item key="all-components" icon={<GlobalOutlined />}>
             Components
           </Menu.Item>
