@@ -44,13 +44,19 @@
 }
 
 .button-notification-number {
-  background-color:red;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: gray;
+  color: white;
   font-size: xx-small;
   position: absolute;
-  padding:1px;
+  padding-top:1px;
   top: 10px;
-  right: 16px;
-  border-radius: 5px;
+  right: 10px;
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
 }
 
 .drawer-title {
