@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Layout, Drawer, Button } from "antd";
+import { Layout, Drawer, Button, Dropdown, Menu } from "antd";
 import { useAuthorisedContext } from "../../../../context/authorised-user-context";
 import {
   MenuUnfoldOutlined,
@@ -7,6 +7,7 @@ import {
   LogoutOutlined,
   LeftOutlined,
   BellOutlined,
+  MenuOutlined,
 } from "@ant-design/icons";
 import "./Header.css";
 import { useAuth } from "../../../../hooks/useAuth";
@@ -57,13 +58,26 @@ const CustomHeader = () => {
     setShowIndividualNotification(false);
   };
 
+  const menu = (
+    <Menu>
+      <Menu.Item key="0">
+        <a href="./settings">Settings</a>
+      </Menu.Item>
+      <Menu.Item key="1"><a href="./login?redirect=settings">Log out</a></Menu.Item>
+    </Menu>
+  );
   return (
     <>
       <Header className="site-layout-background" style={{ padding: 0 }}>
         {/* {mobileView ? <div className="back-to-dashboard"><Link to="/dashboard"><LeftOutlined className="leftOutlined" />{pathnames[0]}</Link></div> :
   
             } */}
-
+        <Dropdown
+          overlay={menu} trigger={['click']}
+          className="dropdown-menu"
+        >
+          <MenuOutlined />
+        </Dropdown>
         {React.createElement(LogoutOutlined, {
           className: "logout-button",
           onClick: signout,
@@ -77,6 +91,8 @@ const CustomHeader = () => {
           <BellOutlined />
           <div className="button-notification-number">1</div>
         </Button>
+
+
 
       </Header>
       {showBreadcrumb ?

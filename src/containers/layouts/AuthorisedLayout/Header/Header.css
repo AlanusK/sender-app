@@ -134,3 +134,9 @@
   background-color: rgb(126, 123, 123);
   border-radius: 6px;
 }
+
+.dropdown-menu {
+  float: right;
+  padding-top: 20px;
+  padding-right: 20px;
+}
