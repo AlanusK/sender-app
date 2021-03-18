@@ -10,10 +10,6 @@
   color: #1890ff;
 }
 
-.logout-button {
-  float: right;
-  padding: 20px;
-}
 
 .back-to-dashboard {
   display: flex;
@@ -133,4 +129,9 @@
   color: white;
   background-color: rgb(126, 123, 123);
   border-radius: 6px;
+}
+
+.dropdown-menu {
+  float: right;
+  padding: 20px 20px 20px 15px;
 }

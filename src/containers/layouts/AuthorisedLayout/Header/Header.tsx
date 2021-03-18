@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Layout, Drawer, Button } from "antd";
+import { Layout, Drawer, Button, Dropdown, Menu } from "antd";
 import { useAuthorisedContext } from "../../../../context/authorised-user-context";
 import {
   MenuUnfoldOutlined,
@@ -7,6 +7,7 @@ import {
   LogoutOutlined,
   LeftOutlined,
   BellOutlined,
+  MenuOutlined,
 } from "@ant-design/icons";
 import "./Header.css";
 import { useAuth } from "../../../../hooks/useAuth";
@@ -57,17 +58,36 @@ const CustomHeader = () => {
     setShowIndividualNotification(false);
   };
 
+  const {
+    setMenuItem,
+  } = useAuthorisedContext();
+
+  const menu = (
+    <Menu>
+      <Menu.Item key="settings" onClick={setMenuItem}>
+        Settings
+      </Menu.Item>
+      <Menu.Item key="logout" onClick={signout}>
+        Log out
+      </Menu.Item>
+    </Menu>
+  );
   return (
     <>
       <Header className="site-layout-background" style={{ padding: 0 }}>
         {/* {mobileView ? <div className="back-to-dashboard"><Link to="/dashboard"><LeftOutlined className="leftOutlined" />{pathnames[0]}</Link></div> :
   
             } */}
-
-        {React.createElement(LogoutOutlined, {
+        <Dropdown
+          overlay={menu} trigger={['click']}
+          className="dropdown-menu"
+        >
+          <MenuOutlined />
+        </Dropdown>
+        {/* {React.createElement(LogoutOutlined, {
           className: "logout-button",
           onClick: signout,
-        })}
+        })} */}
         {React.createElement(DarkModeToggle, {
           darkMode: darkMode,
           setDarkMode: setDarkMode,
@@ -77,6 +97,8 @@ const CustomHeader = () => {
           <BellOutlined />
           <div className="button-notification-number">1</div>
         </Button>
+
+
 
       </Header>
       {showBreadcrumb ?
