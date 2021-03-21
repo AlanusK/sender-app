@@ -22,10 +22,11 @@ const CustomHeader = () => {
   const { signout } = useAuth();
   const [darkMode, setDarkMode] = useDarkMode();
   const screens = useBreakpoint();
-  const [mobileView, setMobileView] = useState<Boolean>(false);
-  const [showBreadcrumb, setShowBreadcrumb] = useState<Boolean>(false);
-  const [visible, setVisible] = useState(false);
-  const [showIndividualNotification, setShowIndividualNotification] = useState(false);
+  const [mobileView, setMobileView] = useState<boolean>(false);
+  const [showBreadcrumb, setShowBreadcrumb] = useState<boolean>(false);
+  const [visible, setVisible] = useState<boolean>(false);
+  const [showIndividualNotification, setShowIndividualNotification] = useState<boolean>(false);
+  const [showDropdownMenu, setShowDropdownMenu] = useState<boolean>(false);
   useEffect(() => {
     if (screens.xs) {
       setMobileView(true)
@@ -58,49 +59,99 @@ const CustomHeader = () => {
     setShowIndividualNotification(false);
   };
 
+  const openDropdownMenu = () => {
+    setShowDropdownMenu(true);
+  }
+
+  const closeDropdownMenu = () => {
+    setShowDropdownMenu(false);
+  }
+
+
   const {
     setMenuItem,
   } = useAuthorisedContext();
 
+  var mobileMenuWidth = "100px";
+  var mobileMenuHeight = "";
+  var mobileTopMargin = ""
+
+  if(mobileView === true) {
+    mobileMenuWidth = "100vw";
+    mobileMenuHeight = "100vh";
+    mobileTopMargin = "-58px";
+  }
+
   const menu = (
-    <Menu>
-      <Menu.Item key="settings" onClick={setMenuItem}>
-        Settings
-      </Menu.Item>
-      <Menu.Item key="logout" onClick={signout}>
-        Log out
-      </Menu.Item>
+    <Menu
+      className="dropdown-menu-items"
+      style={{ width: mobileMenuWidth, height: mobileMenuHeight, marginTop: mobileTopMargin }}
+    >
+      {mobileView ?
+        <>
+          <Button 
+              onClick={closeDropdownMenu}
+              className="dropdown-menu-mobile-button"
+            >
+              X
+          </Button>
+          <Menu.Item key="dashboard" onClick={(key) => { setMenuItem(key); closeDropdownMenu() }}>
+            Dashboard
+          </Menu.Item>
+          <Menu.Item key="wallet" onClick={(key) => { setMenuItem(key); closeDropdownMenu() }}>
+            Wallet
+          </Menu.Item>
+          <Menu.Item key="transactions" onClick={(key) => { setMenuItem(key); closeDropdownMenu() }}>
+            Transactions
+          </Menu.Item>
+          <Menu.Item key="settings" onClick={(key) => { setMenuItem(key); closeDropdownMenu() }}>
+            Settings
+          </Menu.Item>
+          <Menu.Item key="logout" onClick={signout}>
+            Log out
+          </Menu.Item>
+        </>
+        :
+        <>
+          <Menu.Item key="settings" onClick={setMenuItem}>
+            Settings
+          </Menu.Item>
+          <Menu.Item key="logout" onClick={signout}>
+            Log out
+          </Menu.Item>
+        </>
+      }
     </Menu>
   );
   return (
     <>
       <Header className="site-layout-background" style={{ padding: 0 }}>
-        {/* {mobileView ? <div className="back-to-dashboard"><Link to="/dashboard"><LeftOutlined className="leftOutlined" />{pathnames[0]}</Link></div> :
-  
-            } */}
-        <Dropdown
-          overlay={menu} trigger={['click']}
-          className="dropdown-menu"
-        >
-          <MenuOutlined />
-        </Dropdown>
-        {/* {React.createElement(LogoutOutlined, {
-          className: "logout-button",
-          onClick: signout,
-        })} */}
+        {mobileView ?
+          <Dropdown
+            overlay={menu} trigger={['click']}
+            className="dropdown-menu"
+            visible={mobileView ? showDropdownMenu : false}
+          >
+            <MenuOutlined onClick={openDropdownMenu} />
+          </Dropdown>
+          : 
+          <Dropdown
+            overlay={menu} trigger={['click']}
+            className="dropdown-menu"
+          >
+            <MenuOutlined />
+          </Dropdown>
+        }
         {React.createElement(DarkModeToggle, {
           darkMode: darkMode,
           setDarkMode: setDarkMode,
         })}
-
         <Button onClick={openNotification} className="notification-button">
           <BellOutlined />
           <div className="button-notification-number">1</div>
         </Button>
-
-
-
       </Header>
+
       {showBreadcrumb ?
         <div className="breadCrumb">
           <BreadCrumb />
