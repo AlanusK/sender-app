@@ -1,36 +1,150 @@
 .trigger {
-   font-size: 18px;
-   line-height: 64px;
-   padding: 0 24px;
-   cursor: pointer;
-   transition: color 0.3s;
- }
+  font-size: 18px;
+  line-height: 64px;
+  padding: 0 24px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
 
 .trigger:hover {
-   color: #1890ff;
- }
+  color: #1890ff;
+}
 
- .logout-button {
-   float: right;
-   padding: 20px;
- }
 
- .back-to-dashboard {
-    display: flex;
-    align-items: center;
-    margin-left: 15px;
-    text-transform: capitalize;
- }
+.back-to-dashboard {
+  display: flex;
+  align-items: center;
+  margin-left: 15px;
+  text-transform: capitalize;
+}
 
- .leftOutlined {
-    margin-right: 5px;
- }
+.leftOutlined {
+  margin-right: 5px;
+}
 
- .breadCrumb {
-   display: flex;
-   align-items: center;
-   padding-left: 26px;
-   padding-top: 15px;
-   text-transform: capitalize;
-   /* height: 50px; */
- }
+.breadCrumb {
+  display: flex;
+  align-items: center;
+  padding-left: 26px;
+  padding-top: 15px;
+  text-transform: capitalize;
+  /* height: 50px; */
+}
+
+.notification-button {
+  position: relative;
+  font-size: 18px;
+  float: right;
+  border: none;
+  padding-top: 15px;
+}
+
+.button-notification-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: gray;
+  color: white;
+  font-size: xx-small;
+  position: absolute;
+  padding-top:1px;
+  top: 10px;
+  right: 10px;
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+}
+
+.drawer-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 30px;
+}
+
+.title-notification-number {
+  background-color: rgb(73, 70, 70);
+  color: white;
+  padding: 0px 10px;
+  border-radius: 10px;
+}
+
+.notification-message {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: gray;
+  border-bottom: 1px solid lightgray;
+  padding: 10px 24px;
+}
+
+.notification-type,
+.notification-day {
+  margin: 0;
+}
+
+.ant-drawer-body {
+  padding: 0;
+}
+
+.notification-type-selected {
+  color: black
+}
+
+.notification-message:hover {
+  cursor: pointer;
+}
+
+.title-notification-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  width: 10px;
+  color: gray;
+  font-size: large;
+  padding-top: 7px;
+}
+
+.individual-notification {
+  display: flex;
+  flex-direction: column;
+  color: gray;
+  padding: 24px 24px 0 24px;
+}
+
+.individual-notification-description {
+  color: rgb(53, 52, 52);
+}
+
+.individual-notification p {
+  margin-top: 0;
+  margin-bottom: 2px;
+}
+
+.content-notification-button {
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
+  color: white;
+  background-color: rgb(126, 123, 123);
+  border-radius: 6px;
+}
+
+.dropdown-menu {
+  float: right;
+  padding: 20px 20px 20px 15px;
+}
+
+.dropdown-menu-items {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dropdown-menu-mobile-button {
+  border: none;
+  align-self: flex-end;
+  margin-bottom: 5px;
+  font-size: large;
+}
