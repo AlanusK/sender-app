@@ -7,7 +7,7 @@ import {
   LogoutOutlined,
   LeftOutlined,
   BellOutlined,
-  MenuOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
 import "./Header.css";
 import { useAuth } from "../../../../hooks/useAuth";
@@ -132,14 +132,14 @@ const CustomHeader = () => {
             className="dropdown-menu"
             visible={mobileView ? showDropdownMenu : false}
           >
-            <MenuOutlined onClick={openDropdownMenu} />
+            <UserOutlined onClick={openDropdownMenu} />
           </Dropdown>
           : 
           <Dropdown
             overlay={menu} trigger={['click']}
             className="dropdown-menu"
           >
-            <MenuOutlined />
+            <UserOutlined />
           </Dropdown>
         }
         {React.createElement(DarkModeToggle, {
